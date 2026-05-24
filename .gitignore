@@ -3,3 +3,1019 @@ node_modules/
 .env.local
 .env.production
 uploads/
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KenyaSurvey - Earn While You Learn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+<div class="earn-pop" id="earn-pop">
+  <div class="earn-amount" id="earn-amount">+KSh 0</div>
+  <div class="earn-label">Earned!</div>
+</div>
+
+<!-- ════════════════ AUTH SCREEN ════════════════ -->
+<div class="screen active" id="auth-screen">
+  <div class="auth-box">
+    <div class="logo-wrap">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-title">Kenya<span>Survey</span></div>
+      <div class="logo-sub">Earn money answering Kenyan questions</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">Create Account</button>
+      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign In</button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="auth-form" id="form-register">
+      <div class="bonus-badge">
+        <i class="fas fa-gift"></i>
+        Register today and receive a KSh 50 welcome bonus instantly
+      </div>
+      <div class="field-group">
+        <label class="field-label">Phone Number</label>
+        <div class="field-wrap">
+          <i class="fas fa-phone"></i>
+          <input class="field-input" type="tel" id="reg-phone" placeholder="07XX XXX XXX" maxlength="12" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Create 4-Digit PIN</label>
+        <div class="field-wrap">
+          <i class="fas fa-lock"></i>
+          <input class="field-input" type="password" id="reg-pin" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Confirm PIN</label>
+        <div class="field-wrap">
+          <i class="fas fa-lock"></i>
+          <input class="field-input" type="password" id="reg-pin2" placeholder="Repeat your PIN" maxlength="4" inputmode="numeric" />
+        </div>
+      </div>
+      <div class="alert error" id="reg-error"></div>
+      <button class="btn-primary" id="btn-register" onclick="doRegister()">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+      <p class="auth-note">By registering, you agree to participate in surveys and earn real money via M-Pesa.</p>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form hidden" id="form-login">
+      <div class="field-group">
+        <label class="field-label">Phone Number</label>
+        <div class="field-wrap">
+          <i class="fas fa-phone"></i>
+          <input class="field-input" type="tel" id="login-phone" placeholder="07XX XXX XXX" maxlength="12" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Your 4-Digit PIN</label>
+        <div class="field-wrap">
+          <i class="fas fa-lock"></i>
+          <input class="field-input" type="password" id="login-pin" placeholder="Enter PIN" maxlength="4" inputmode="numeric" />
+        </div>
+      </div>
+      <div class="alert error" id="login-error"></div>
+      <button class="btn-primary" id="btn-login" onclick="doLogin()">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PROFILE SCREEN ════════════════ -->
+<div class="screen" id="profile-screen">
+  <div class="profile-box">
+    <div class="profile-header">
+      <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
+      <h2>Complete Your Profile</h2>
+      <p>Fill in your details to unlock the full survey dashboard and earn your welcome bonus.</p>
+    </div>
+
+    <div class="auth-form">
+      <div class="field-group">
+        <label class="field-label">Full Name</label>
+        <div class="field-wrap">
+          <i class="fas fa-user"></i>
+          <input class="field-input" type="text" id="prof-name" placeholder="Enter your full name" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">County</label>
+        <div class="field-wrap">
+          <i class="fas fa-map-marker-alt"></i>
+          <select class="select-input" id="prof-county">
+            <option value="">Select your county</option>
+            <option>Mombasa</option><option>Kwale</option><option>Kilifi</option><option>Tana River</option>
+            <option>Lamu</option><option>Taita-Taveta</option><option>Garissa</option><option>Wajir</option>
+            <option>Mandera</option><option>Marsabit</option><option>Isiolo</option><option>Meru</option>
+            <option>Tharaka-Nithi</option><option>Embu</option><option>Kitui</option><option>Machakos</option>
+            <option>Makueni</option><option>Nyandarua</option><option>Nyeri</option><option>Kirinyaga</option>
+            <option>Murang'a</option><option>Kiambu</option><option>Turkana</option><option>West Pokot</option>
+            <option>Samburu</option><option>Trans-Nzoia</option><option>Uasin Gishu</option><option>Elgeyo-Marakwet</option>
+            <option>Nandi</option><option>Baringo</option><option>Laikipia</option><option>Nakuru</option>
+            <option>Narok</option><option>Kajiado</option><option>Kericho</option><option>Bomet</option>
+            <option>Kakamega</option><option>Vihiga</option><option>Bungoma</option><option>Busia</option>
+            <option>Siaya</option><option>Kisumu</option><option>Homa Bay</option><option>Migori</option>
+            <option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Occupation</label>
+        <div class="field-wrap">
+          <i class="fas fa-briefcase"></i>
+          <select class="select-input" id="prof-occupation">
+            <option value="">Select occupation</option>
+            <option>Student</option><option>Employed - Private Sector</option><option>Employed - Government</option>
+            <option>Self-Employed / Business</option><option>Freelancer</option><option>Farmer</option>
+            <option>Unemployed</option><option>Retired</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Highest Education Level</label>
+        <div class="field-wrap">
+          <i class="fas fa-graduation-cap"></i>
+          <select class="select-input" id="prof-education">
+            <option value="">Select education level</option>
+            <option>Primary School</option><option>Secondary School (KCSE)</option>
+            <option>Certificate / Diploma</option><option>Bachelor's Degree</option>
+            <option>Master's Degree</option><option>PhD</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert error" id="prof-error"></div>
+      <div class="alert success" id="prof-success"></div>
+      <button class="btn-primary" id="btn-profile" onclick="doCompleteProfile()">
+        <i class="fas fa-check"></i> Save Profile and Continue
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ MAIN APP ════════════════ -->
+<div class="screen" id="app-screen">
+
+  <!-- Mobile Header -->
+  <div class="mobile-header">
+    <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <div class="mobile-balance" id="mobile-balance">KSh 0.00</div>
+    <button class="btn-logout" onclick="doLogout()"><i class="fas fa-power-off"></i></button>
+  </div>
+
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="sidebar-logo-text">Kenya<span>Survey</span></div>
+    </div>
+
+    <div class="balance-card">
+      <div class="balance-label">Available Balance</div>
+      <div class="balance-amount" id="sidebar-balance">KSh 0.00</div>
+      <div class="balance-earned" id="sidebar-earned">Total earned: KSh 0.00</div>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item">
+        <button class="nav-link active" id="nav-dashboard" onclick="showPanel('dashboard')">
+          <i class="fas fa-th-large"></i> Dashboard
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="nav-survey" onclick="showPanel('survey')">
+          <i class="fas fa-clipboard-list"></i> Surveys
+          <span class="nav-badge" id="nav-survey-badge">120</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="nav-withdraw" onclick="showPanel('withdraw')">
+          <i class="fas fa-wallet"></i> Withdraw
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="nav-transactions" onclick="showPanel('transactions')">
+          <i class="fas fa-history"></i> History
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar"><i class="fas fa-user"></i></div>
+        <div>
+          <div class="user-name" id="sidebar-name">User</div>
+          <div class="user-phone" id="sidebar-phone">+254...</div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()" title="Sign Out">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- ── DASHBOARD PANEL ── -->
+    <div class="page-panel active" id="panel-dashboard">
+      <div class="page-title" id="dash-greeting">Good day!</div>
+      <div class="page-sub">Track your earnings and survey progress.</div>
+
+      <div class="start-survey-hero">
+        <div class="start-survey-left">
+          <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
+          <div>
+            <div class="start-survey-heading">Ready to Earn?</div>
+            <div class="start-survey-desc">Answer Kenyan trivia questions and earn KSh 30 – 100 per correct answer.</div>
+          </div>
+        </div>
+        <button class="btn-start-survey" onclick="showPanel('survey')">
+          <i class="fas fa-play-circle"></i> Start Surveys
+        </button>
+      </div>
+
+      <div class="activation-banner" id="activation-banner">
+        <div class="activation-text">
+          <h3><i class="fas fa-unlock" style="margin-right:6px"></i>Activate to Withdraw</h3>
+          <p>Pay a one-time activation fee of KSh 150 to unlock M-Pesa withdrawals. Your earnings are safe.</p>
+        </div>
+        <button class="btn-activate" onclick="showPanel('withdraw')">Activate Now</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-coins"></i></div>
+          <div>
+            <div class="stat-value" id="stat-balance">0.00</div>
+            <div class="stat-label">Balance (KSh)</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fas fa-trophy"></i></div>
+          <div>
+            <div class="stat-value" id="stat-earned">0.00</div>
+            <div class="stat-label">Total Earned (KSh)</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
+          <div>
+            <div class="stat-value" id="stat-completed">0</div>
+            <div class="stat-label">Questions Done</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-tasks"></i></div>
+          <div>
+            <div class="stat-value" id="stat-remaining">120</div>
+            <div class="stat-label">Remaining</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <span class="progress-title"><i class="fas fa-chart-line" style="color:var(--green);margin-right:6px"></i>Survey Progress</span>
+          <span class="progress-count" id="progress-text">0 / 120 completed</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="section-title"><i class="fas fa-receipt"></i> Recent Transactions</div>
+      <div class="tx-list" id="dash-tx-list">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>No transactions yet. Start answering surveys to earn!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SURVEY PANEL ── -->
+    <div class="page-panel" id="panel-survey">
+      <div class="survey-top">
+        <div>
+          <div class="page-title">Survey Questions</div>
+          <div class="page-sub">Answer correctly to earn KSh 30 – KSh 100 per question.</div>
+        </div>
+        <div id="page-dots" class="page-indicator"></div>
+      </div>
+
+      <div class="questions-grid" id="questions-grid">
+        <div class="empty-state"><div class="spinner"></div></div>
+      </div>
+
+      <div class="pagination">
+        <button class="btn-page" id="btn-prev" onclick="changePage(-1)" disabled>
+          <i class="fas fa-arrow-left"></i> Previous
+        </button>
+        <span class="page-info" id="page-info">Page 1 of 7</span>
+        <button class="btn-page next" id="btn-next" onclick="changePage(1)">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── WITHDRAW PANEL ── -->
+    <div class="page-panel withdraw-box" id="panel-withdraw">
+      <div class="page-title">Withdraw Earnings</div>
+      <div class="page-sub">Receive your earnings directly to M-Pesa.</div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <span class="label">Current Balance</span>
+          <span class="value green" id="wd-balance">KSh 0.00</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Minimum Withdrawal</span>
+          <span class="value">KSh 150</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Account Status</span>
+          <span class="value" id="wd-status"><span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span></span>
+        </div>
+      </div>
+
+      <!-- Not activated view -->
+      <div id="wd-locked">
+        <div class="locked-msg">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Your account needs to be activated before you can withdraw. Pay a one-time fee of <strong>KSh 150</strong> via M-Pesa to unlock withdrawals permanently.</p>
+        </div>
+        <div class="field-group" style="margin-bottom:16px">
+          <label class="field-label">M-Pesa Phone Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-mobile-alt"></i>
+            <input class="field-input" type="tel" id="act-phone" placeholder="07XX XXX XXX" />
+          </div>
+        </div>
+        <div class="alert error" id="act-error"></div>
+        <div class="alert success" id="act-success"></div>
+        <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;" id="btn-activate" onclick="doActivate()">
+          <i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150
+        </button>
+        <p class="auth-note" style="margin-top:12px">One-time payment. No recurring charges.</p>
+      </div>
+
+      <!-- Activated view -->
+      <div id="wd-unlocked" class="hidden">
+        <div class="field-group" style="margin-bottom:16px">
+          <label class="field-label">M-Pesa Phone Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-mobile-alt"></i>
+            <input class="field-input" type="tel" id="wd-phone" placeholder="07XX XXX XXX" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom:8px">
+          <label class="field-label">Amount to Withdraw (KSh)</label>
+          <div class="amount-display" id="wd-amount-display">150</div>
+          <input type="range" class="slider-input" id="wd-slider" min="150" max="1000" step="10" value="150" oninput="updateSlider()" />
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text3);margin-top:4px">
+            <span>KSh 150</span><span>KSh 1,000</span>
+          </div>
+        </div>
+        <div class="alert error" id="wd-error"></div>
+        <div class="alert success" id="wd-success"></div>
+        <button class="btn-primary" id="btn-withdraw" onclick="doWithdraw()" style="margin-top:12px">
+          <i class="fas fa-paper-plane"></i> Request Withdrawal
+        </button>
+      </div>
+    </div>
+
+    <!-- ── TRANSACTIONS PANEL ── -->
+    <div class="page-panel" id="panel-transactions">
+      <div class="page-title">Transaction History</div>
+      <div class="page-sub">All your earnings and withdrawals.</div>
+      <div class="tx-list" id="all-tx-list">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>No transactions yet.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// CONFIG — change this to your backend URL
+// ════════════════════════════════════════════
+const API = 'http://localhost:4000/api';
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let token = localStorage.getItem('ks_token') || null;
+let userProfile = null;
+let currentPage = 0;
+let totalPages = 7;
+let stats = { balance: 0, totalEarned: 0, completedQuestions: 0, totalQuestions: 40, activated: false, transactions: [] };
+let activationRef = null;
+let activationPollTimer = null;
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  if (token) {
+    loadUser();
+  }
+});
+
+async function loadUser() {
+  try {
+    const data = await apiFetch('/auth/profile');
+    userProfile = data;
+    if (!data.profileComplete) {
+      showScreen('profile-screen');
+    } else {
+      showScreen('app-screen');
+      initApp();
+    }
+  } catch {
+    token = null;
+    localStorage.removeItem('ks_token');
+    showScreen('auth-screen');
+  }
+}
+
+function initApp() {
+  updateSidebarUser();
+  loadStats();
+  loadQuestions(currentPage);
+}
+
+// ════════════════════════════════════════════
+// SCREENS
+// ════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showPanel(name) {
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  closeSidebar();
+  if (name === 'survey') loadQuestions(currentPage);
+  if (name === 'withdraw') updateWithdrawPanel();
+  if (name === 'transactions') renderAllTransactions();
+}
+
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+function switchTab(tab) {
+  document.getElementById('form-register').classList.toggle('hidden', tab !== 'register');
+  document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+}
+
+async function doRegister() {
+  const phone = document.getElementById('reg-phone').value.trim();
+  const pin = document.getElementById('reg-pin').value.trim();
+  const pin2 = document.getElementById('reg-pin2').value.trim();
+  const errEl = document.getElementById('reg-error');
+  const btn = document.getElementById('btn-register');
+
+  clearAlert(errEl);
+  if (!phone || !pin || !pin2) { showAlert(errEl, 'All fields are required.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const data = await apiFetch('/auth/register', 'POST', { phone, pin, pin2 });
+    token = data.token;
+    localStorage.setItem('ks_token', token);
+    toast('Account created! KSh 50 welcome bonus added.', 'success');
+    const user = await apiFetch('/auth/profile');
+    userProfile = user;
+    showScreen('profile-screen');
+  } catch (err) {
+    showAlert(errEl, err.message || 'Registration failed.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+  }
+}
+
+async function doLogin() {
+  const phone = document.getElementById('login-phone').value.trim();
+  const pin = document.getElementById('login-pin').value.trim();
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+
+  clearAlert(errEl);
+  if (!phone || !pin) { showAlert(errEl, 'Phone and PIN required.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const data = await apiFetch('/auth/login', 'POST', { phone, pin });
+    token = data.token;
+    localStorage.setItem('ks_token', token);
+    const user = await apiFetch('/auth/profile');
+    userProfile = user;
+    if (!user.profileComplete) {
+      showScreen('profile-screen');
+    } else {
+      showScreen('app-screen');
+      initApp();
+    }
+  } catch (err) {
+    showAlert(errEl, err.message || 'Login failed.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+  }
+}
+
+async function doCompleteProfile() {
+  const name = document.getElementById('prof-name').value.trim();
+  const county = document.getElementById('prof-county').value;
+  const occupation = document.getElementById('prof-occupation').value;
+  const education = document.getElementById('prof-education').value;
+  const errEl = document.getElementById('prof-error');
+  const succEl = document.getElementById('prof-success');
+  const btn = document.getElementById('btn-profile');
+
+  clearAlert(errEl); clearAlert(succEl);
+  if (!name || !county || !occupation || !education) { showAlert(errEl, 'All fields are required.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    await apiFetch('/auth/profile/complete', 'POST', { name, county, occupation, education });
+    showAlert(succEl, 'Profile saved! Redirecting to dashboard...');
+    const user = await apiFetch('/auth/profile');
+    userProfile = user;
+    setTimeout(() => {
+      showScreen('app-screen');
+      initApp();
+    }, 1200);
+  } catch (err) {
+    showAlert(errEl, err.message || 'Failed to save profile.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Save Profile and Continue';
+  }
+}
+
+function doLogout() {
+  token = null;
+  userProfile = null;
+  localStorage.removeItem('ks_token');
+  showScreen('auth-screen');
+  switchTab('login');
+}
+
+// ════════════════════════════════════════════
+// STATS & DASHBOARD
+// ════════════════════════════════════════════
+async function loadStats() {
+  try {
+    const data = await apiFetch('/survey/stats');
+    stats = { ...data, completedIds: data.completedIds || [] };
+    updateDashboard();
+    updateWithdrawPanel();
+  } catch {}
+}
+
+function updateDashboard() {
+  const bal = stats.balance.toFixed(2);
+  const earned = (stats.totalEarned || 0).toFixed(2);
+  const completed = stats.completedQuestions || 0;
+  const total = stats.totalQuestions || 40;
+  const remaining = total - completed;
+  const pct = Math.round((completed / total) * 100);
+
+  document.getElementById('sidebar-balance').textContent = `KSh ${bal}`;
+  document.getElementById('sidebar-earned').textContent = `Total earned: KSh ${earned}`;
+  document.getElementById('mobile-balance').textContent = `KSh ${bal}`;
+  document.getElementById('stat-balance').textContent = bal;
+  document.getElementById('stat-earned').textContent = earned;
+  document.getElementById('stat-completed').textContent = completed;
+  document.getElementById('stat-remaining').textContent = remaining;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${completed} / ${total} completed`;
+  document.getElementById('nav-survey-badge').textContent = remaining;
+
+  const hour = new Date().getHours();
+  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('dash-greeting').textContent = `${greet}, ${userProfile?.name || 'there'}!`;
+
+  const banner = document.getElementById('activation-banner');
+  if (stats.activated) banner.classList.add('hidden');
+  else banner.classList.remove('hidden');
+
+  renderDashTransactions();
+}
+
+function updateSidebarUser() {
+  if (!userProfile) return;
+  document.getElementById('sidebar-name').textContent = userProfile.name || 'User';
+  const ph = userProfile.phone || '';
+  document.getElementById('sidebar-phone').textContent = '+' + ph;
+}
+
+function renderDashTransactions() {
+  const el = document.getElementById('dash-tx-list');
+  const txs = (stats.transactions || []).slice(0, 6);
+  if (!txs.length) {
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No transactions yet.</p></div>';
+    return;
+  }
+  el.innerHTML = txs.map(tx => renderTxItem(tx)).join('');
+}
+
+function renderAllTransactions() {
+  const el = document.getElementById('all-tx-list');
+  const txs = stats.transactions || [];
+  if (!txs.length) {
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No transactions yet.</p></div>';
+    return;
+  }
+  el.innerHTML = txs.map(tx => renderTxItem(tx)).join('');
+}
+
+function renderTxItem(tx) {
+  const isPositive = tx.amount > 0;
+  const type = tx.type;
+  let iconClass = 'earn', iconName = 'coins';
+  if (type === 'withdrawal') { iconClass = 'withdraw'; iconName = 'paper-plane'; }
+  else if (type === 'welcome_bonus' || type === 'activation') { iconClass = 'bonus'; iconName = 'gift'; }
+
+  const date = new Date(tx.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+  const amount = isPositive ? `+KSh ${tx.amount.toFixed(2)}` : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
+
+  return `<div class="tx-item">
+    <div class="tx-icon ${iconClass}"><i class="fas fa-${iconName}"></i></div>
+    <div>
+      <div class="tx-desc">${tx.description}</div>
+      <div class="tx-date">${date}</div>
+    </div>
+    <div class="tx-amount ${isPositive ? 'positive' : 'negative'}">${amount}</div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════
+// SURVEY
+// ════════════════════════════════════════════
+async function loadQuestions(page) {
+  const grid = document.getElementById('questions-grid');
+  grid.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+
+  try {
+    const data = await apiFetch(`/survey/questions?page=${page}`);
+    totalPages = data.totalPages;
+    currentPage = data.page;
+    renderQuestions(data.questions);
+    updatePagination();
+    renderPageDots(data.totalPages);
+  } catch {
+    grid.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load questions.</p></div>';
+  }
+}
+
+function renderQuestions(questions) {
+  const grid = document.getElementById('questions-grid');
+  const completedIds = stats.completedIds || [];
+
+  grid.innerHTML = questions.map(q => {
+    const isAnswered = completedIds.includes(q.id);
+    return `<div class="question-card${isAnswered ? ' answered' : ''}" id="qcard-${q.id}" data-answered="${isAnswered}">
+      <div class="question-meta">
+        <span class="question-cat">${q.category}</span>
+        <span class="question-reward"><i class="fas fa-coins"></i> KSh ${q.reward}</span>
+      </div>
+      <div class="question-text">${q.question}</div>
+      <div class="options-grid">
+        ${q.options.map((opt, i) => `
+          <button class="option-btn" id="opt-${q.id}-${i}" onclick="submitAnswer(${q.id}, ${i}, ${q.reward})" ${isAnswered ? 'disabled' : ''}>${opt}</button>
+        `).join('')}
+      </div>
+      <div class="question-result" id="result-${q.id}">${isAnswered ? '<span style="color:var(--text3)"><i class="fas fa-check" style="margin-right:5px"></i>Already answered</span>' : ''}</div>
+    </div>`;
+  }).join('');
+
+}
+
+async function submitAnswer(questionId, answerIndex, reward) {
+  const card = document.getElementById('qcard-' + questionId);
+  if (card.dataset.answered === 'true') return;
+
+  // Disable all options
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById(`opt-${questionId}-${i}`);
+    if (btn) btn.disabled = true;
+  }
+
+  const selectedBtn = document.getElementById(`opt-${questionId}-${answerIndex}`);
+  if (selectedBtn) selectedBtn.style.opacity = '0.7';
+
+  try {
+    const data = await apiFetch('/survey/answer', 'POST', { questionId, answer: answerIndex });
+
+    if (data.alreadyAnswered) {
+      toast('You already answered this question.', 'info');
+      card.dataset.answered = 'true';
+      return;
+    }
+
+    // Update visuals
+    const correctBtn = document.getElementById(`opt-${questionId}-${data.correctIndex}`);
+    if (correctBtn) correctBtn.classList.add('reveal-correct');
+
+    const resultEl = document.getElementById('result-' + questionId);
+
+    if (data.correct) {
+      selectedBtn.classList.add('selected-correct');
+      card.classList.add('correct');
+      resultEl.className = 'question-result correct';
+      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! You earned KSh ${data.earned}`;
+      showEarnPop(data.earned);
+      toast(`Correct! +KSh ${data.earned} added to your balance.`, 'success');
+    } else {
+      selectedBtn.classList.add('selected-wrong');
+      card.classList.add('wrong');
+      resultEl.className = 'question-result wrong';
+      resultEl.innerHTML = `<i class="fas fa-times-circle"></i> Wrong. ${data.explanation || ''}`;
+      toast('Wrong answer. Keep trying!', 'error');
+    }
+
+    card.dataset.answered = 'true';
+
+    // Update balance
+    stats.balance = data.balance;
+    if (data.correct) {
+      stats.totalEarned = (stats.totalEarned || 0) + data.earned;
+      stats.completedQuestions = (stats.completedQuestions || 0) + 1;
+    } else {
+      stats.completedQuestions = (stats.completedQuestions || 0) + 1;
+    }
+
+    document.getElementById('sidebar-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
+    document.getElementById('mobile-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
+    document.getElementById('stat-balance').textContent = data.balance.toFixed(2);
+    document.getElementById('wd-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
+
+    // Reload stats silently
+    loadStats();
+
+  } catch (err) {
+    toast(err.message || 'Failed to submit answer.', 'error');
+    for (let i = 0; i < 4; i++) {
+      const btn = document.getElementById(`opt-${questionId}-${i}`);
+      if (btn) btn.disabled = false;
+    }
+  }
+}
+
+function changePage(dir) {
+  const newPage = currentPage + dir;
+  if (newPage < 0 || newPage >= totalPages) return;
+  currentPage = newPage;
+  loadQuestions(currentPage);
+  window.scrollTo(0, 0);
+}
+
+function updatePagination() {
+  document.getElementById('btn-prev').disabled = currentPage === 0;
+  document.getElementById('btn-next').disabled = currentPage >= totalPages - 1;
+  document.getElementById('page-info').textContent = `Page ${currentPage + 1} of ${totalPages}`;
+
+  if (currentPage >= totalPages - 1) {
+    document.getElementById('btn-next').innerHTML = '<i class="fas fa-flag-checkered"></i> Finish';
+  } else {
+    document.getElementById('btn-next').innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+  }
+}
+
+function renderPageDots(total) {
+  const container = document.getElementById('page-dots');
+  container.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'page-dot' + (i === currentPage ? ' current' : '');
+    dot.onclick = () => { currentPage = i; loadQuestions(i); };
+    container.appendChild(dot);
+  }
+}
+
+// ════════════════════════════════════════════
+// WITHDRAW
+// ════════════════════════════════════════════
+function updateWithdrawPanel() {
+  const bal = (stats.balance || 0).toFixed(2);
+  document.getElementById('wd-balance').textContent = `KSh ${bal}`;
+
+  const statusEl = document.getElementById('wd-status');
+  const lockedDiv = document.getElementById('wd-locked');
+  const unlockedDiv = document.getElementById('wd-unlocked');
+
+  if (stats.activated) {
+    statusEl.innerHTML = '<span class="chip"><i class="fas fa-check"></i> Activated</span>';
+    lockedDiv.classList.add('hidden');
+    unlockedDiv.classList.remove('hidden');
+
+    const slider = document.getElementById('wd-slider');
+    const maxWithdraw = Math.min(Math.floor(stats.balance / 10) * 10, 10000);
+    slider.max = Math.max(150, maxWithdraw);
+    updateSlider();
+  } else {
+    statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span>';
+    lockedDiv.classList.remove('hidden');
+    unlockedDiv.classList.add('hidden');
+  }
+}
+
+function updateSlider() {
+  const val = document.getElementById('wd-slider').value;
+  document.getElementById('wd-amount-display').textContent = val;
+}
+
+async function doActivate() {
+  const phone = document.getElementById('act-phone').value.trim();
+  const errEl = document.getElementById('act-error');
+  const succEl = document.getElementById('act-success');
+  const btn = document.getElementById('btn-activate');
+
+  clearAlert(errEl); clearAlert(succEl);
+  if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sending prompt...';
+
+  try {
+    const data = await apiFetch('/activation/initiate', 'POST', { phone });
+    activationRef = data.reference;
+    showAlert(succEl, 'M-Pesa STK prompt sent! Enter your PIN on your phone.');
+    toast('Check your phone for the M-Pesa prompt.', 'info');
+    startActivationPoll(activationRef);
+  } catch (err) {
+    showAlert(errEl, err.message || 'Failed to initiate payment.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
+  }
+}
+
+function startActivationPoll(ref) {
+  if (activationPollTimer) clearInterval(activationPollTimer);
+  let attempts = 0;
+  const btn = document.getElementById('btn-activate');
+
+  activationPollTimer = setInterval(async () => {
+    attempts++;
+    if (attempts > 30) {
+      clearInterval(activationPollTimer);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
+      return;
+    }
+
+    try {
+      const data = await apiFetch(`/activation/status/${ref}`);
+      if (data.status === 'success') {
+        clearInterval(activationPollTimer);
+        stats.activated = true;
+        updateWithdrawPanel();
+        updateDashboard();
+        toast('Account activated! You can now withdraw your earnings.', 'success');
+        btn.disabled = false;
+      } else if (data.status === 'failed') {
+        clearInterval(activationPollTimer);
+        showAlert(document.getElementById('act-error'), 'Payment failed. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
+      }
+    } catch {}
+  }, 3000);
+}
+
+async function doWithdraw() {
+  const phone = document.getElementById('wd-phone').value.trim();
+  const amount = document.getElementById('wd-slider').value;
+  const errEl = document.getElementById('wd-error');
+  const succEl = document.getElementById('wd-success');
+  const btn = document.getElementById('btn-withdraw');
+
+  clearAlert(errEl); clearAlert(succEl);
+  if (!phone) { showAlert(errEl, 'Enter your M-Pesa number.'); return; }
+  if (parseFloat(amount) > stats.balance) { showAlert(errEl, 'Insufficient balance.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Processing...';
+
+  try {
+    const data = await apiFetch('/survey/withdraw', 'POST', { amount: parseFloat(amount), mpesaPhone: phone });
+    stats.balance = data.balance;
+    updateDashboard();
+    updateWithdrawPanel();
+    showAlert(succEl, data.message);
+    toast('Withdrawal request submitted successfully!', 'success');
+    document.getElementById('wd-phone').value = '';
+    loadStats();
+  } catch (err) {
+    showAlert(errEl, err.message || 'Withdrawal failed.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Withdrawal';
+  }
+}
+
+// ════════════════════════════════════════════
+// SIDEBAR MOBILE
+// ════════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ════════════════════════════════════════════
+// UTILITIES
+// ════════════════════════════════════════════
+async function apiFetch(path, method = 'GET', body = null) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (token) opts.headers['Authorization'] = `Bearer ${token}`;
+  if (body) opts.body = JSON.stringify(body);
+
+  const res = await fetch(API + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Request failed');
+  return data;
+}
+
+function showAlert(el, msg) {
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearAlert(el) {
+  el.textContent = '';
+  el.classList.remove('show');
+}
+
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icons = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
+  el.innerHTML = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${msg}`;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }, 3500);
+}
+
+function showEarnPop(amount) {
+  const pop = document.getElementById('earn-pop');
+  document.getElementById('earn-amount').textContent = `+KSh ${amount}`;
+  pop.classList.add('show');
+  setTimeout(() => pop.classList.remove('show'), 1800);
+}
+</script>
+</body>
+</html>

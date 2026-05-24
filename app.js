@@ -1,8 +1,6 @@
 
-// ════════════════════════════════════════════
-// CONFIG — change this to your backend URL
-// ════════════════════════════════════════════
 const API = 'https://kenyasurveysback.onrender.com/api';
+
 
 // ════════════════════════════════════════════
 // STATE
@@ -183,7 +181,8 @@ function doLogout() {
 // ════════════════════════════════════════════
 async function loadStats() {
   try {
-    stats = await apiFetch('/survey/stats');
+    const data = await apiFetch('/survey/stats');
+    stats = { ...data, completedIds: data.completedIds || [] };
     updateDashboard();
     updateWithdrawPanel();
   } catch {}
@@ -287,11 +286,11 @@ async function loadQuestions(page) {
 
 function renderQuestions(questions) {
   const grid = document.getElementById('questions-grid');
-  const completedIds = userProfile?.completedQuestions || stats?.completedQuestions || [];
+  const completedIds = stats.completedIds || [];
 
   grid.innerHTML = questions.map(q => {
-    const isAnswered = (stats.completedQuestions > 0);
-    return `<div class="question-card" id="qcard-${q.id}" data-answered="false">
+    const isAnswered = completedIds.includes(q.id);
+    return `<div class="question-card${isAnswered ? ' answered' : ''}" id="qcard-${q.id}" data-answered="${isAnswered}">
       <div class="question-meta">
         <span class="question-cat">${q.category}</span>
         <span class="question-reward"><i class="fas fa-coins"></i> KSh ${q.reward}</span>
@@ -299,12 +298,13 @@ function renderQuestions(questions) {
       <div class="question-text">${q.question}</div>
       <div class="options-grid">
         ${q.options.map((opt, i) => `
-          <button class="option-btn" id="opt-${q.id}-${i}" onclick="submitAnswer(${q.id}, ${i}, ${q.reward})">${opt}</button>
+          <button class="option-btn" id="opt-${q.id}-${i}" onclick="submitAnswer(${q.id}, ${i}, ${q.reward})" ${isAnswered ? 'disabled' : ''}>${opt}</button>
         `).join('')}
       </div>
-      <div class="question-result" id="result-${q.id}"></div>
+      <div class="question-result" id="result-${q.id}">${isAnswered ? '<span style="color:var(--text3)"><i class="fas fa-check" style="margin-right:5px"></i>Already answered</span>' : ''}</div>
     </div>`;
   }).join('');
+
 }
 
 async function submitAnswer(questionId, answerIndex, reward) {

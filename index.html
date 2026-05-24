@@ -198,7 +198,7 @@
       <li class="nav-item">
         <button class="nav-link" id="nav-survey" onclick="showPanel('survey')">
           <i class="fas fa-clipboard-list"></i> Surveys
-          <span class="nav-badge" id="nav-survey-badge">40</span>
+          <span class="nav-badge" id="nav-survey-badge">120</span>
         </button>
       </li>
       <li class="nav-item">
@@ -235,6 +235,19 @@
       <div class="page-title" id="dash-greeting">Good day!</div>
       <div class="page-sub">Track your earnings and survey progress.</div>
 
+      <div class="start-survey-hero">
+        <div class="start-survey-left">
+          <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
+          <div>
+            <div class="start-survey-heading">Ready to Earn?</div>
+            <div class="start-survey-desc">Answer Kenyan trivia questions and earn KSh 30 – 100 per correct answer.</div>
+          </div>
+        </div>
+        <button class="btn-start-survey" onclick="showPanel('survey')">
+          <i class="fas fa-play-circle"></i> Start Surveys
+        </button>
+      </div>
+
       <div class="activation-banner" id="activation-banner">
         <div class="activation-text">
           <h3><i class="fas fa-unlock" style="margin-right:6px"></i>Activate to Withdraw</h3>
@@ -268,7 +281,7 @@
         <div class="stat-card">
           <div class="stat-icon purple"><i class="fas fa-tasks"></i></div>
           <div>
-            <div class="stat-value" id="stat-remaining">40</div>
+            <div class="stat-value" id="stat-remaining">120</div>
             <div class="stat-label">Remaining</div>
           </div>
         </div>
@@ -277,7 +290,7 @@
       <div class="progress-card">
         <div class="progress-header">
           <span class="progress-title"><i class="fas fa-chart-line" style="color:var(--green);margin-right:6px"></i>Survey Progress</span>
-          <span class="progress-count" id="progress-text">0 / 40 completed</span>
+          <span class="progress-count" id="progress-text">0 / 120 completed</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" id="progress-fill" style="width:0%"></div>
