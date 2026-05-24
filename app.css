@@ -1104,3 +1104,33 @@
     }
     .btn-start-survey { width: 100%; justify-content: center; }
   }
+
+  /* ─── ANSWERED QUESTION BADGE ─── */
+.question-answered-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,166,81,0.15);
+  border: 1px solid rgba(0,166,81,0.35);
+  color: var(--green-light);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.question-card.answered {
+  border-color: var(--green-dark);
+  opacity: 0.72;
+  position: relative;
+}
+
+.question-card.answered::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: rgba(0,166,81,0.03);
+  pointer-events: none;
+}

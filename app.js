@@ -293,18 +293,31 @@ function renderQuestions(questions) {
     return `<div class="question-card${isAnswered ? ' answered' : ''}" id="qcard-${q.id}" data-answered="${isAnswered}">
       <div class="question-meta">
         <span class="question-cat">${q.category}</span>
-        <span class="question-reward"><i class="fas fa-coins"></i> KSh ${q.reward}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${isAnswered
+            ? `<span class="question-answered-badge"><i class="fas fa-check-circle"></i> Answered</span>`
+            : `<span class="question-reward"><i class="fas fa-coins"></i> KSh ${q.reward}</span>`
+          }
+        </div>
       </div>
       <div class="question-text">${q.question}</div>
       <div class="options-grid">
         ${q.options.map((opt, i) => `
-          <button class="option-btn" id="opt-${q.id}-${i}" onclick="submitAnswer(${q.id}, ${i}, ${q.reward})" ${isAnswered ? 'disabled' : ''}>${opt}</button>
+          <button class="option-btn" id="opt-${q.id}-${i}"
+            onclick="submitAnswer(${q.id}, ${i}, ${q.reward})"
+            ${isAnswered ? 'disabled' : ''}>${opt}</button>
         `).join('')}
       </div>
-      <div class="question-result" id="result-${q.id}">${isAnswered ? '<span style="color:var(--text3)"><i class="fas fa-check" style="margin-right:5px"></i>Already answered</span>' : ''}</div>
+      <div class="question-result" id="result-${q.id}">
+        ${isAnswered
+          ? `<span style="color:var(--text3);font-size:0.82rem;display:flex;align-items:center;gap:6px;margin-top:8px;">
+               <i class="fas fa-lock" style="color:var(--green-dark)"></i> You have already answered this question
+             </span>`
+          : ''
+        }
+      </div>
     </div>`;
   }).join('');
-
 }
 
 async function submitAnswer(questionId, answerIndex, reward) {
