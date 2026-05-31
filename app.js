@@ -58,7 +58,9 @@ function showPanel(name) {
   if (navEl) navEl.classList.add('active');
   closeSidebar();
   if (name === 'survey') loadQuestions(currentPage);
-  if (name === 'withdraw') updateWithdrawPanel();
+   if (name === 'withdraw') {
+  loadStats();
+}
   if (name === 'transactions') renderAllTransactions();
 }
 
