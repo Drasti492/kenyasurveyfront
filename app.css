@@ -1134,3 +1134,4 @@
   background: rgba(0,166,81,0.03);
   pointer-events: none;
 }
+.hidden { display: none !important; }

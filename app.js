@@ -193,7 +193,9 @@ async function loadStats() {
     };
     updateDashboard();
     updateWithdrawPanel();
-  } catch {}
+  } catch (err) {
+    console.error('Failed to load stats:', err);
+  }
 }
 
 function updateDashboard() {
@@ -560,7 +562,9 @@ function startActivationPoll(ref) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
       }
-    } catch {}
+    } catch (err) {
+    console.error('loadStats failed:', err.message);
+  }
   }, 3000);
 }
 
@@ -613,7 +617,9 @@ function startForceVerifyPoll(ref, btn) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
       }
-    } catch {}
+    } catch (err) {
+    console.error('loadStats failed:', err.message);
+  }
   }, 3000);
 }
 
