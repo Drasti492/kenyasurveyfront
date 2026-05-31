@@ -36,9 +36,9 @@ async function loadUser() {
   }
 }
 
-function initApp() {
+async function initApp() {
   updateSidebarUser();
-  loadStats();
+  await loadStats();
   loadQuestions(currentPage);
 }
 
@@ -59,7 +59,11 @@ function showPanel(name) {
   closeSidebar();
   if (name === 'survey') loadQuestions(currentPage);
    if (name === 'withdraw') {
-  loadStats();
+  loadStats(); // intentionally not awaited — updateWithdrawPanel runs inside loadStats() when done
+  // Hide all stages while loading to prevent flash
+  document.getElementById('wd-locked').classList.add('hidden');
+  document.getElementById('wd-force').classList.add('hidden');
+  document.getElementById('wd-unlocked').classList.add('hidden');
 }
   if (name === 'transactions') renderAllTransactions();
 }
