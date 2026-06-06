@@ -239,7 +239,7 @@ function updateDashboard() {
   } else {
     // Not activated at all
     banner.classList.remove('hidden');
-    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account for Withdrawals';
+    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account to Unlock Rewards';
     if (bannerDesc) bannerDesc.textContent = 'To verify account ownership and maintain platform security, a one-time verification process is required before your first reward redemption.';
     if (bannerBtn) { bannerBtn.textContent = 'Verify Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
   }
