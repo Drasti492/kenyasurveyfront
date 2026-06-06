@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KenyaSurvey - Earn While You Learn</title>
+<title>KenyaSurvey - Research Surveys & Rewards</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="app.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,7 +25,7 @@
     <div class="logo-wrap">
       <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
       <div class="logo-title">Kenya<span>Survey</span></div>
-      <div class="logo-sub">Earn money answering Kenyan questions</div>
+      <div class="logo-sub">Share your opinions through research surveys</div>
     </div>
 
     <div class="auth-tabs">
@@ -37,7 +37,7 @@
     <div class="auth-form" id="form-register">
       <div class="bonus-badge">
         <i class="fas fa-gift"></i>
-        Get KSh 50 instantly after completing your profile
+        Complete your profile to access available survey opportunities
       </div>
       <div class="field-group">
         <label class="field-label">Phone Number</label>
@@ -64,7 +64,7 @@
       <button class="btn-primary" id="btn-register" onclick="doRegister()">
         <i class="fas fa-user-plus"></i> Create Account
       </button>
-      <p class="auth-note">By registering, you agree to participate in surveys and earn real money via M-Pesa.</p>
+      <p class="auth-note">By registering, you agree to participate in surveys and receive rewards according to platform terms.</p>
     </div>
 
     <!-- LOGIN FORM -->
@@ -97,7 +97,7 @@
     <div class="profile-header">
       <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
       <h2>Complete Your Profile</h2>
-      <p>Fill in your details to unlock the full survey dashboard and earn your welcome bonus.</p>
+      <p>Fill in your details to personalize your survey experience and access available survey opportunities.</p>
     </div>
 
     <div class="auth-form">
@@ -185,7 +185,7 @@
     <div class="balance-card">
       <div class="balance-label">Available Balance</div>
       <div class="balance-amount" id="sidebar-balance">KSh 0.00</div>
-      <div class="balance-earned" id="sidebar-earned">Total earned: KSh 0.00</div>
+      <div class="balance-earned" id="sidebar-earned">Total rewards: KSh 0.00</div>
     </div>
 
     <ul class="nav-list">
@@ -232,14 +232,14 @@
     <!-- ── DASHBOARD PANEL ── -->
     <div class="page-panel active" id="panel-dashboard">
       <div class="page-title" id="dash-greeting">Good day!</div>
-      <div class="page-sub">Track your earnings and survey progress.</div>
+      <div class="page-sub">Track your rewards and survey activity.</div>
 
       <div class="start-survey-hero">
         <div class="start-survey-left">
           <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
           <div>
-            <div class="start-survey-heading">Ready to Earn?</div>
-            <div class="start-survey-desc">Answer Kenyan trivia questions and earn KSh 30 – 100 per correct answer.</div>
+            <div class="start-survey-heading">Ready to Participate?</div>
+            <div class="start-survey-desc">Participate in survey activities and receive rewards based on eligible responses.</div>
           </div>
         </div>
         <button class="btn-start-survey" onclick="showPanel('survey')">
@@ -249,10 +249,10 @@
 
        <div class="activation-banner" id="activation-banner">
         <div class="activation-text">
-          <h3 id="activation-banner-title"><i class="fas fa-unlock" style="margin-right:6px"></i>Verify Account for Withdrawals</h3>
-          <p id="activation-banner-desc">Pay a one-time verification fee of KSh 150 to activate your account. Your earnings are safe.</p>
+          <h3 id="activation-banner-title"><i class="fas fa-user-check" style="margin-right:6px"></i>Complete Account Verification</h3>
+          <p id="activation-banner-desc">To verify account ownership and maintain platform security, a one-time verification process is required before your first reward redemption.</p>
         </div>
-        <button class="btn-activate" id="activation-banner-btn" onclick="showPanel('withdraw')">Verify Now</button>
+        <button class="btn-activate" id="activation-banner-btn" onclick="showPanel('withdraw')">Complete Verification</button>
       </div>
 
       <div class="stats-grid">
@@ -267,14 +267,14 @@
           <div class="stat-icon gold"><i class="fas fa-trophy"></i></div>
           <div>
             <div class="stat-value" id="stat-earned">0.00</div>
-            <div class="stat-label">Total Earned (KSh)</div>
+            <div class="stat-label">Total Rewards (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
           <div>
             <div class="stat-value" id="stat-completed">0</div>
-            <div class="stat-label">Questions Done</div>
+            <div class="stat-label">Completed Activities</div>
           </div>
         </div>
         <div class="stat-card">
@@ -300,7 +300,7 @@
       <div class="tx-list" id="dash-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
-          <p>No transactions yet. Start answering surveys to earn!</p>
+          <p>No activity recorded yet. Participate in surveys to begin earning rewards.</p>
         </div>
       </div>
     </div>
@@ -310,7 +310,7 @@
       <div class="survey-top">
         <div>
           <div class="page-title">Survey Questions</div>
-          <div class="page-sub">Answer correctly to earn KSh 30 – KSh 100 per question.</div>
+          <div class="page-sub">Participate in surveys and receive rewards based on eligible responses.</div>
         </div>
         <div id="page-dots" class="page-indicator"></div>
       </div>
@@ -332,12 +332,12 @@
 
     <!-- ── WITHDRAW PANEL ── -->
    <div class="page-panel withdraw-box" id="panel-withdraw">
-      <div class="page-title">Withdraw Earnings</div>
-      <div class="page-sub">Receive your earnings directly to M-Pesa.</div>
+      <div class="page-title">Reward Redemption</div>
+      <div class="page-sub">Redeem eligible rewards directly to your M-Pesa account.</div>
  
       <div class="info-card">
         <div class="info-row">
-          <span class="label">Current Balance</span>
+          <span class="label">Current Rewards</span>
           <span class="value green" id="wd-balance">KSh 0.00</span>
         </div>
         <div class="info-row">
@@ -347,7 +347,7 @@
         <div class="info-row">
           <span class="label">Account Status</span>
           <span class="value" id="wd-status">
-            <span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span>
+            <span class="chip gold"><i class="fas fa-user-check"></i> Verification Required</span>
           </span>
         </div>
         <div class="info-row" id="wd-phone-row" style="display:none">
@@ -356,11 +356,11 @@
         </div>
       </div>
  
-      <!-- Stage 1: Not activated — only this shows by default -->
+      <!-- Stage 1: Not activated -->
       <div id="wd-locked" class="hidden">
         <div class="locked-msg">
-          <i class="fas fa-exclamation-triangle"></i>
-          <p>Your account needs to be activated before you can withdraw. Pay a one-time fee of <strong>KSh 150</strong> via M-Pesa to unlock your account.</p>
+          <i class="fas fa-shield-alt"></i>
+          <p>To verify account ownership and maintain platform security, a one-time account verification process is required before your first reward redemption.</p>
         </div>
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -372,29 +372,28 @@
         <div class="alert error" id="act-error"></div>
         <div class="alert success" id="act-success"></div>
         <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;" id="btn-activate" onclick="doActivate()">
-          <i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150
+          <i class="fas fa-user-check"></i> Complete Verification
         </button>
-        <p class="auth-note" style="margin-top:12px">One-time payment. No recurring charges.</p>
+        <p class="auth-note" style="margin-top:12px">One-time verification process.</p>
       </div>
  
-      <!-- Stage 2: Activated — force verify. Hidden until activated=true -->
+      <!-- Stage 2 -->
       <div id="wd-force" class="hidden">
         <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
           <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
           <div>
             <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">Account Verified</div>
-            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your KSh 150 verification was successful. To withdraw your earnings, complete the one-time <strong style="color:var(--text)">Force Withdrawal activation of KSh 100</strong>. The M-Pesa prompt will be sent automatically to your registered number.</div>
+            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your verification has been completed successfully. You can now proceed with reward redemption according to platform requirements.</div>
           </div>
         </div>
         <div class="alert error" id="fv-error"></div>
         <div class="alert success" id="fv-success"></div>
         <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8);" id="btn-force-verify" onclick="doForceVerify()">
-          <i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100
+          <i class="fas fa-paper-plane" style="margin-right:8px"></i> Continue to Withdrawal
         </button>
-        <p class="auth-note" style="margin-top:12px">Prompt sent automatically to your registered number. No number entry needed.</p>
       </div>
  
-      <!-- Stage 3: Fully verified — withdrawal form. Hidden until forceVerified=true -->
+      <!-- Stage 3 -->
       <div id="wd-unlocked" class="hidden">
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -418,14 +417,15 @@
         </button>
       </div>
     </div>
+
     <!-- ── TRANSACTIONS PANEL ── -->
     <div class="page-panel" id="panel-transactions">
       <div class="page-title">Transaction History</div>
-      <div class="page-sub">All your earnings and withdrawals.</div>
+      <div class="page-sub">View your reward activity and redemption history.</div>
       <div class="tx-list" id="all-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
-          <p>No transactions yet.</p>
+          <p>No activity recorded yet. Participate in surveys to begin earning rewards.</p>
         </div>
       </div>
     </div>
