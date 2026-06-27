@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>KenyaSurvey – Research Participation Platform</title>
+<meta name="description" content="KenyaSurvey connects eligible Kenyan participants with academic, market research and public opinion studies. Join thousands of verified participants today." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="app.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,27 +20,510 @@
   <div class="earn-label">Compensation Added!</div>
 </div>
 
-<!-- ════════════════ AUTH SCREEN ════════════════ -->
-<div class="screen active" id="auth-screen">
+<!-- ════════════════════════════════════════
+     LANDING PAGE SCREEN
+════════════════════════════════════════ -->
+<div class="screen active" id="landing-screen">
+
+  <!-- ── TOP NAV ── -->
+  <nav class="lp-nav" id="lp-nav">
+    <div class="lp-nav-inner">
+      <a href="#" class="lp-logo" onclick="scrollToTop()">
+        <div class="lp-logo-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span>Kenya<strong>Survey</strong></span>
+      </a>
+      <ul class="lp-nav-links" id="lp-nav-links">
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#research">Research Areas</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="lp-nav-cta">
+        <button class="lp-btn-ghost" onclick="goToAuth('login')">Login</button>
+        <button class="lp-btn-primary" onclick="goToAuth('register')">Become a Participant</button>
+      </div>
+      <button class="lp-hamburger" id="lp-hamburger" onclick="toggleLpMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div class="lp-mobile-menu" id="lp-mobile-menu">
+      <a href="#about" onclick="closeLpMenu()">About Us</a>
+      <a href="#how-it-works" onclick="closeLpMenu()">How It Works</a>
+      <a href="#research" onclick="closeLpMenu()">Research Areas</a>
+      <a href="#faq" onclick="closeLpMenu()">FAQ</a>
+      <a href="#contact" onclick="closeLpMenu()">Contact</a>
+      <div class="lp-mobile-cta">
+        <button class="lp-btn-ghost" onclick="goToAuth('login')">Login</button>
+        <button class="lp-btn-primary" onclick="goToAuth('register')">Become a Participant</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="lp-hero">
+    <div class="lp-hero-inner">
+      <div class="lp-hero-badge">
+        <i class="fas fa-shield-alt"></i> Verified Research Platform · Kenya
+      </div>
+      <h1 class="lp-hero-title">
+        Research That Connects<br />
+        <span class="lp-hero-accent">Kenya's Voices</span>
+      </h1>
+      <p class="lp-hero-desc">
+        KenyaSurvey connects eligible Kenyan participants with academic, market research
+        and public opinion studies. Participants who qualify for research projects may
+        receive compensation based on project requirements.
+      </p>
+      <div class="lp-hero-actions">
+        <button class="lp-btn-primary lp-btn-lg" onclick="goToAuth('register')">
+          <i class="fas fa-user-plus"></i> Become a Participant
+        </button>
+        <a href="#how-it-works" class="lp-btn-outline-white lp-btn-lg">
+          <i class="fas fa-play-circle"></i> How It Works
+        </a>
+      </div>
+      <div class="lp-hero-trust">
+        <span><i class="fas fa-lock"></i> HTTPS Encrypted</span>
+        <span><i class="fas fa-user-shield"></i> Privacy Protected</span>
+        <span><i class="fas fa-check-circle"></i> Verified Participants</span>
+      </div>
+    </div>
+    <div class="lp-hero-visual">
+      <div class="lp-hero-card">
+        <div class="lp-card-row">
+          <div class="lp-card-icon green"><i class="fas fa-clipboard-list"></i></div>
+          <div>
+            <div class="lp-card-label">Active Research Projects</div>
+            <div class="lp-card-val">120+ Surveys</div>
+          </div>
+        </div>
+        <div class="lp-card-row">
+          <div class="lp-card-icon blue"><i class="fas fa-users"></i></div>
+          <div>
+            <div class="lp-card-label">Verified Participants</div>
+            <div class="lp-card-val">Across 47 Counties</div>
+          </div>
+        </div>
+        <div class="lp-card-row">
+          <div class="lp-card-icon gold"><i class="fas fa-chart-bar"></i></div>
+          <div>
+            <div class="lp-card-label">Research Categories</div>
+            <div class="lp-card-val">Consumer · Health · Education</div>
+          </div>
+        </div>
+        <div class="lp-card-divider"></div>
+        <div class="lp-card-disclaimer">
+          <i class="fas fa-info-circle"></i>
+          Compensation varies by project. Survey eligibility is not guaranteed.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHO USES KENYASURVEY ── -->
+  <section class="lp-section" id="research">
+    <div class="lp-section-inner">
+      <div class="lp-section-eyebrow"><i class="fas fa-chart-bar"></i> Research Areas</div>
+      <h2 class="lp-section-title">Research Projects May Include</h2>
+      <p class="lp-section-sub">
+        Organizations across multiple sectors rely on KenyaSurvey to reach verified
+        Kenyan participants for data collection and research studies.
+      </p>
+      <div class="lp-research-grid">
+        <div class="lp-research-card">
+          <div class="lp-research-icon"><i class="fas fa-shopping-bag"></i></div>
+          <h3>Consumer Products</h3>
+          <p>Product feedback, brand perception, and consumer behaviour studies for manufacturers and retailers.</p>
+        </div>
+        <div class="lp-research-card">
+          <div class="lp-research-icon"><i class="fas fa-heartbeat"></i></div>
+          <h3>Healthcare Research</h3>
+          <p>Public health surveys, patient experience studies, and health awareness campaigns.</p>
+        </div>
+        <div class="lp-research-card">
+          <div class="lp-research-icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>Education Studies</h3>
+          <p>Academic research, student experience surveys, and educational policy evaluation projects.</p>
+        </div>
+        <div class="lp-research-card">
+          <div class="lp-research-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h3>Technology Research</h3>
+          <p>App usability, digital adoption, and technology access studies for tech companies and NGOs.</p>
+        </div>
+        <div class="lp-research-card">
+          <div class="lp-research-icon"><i class="fas fa-comments"></i></div>
+          <h3>Public Opinion</h3>
+          <p>Community sentiment, policy awareness, and social research for government bodies and think-tanks.</p>
+        </div>
+        <div class="lp-research-card">
+          <div class="lp-research-icon"><i class="fas fa-hands-helping"></i></div>
+          <h3>NGO Research</h3>
+          <p>Impact assessments, field surveys, and beneficiary feedback for non-governmental organisations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section class="lp-section lp-section-alt" id="about">
+    <div class="lp-section-inner lp-about-grid">
+      <div class="lp-about-text">
+        <div class="lp-section-eyebrow"><i class="fas fa-info-circle"></i> About KenyaSurvey</div>
+        <h2 class="lp-section-title">We Connect Organisations with Verified Kenyan Participants</h2>
+        <p>
+          KenyaSurvey is a research participation platform that bridges the gap between
+          organisations seeking reliable data and Kenyan citizens willing to share their
+          perspectives. We handle participant recruitment, verification, and compensation
+          so researchers can focus on what matters — the data.
+        </p>
+        <p>
+          Demographic profiling is a core part of our platform. Research projects often
+          require specific participant profiles — particular counties, age groups, or
+          occupations. By collecting verified demographic data, we ensure your survey
+          reaches the right audience.
+        </p>
+        <div class="lp-about-stats">
+          <div class="lp-about-stat">
+            <div class="lp-about-stat-val">47</div>
+            <div class="lp-about-stat-label">Counties Covered</div>
+          </div>
+          <div class="lp-about-stat">
+            <div class="lp-about-stat-val">6+</div>
+            <div class="lp-about-stat-label">Research Categories</div>
+          </div>
+          <div class="lp-about-stat">
+            <div class="lp-about-stat-val">M-Pesa</div>
+            <div class="lp-about-stat-label">Compensation Method</div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-about-cards">
+        <div class="lp-about-card">
+          <i class="fas fa-bullseye"></i>
+          <h4>Our Mission</h4>
+          <p>To make research participation accessible to all Kenyans while ensuring organisations receive accurate, demographically representative data.</p>
+        </div>
+        <div class="lp-about-card">
+          <i class="fas fa-eye"></i>
+          <h4>Our Vision</h4>
+          <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
+        </div>
+        <div class="lp-about-card">
+          <i class="fas fa-balance-scale"></i>
+          <h4>Research Ethics</h4>
+          <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="lp-section" id="how-it-works">
+    <div class="lp-section-inner">
+      <div class="lp-section-eyebrow"><i class="fas fa-list-ol"></i> Process</div>
+      <h2 class="lp-section-title">How It Works</h2>
+      <p class="lp-section-sub">
+        Joining KenyaSurvey is straightforward. From registration to compensation,
+        here is what the process looks like.
+      </p>
+      <div class="lp-steps">
+        <div class="lp-step">
+          <div class="lp-step-num">1</div>
+          <div class="lp-step-body">
+            <h3>Create a Participant Account</h3>
+            <p>Register with your Kenyan mobile number and set a secure PIN. Your phone number is used for identity verification and M-Pesa compensation.</p>
+          </div>
+        </div>
+        <div class="lp-step-connector"></div>
+        <div class="lp-step">
+          <div class="lp-step-num">2</div>
+          <div class="lp-step-body">
+            <h3>Complete Your Participant Profile</h3>
+            <p>Provide your demographic information — county, occupation, and education level. This helps us match you with research projects relevant to your profile.</p>
+          </div>
+        </div>
+        <div class="lp-step-connector"></div>
+        <div class="lp-step">
+          <div class="lp-step-num">3</div>
+          <div class="lp-step-body">
+            <h3>Participate in Available Research Surveys</h3>
+            <p>Access surveys relevant to your demographic profile. Answer all questions honestly — research quality depends on accurate responses.</p>
+          </div>
+        </div>
+        <div class="lp-step-connector"></div>
+        <div class="lp-step">
+          <div class="lp-step-num">4</div>
+          <div class="lp-step-body">
+            <h3>Compensation is Calculated Per Eligible Response</h3>
+            <p>Compensation varies by project, survey length and eligibility. Not all surveys pay the same amount, and eligibility is determined by project requirements.</p>
+          </div>
+        </div>
+        <div class="lp-step-connector"></div>
+        <div class="lp-step">
+          <div class="lp-step-num">5</div>
+          <div class="lp-step-body">
+            <h3>Complete Account Verification</h3>
+            <p>Before your first payment, a one-time account verification process confirms your registered mobile number and activates M-Pesa payout services.</p>
+          </div>
+        </div>
+        <div class="lp-step-connector"></div>
+        <div class="lp-step">
+          <div class="lp-step-num">6</div>
+          <div class="lp-step-body">
+            <h3>Submit a Payment Request</h3>
+            <p>Once verified, submit payment requests to your registered M-Pesa number. Processing may take up to 24 hours.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compensation note -->
+      <div class="lp-compensation-note">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          <strong>About Compensation</strong>
+          <p>Compensation varies depending on the project, survey length and your eligibility. KenyaSurvey does not guarantee a specific income. Payments are processed via M-Pesa after account verification is complete.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRUST SECTION ── -->
+  <section class="lp-section lp-section-alt">
+    <div class="lp-section-inner">
+      <div class="lp-section-eyebrow"><i class="fas fa-shield-alt"></i> Trust &amp; Security</div>
+      <h2 class="lp-section-title">Built for Participant Trust</h2>
+      <p class="lp-section-sub">
+        Your data and privacy are central to how we operate.
+      </p>
+      <div class="lp-trust-grid">
+        <div class="lp-trust-item">
+          <i class="fas fa-lock"></i>
+          <h4>Secure Platform</h4>
+          <p>All connections use HTTPS encryption. PINs are hashed and never stored in plain text.</p>
+        </div>
+        <div class="lp-trust-item">
+          <i class="fas fa-user-shield"></i>
+          <h4>Privacy Protected</h4>
+          <p>Your personal data is never sold to third parties. Responses are shared in aggregate, anonymised form only.</p>
+        </div>
+        <div class="lp-trust-item">
+          <i class="fas fa-database"></i>
+          <h4>Data Confidentiality</h4>
+          <p>Individual survey responses are kept confidential. Research clients receive aggregated datasets, not personal records.</p>
+        </div>
+        <div class="lp-trust-item">
+          <i class="fas fa-id-badge"></i>
+          <h4>Verified Participants</h4>
+          <p>Mobile number verification ensures research data comes from real, registered Kenyan participants.</p>
+        </div>
+        <div class="lp-trust-item">
+          <i class="fas fa-balance-scale"></i>
+          <h4>Research Ethics</h4>
+          <p>We follow ethical data collection principles. Participants may request account and data deletion at any time.</p>
+        </div>
+        <div class="lp-trust-item">
+          <i class="fas fa-mobile-alt"></i>
+          <h4>M-Pesa Integration</h4>
+          <p>Compensation is paid directly to your Safaricom M-Pesa number. We do not handle or store your M-Pesa PIN.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="lp-section" id="faq">
+    <div class="lp-section-inner lp-faq-inner">
+      <div class="lp-section-eyebrow"><i class="fas fa-question-circle"></i> FAQ</div>
+      <h2 class="lp-section-title">Frequently Asked Questions</h2>
+      <div class="lp-faq-list">
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            Who can join KenyaSurvey?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Any Kenyan resident aged 18 or older with a valid Safaricom mobile number can register. You must provide accurate demographic information to be matched with relevant research projects.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            How do I qualify for a survey?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Survey eligibility is determined by the project's demographic requirements — such as county, occupation, age group or education level. Not all participants will qualify for all surveys. Your profile information determines which surveys you are matched to.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            Do all surveys pay?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Compensation is awarded per eligible response based on project requirements. Not all surveys offer the same compensation, and some surveys may only compensate participants who meet specific eligibility criteria. KenyaSurvey does not guarantee a specific income.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            How is compensation calculated?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Compensation amounts are set per individual research project. Factors that influence compensation include survey length, topic complexity, and your eligibility for the project. Compensation rates are displayed on each survey before you begin.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            How long do payments take?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Payment requests are processed to your M-Pesa number within 24 hours of submission. Before your first payment, you must complete a one-time account verification to confirm your registered mobile number and activate payout services.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            Can I be rejected from surveys?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Yes. Survey eligibility depends on whether your demographic profile matches the project's requirements. If you do not qualify, you will not be able to participate in that particular survey. More surveys across different categories are added regularly.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            Is my data kept private?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Yes. Your personal information is never sold to third parties. Survey responses are shared with research clients in aggregate, anonymised form only. You may request deletion of your account and data by contacting support.</p>
+          </div>
+        </div>
+        <div class="lp-faq-item">
+          <button class="lp-faq-q" onclick="toggleFaq(this)">
+            What is the account verification process?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="lp-faq-a">
+            <p>Before your first payment request, you must complete a one-time account verification. This confirms your registered M-Pesa number and activates payment services on your account. Verification involves a small M-Pesa transaction to confirm your mobile number ownership. This step is required once only.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA BANNER ── -->
+  <section class="lp-cta-section">
+    <div class="lp-cta-inner">
+      <h2>Ready to Participate in Research?</h2>
+      <p>Join verified Kenyan participants contributing to academic, market and public opinion research. Create your free account today.</p>
+      <button class="lp-btn-primary lp-btn-lg" onclick="goToAuth('register')">
+        <i class="fas fa-user-plus"></i> Create Free Account
+      </button>
+      <p class="lp-cta-note">By registering you confirm you are 18+ and a Kenyan resident. Survey eligibility is not guaranteed.</p>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section class="lp-section lp-section-alt" id="contact">
+    <div class="lp-section-inner lp-contact-grid">
+      <div>
+        <div class="lp-section-eyebrow"><i class="fas fa-envelope"></i> Contact</div>
+        <h2 class="lp-section-title">Get in Touch</h2>
+        <p>For support, account issues, or general enquiries, reach out to our team. We aim to respond within 24–48 hours.</p>
+        <div class="lp-contact-details">
+          <div class="lp-contact-row">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <div class="lp-contact-label">Support Email</div>
+              <div class="lp-contact-val">support@kenyasurvey.com</div>
+            </div>
+          </div>
+          <div class="lp-contact-row">
+            <i class="fas fa-globe"></i>
+            <div>
+              <div class="lp-contact-label">Platform</div>
+              <div class="lp-contact-val">premium-surveys-kenya.vercel.app</div>
+            </div>
+          </div>
+          <div class="lp-contact-row">
+            <i class="fas fa-clock"></i>
+            <div>
+              <div class="lp-contact-label">Response Time</div>
+              <div class="lp-contact-val">Within 24–48 business hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lp-contact-topics">
+        <h4><i class="fas fa-list-ul"></i> Common Support Topics</h4>
+        <ul>
+          <li><i class="fas fa-chevron-right"></i> Account verification issues</li>
+          <li><i class="fas fa-chevron-right"></i> Payment request status</li>
+          <li><i class="fas fa-chevron-right"></i> Survey eligibility questions</li>
+          <li><i class="fas fa-chevron-right"></i> Profile update requests</li>
+          <li><i class="fas fa-chevron-right"></i> Account deletion requests</li>
+          <li><i class="fas fa-chevron-right"></i> Data privacy enquiries</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="lp-footer">
+    <div class="lp-footer-inner">
+      <div class="lp-footer-brand">
+        <div class="lp-footer-logo">
+          <div class="lp-logo-icon small"><i class="fas fa-graduation-cap"></i></div>
+          <span>Kenya<strong>Survey</strong></span>
+        </div>
+        <p>A research participation platform connecting verified Kenyan participants with academic, market and public opinion studies.</p>
+      </div>
+      <div class="lp-footer-col">
+        <h5>Company</h5>
+        <a href="#about">About Us</a>
+        <a href="#research">Research Areas</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="lp-footer-col">
+        <h5>Legal</h5>
+        <a href="#" onclick="showModal('privacy')">Privacy Policy</a>
+        <a href="#" onclick="showModal('terms')">Terms of Service</a>
+      </div>
+      <div class="lp-footer-col">
+        <h5>Participant</h5>
+        <a href="#" onclick="goToAuth('register')">Create Account</a>
+        <a href="#" onclick="goToAuth('login')">Sign In</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="lp-footer-bottom">
+      <span>© 2025 KenyaSurvey. All rights reserved.</span>
+      <span>support@kenyasurvey.com</span>
+    </div>
+  </footer>
+
+</div><!-- /landing-screen -->
+
+
+<!-- ════════════════════════════════════════
+     AUTH SCREEN
+════════════════════════════════════════ -->
+<div class="screen" id="auth-screen">
   <div class="auth-box">
+
+    <!-- Back to home -->
+    <button class="auth-back-btn" onclick="goToLanding()">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </button>
+
     <div class="logo-wrap">
       <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
       <div class="logo-title">Kenya<span>Survey</span></div>
       <div class="logo-sub">Research Participation Platform</div>
-    </div>
-
-    <!-- HOW IT WORKS SECTION -->
-    <div class="how-it-works">
-      <div class="hiw-title"><i class="fas fa-info-circle"></i> How It Works</div>
-      <ol class="hiw-steps">
-        <li>Create a participant account</li>
-        <li>Complete your demographic profile</li>
-        <li>Participate in available research surveys</li>
-        <li>Compensation is calculated per eligible response</li>
-        <li>Complete account verification requirements</li>
-        <li>Submit payment requests to M-Pesa</li>
-      </ol>
-      <p class="hiw-note">Survey eligibility varies by project. Not all participants qualify for every survey opportunity. Compensation amounts vary depending on project requirements and completion status.</p>
     </div>
 
     <div class="auth-tabs">
@@ -49,9 +533,17 @@
 
     <!-- REGISTER FORM -->
     <div class="auth-form" id="form-register">
-      <div class="bonus-badge">
-        <i class="fas fa-clipboard-list"></i>
-        Complete your profile to access available research survey opportunities
+      <div class="auth-register-heading">
+        <h2>Become a KenyaSurvey Participant</h2>
+      </div>
+      <div class="auth-confirm-list">
+        <p>By registering you confirm:</p>
+        <ul>
+          <li><i class="fas fa-check"></i> You are at least 18 years old</li>
+          <li><i class="fas fa-check"></i> Information provided is accurate</li>
+          <li><i class="fas fa-check"></i> Survey eligibility is not guaranteed</li>
+          <li><i class="fas fa-check"></i> Compensation depends on project completion</li>
+        </ul>
       </div>
       <div class="field-group">
         <label class="field-label">Phone Number</label>
@@ -116,13 +608,16 @@
   </div>
 </div>
 
-<!-- ════════════════ PROFILE SCREEN ════════════════ -->
+
+<!-- ════════════════════════════════════════
+     PROFILE SCREEN
+════════════════════════════════════════ -->
 <div class="screen" id="profile-screen">
   <div class="profile-box">
     <div class="profile-header">
       <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
       <h2>Complete Your Profile</h2>
-      <p>Your demographic information helps match you to relevant research surveys. All data is handled in accordance with our Privacy Policy.</p>
+      <p>We use demographic information to match you with relevant research opportunities. All data is handled in accordance with our <a href="#" onclick="showModal('privacy')" style="color:var(--green-light)">Privacy Policy</a>.</p>
     </div>
 
     <div class="auth-form">
@@ -187,7 +682,10 @@
   </div>
 </div>
 
-<!-- ════════════════ MAIN APP ════════════════ -->
+
+<!-- ════════════════════════════════════════
+     MAIN APP SCREEN
+════════════════════════════════════════ -->
 <div class="screen" id="app-screen">
 
   <!-- Mobile Header -->
@@ -221,18 +719,18 @@
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-survey" onclick="showPanel('survey')">
-          <i class="fas fa-clipboard-list"></i> Surveys
+          <i class="fas fa-clipboard-list"></i> Research Surveys
           <span class="nav-badge" id="nav-survey-badge">120</span>
         </button>
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-withdraw" onclick="showPanel('withdraw')">
-          <i class="fas fa-wallet"></i> Payment Request
+          <i class="fas fa-paper-plane"></i> Participant Compensation
         </button>
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-transactions" onclick="showPanel('transactions')">
-          <i class="fas fa-history"></i> History
+          <i class="fas fa-history"></i> Compensation History
         </button>
       </li>
     </ul>
@@ -263,14 +761,14 @@
     <!-- ── DASHBOARD PANEL ── -->
     <div class="page-panel active" id="panel-dashboard">
       <div class="page-title" id="dash-greeting">Good day!</div>
-      <div class="page-sub">Track your compensation and research participation activity.</div>
+      <div class="page-sub">Track your research participation activity and compensation.</div>
 
       <div class="start-survey-hero">
         <div class="start-survey-left">
           <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
           <div>
             <div class="start-survey-heading">Ready to Participate?</div>
-            <div class="start-survey-desc">Participate in research surveys and receive compensation based on eligible responses. Eligibility varies by project.</div>
+            <div class="start-survey-desc">Access available research surveys and receive compensation based on eligible responses. Eligibility varies by project.</div>
           </div>
         </div>
         <button class="btn-start-survey" onclick="showPanel('survey')">
@@ -291,18 +789,18 @@
           <div class="stat-icon green"><i class="fas fa-coins"></i></div>
           <div>
             <div class="stat-value" id="stat-balance">0.00</div>
-            <div class="stat-label">Compensation (KSh)</div>
+            <div class="stat-label">Available Compensation (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon gold"><i class="fas fa-trophy"></i></div>
+          <div class="stat-icon gold"><i class="fas fa-chart-bar"></i></div>
           <div>
             <div class="stat-value" id="stat-earned">0.00</div>
             <div class="stat-label">Total Compensation (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-icon blue"><i class="fas fa-clipboard-check"></i></div>
           <div>
             <div class="stat-value" id="stat-completed">0</div>
             <div class="stat-label">Surveys Completed</div>
@@ -312,7 +810,7 @@
           <div class="stat-icon purple"><i class="fas fa-tasks"></i></div>
           <div>
             <div class="stat-value" id="stat-remaining">120</div>
-            <div class="stat-label">Remaining</div>
+            <div class="stat-label">Surveys Remaining</div>
           </div>
         </div>
       </div>
@@ -333,7 +831,7 @@
         <p>Compensation is subject to survey eligibility and project availability. KenyaSurvey does not guarantee a specific income level. Payment processing is subject to verification requirements.</p>
       </div>
 
-      <div class="section-title"><i class="fas fa-receipt"></i> Recent Transactions</div>
+      <div class="section-title"><i class="fas fa-receipt"></i> Recent Activity</div>
       <div class="tx-list" id="dash-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
@@ -347,9 +845,15 @@
       <div class="survey-top">
         <div>
           <div class="page-title">Research Surveys</div>
-          <div class="page-sub">Answer research questions and receive compensation for eligible responses.</div>
+          <div class="page-sub">Answer research questions honestly. Research depends on accurate participant responses.</div>
         </div>
         <div id="page-dots" class="page-indicator"></div>
+      </div>
+
+      <!-- Survey integrity notice -->
+      <div class="survey-integrity-note">
+        <i class="fas fa-clipboard-check"></i>
+        <p>Please answer all questions honestly. Research quality depends on accurate responses. False or inconsistent responses may affect your eligibility for future surveys.</p>
       </div>
 
       <div class="questions-grid" id="questions-grid">
@@ -367,10 +871,10 @@
       </div>
     </div>
 
-    <!-- ── PAYMENT REQUEST PANEL ── -->
+    <!-- ── PARTICIPANT COMPENSATION PANEL ── -->
     <div class="page-panel withdraw-box" id="panel-withdraw">
-      <div class="page-title">Payment Request</div>
-      <div class="page-sub">Request payment of your accumulated compensation to M-Pesa.</div>
+      <div class="page-title">Participant Compensation</div>
+      <div class="page-sub">Request payment of your accumulated compensation to M-Pesa. Compensation becomes available after survey validation.</div>
 
       <div class="info-card">
         <div class="info-row">
@@ -398,8 +902,8 @@
         <div class="locked-msg">
           <i class="fas fa-shield-alt"></i>
           <div>
-            <strong style="color:var(--gold);display:block;margin-bottom:6px;">Account Verification</strong>
-            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required. This confirms your identity before your first payment request is processed.</p>
+            <strong style="color:var(--gold);display:block;margin-bottom:6px;">Payout Channel Verification</strong>
+            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required. This confirms your identity before your first payment request is processed. Payments may require identity verification.</p>
           </div>
         </div>
         <div class="field-group" style="margin-bottom:16px">
@@ -466,10 +970,10 @@
       </div>
     </div>
 
-    <!-- ── TRANSACTIONS PANEL ── -->
+    <!-- ── COMPENSATION HISTORY PANEL ── -->
     <div class="page-panel" id="panel-transactions">
       <div class="page-title">Compensation History</div>
-      <div class="page-sub">View your compensation activity and payment request history.</div>
+      <div class="page-sub">View your research participation compensation and payment request history.</div>
       <div class="tx-list" id="all-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
@@ -479,9 +983,12 @@
     </div>
 
   </main>
-</div>
+</div><!-- /app-screen -->
 
-<!-- ════════════════ MODALS ════════════════ -->
+
+<!-- ════════════════════════════════════════
+     MODALS
+════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
 
 <!-- About Modal -->
@@ -492,9 +999,13 @@
   </div>
   <div class="modal-body">
     <p>KenyaSurvey is a research participation platform that connects eligible participants with survey and data collection projects across Kenya.</p>
-    <p>We help organizations and researchers gather opinions, demographic data, and survey responses from verified Kenyan participants. Participants who complete eligible surveys may receive compensation via M-Pesa.</p>
+    <p>We help organisations and researchers gather opinions, demographic data, and survey responses from verified Kenyan participants. Participants who complete eligible surveys may receive compensation via M-Pesa.</p>
     <h4>Our Mission</h4>
     <p>To make research participation accessible to all Kenyans while providing fair compensation for participants' time and input.</p>
+    <h4>Our Vision</h4>
+    <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
+    <h4>Research Ethics</h4>
+    <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients. Participants may request deletion of their data at any time.</p>
     <h4>Compensation Disclaimer</h4>
     <p>Compensation is not guaranteed. Eligibility depends on project availability, participant demographics, survey completion, and compliance with platform requirements. KenyaSurvey does not promise a specific income level.</p>
     <div class="modal-contact-info">
@@ -512,17 +1023,21 @@
   </div>
   <div class="modal-body">
     <h4>1. Eligibility</h4>
-    <p>You must be 18 years or older and a resident of Kenya to participate. Account registration requires a valid Kenyan mobile number.</p>
+    <p>You must be 18 years or older and a resident of Kenya to participate. Account registration requires a valid Kenyan mobile number. Multiple accounts are not permitted.</p>
     <h4>2. Survey Participation</h4>
     <p>Survey availability and eligibility are determined by individual project requirements. Not all registered participants will qualify for all surveys. Compensation is only awarded for surveys you are eligible for and complete according to project requirements.</p>
     <h4>3. Compensation</h4>
     <p>Compensation amounts are set per survey project. KenyaSurvey does not guarantee any specific income. Compensation is paid via M-Pesa to your registered number after verification requirements are met.</p>
     <h4>4. Account Verification</h4>
     <p>Before payment services are activated, participants must complete an account verification process. This confirms your registered mobile number and activates the M-Pesa payout channel. Verification fees are non-refundable.</p>
-    <h4>5. Prohibited Conduct</h4>
+    <h4>5. Survey Disqualification</h4>
+    <p>Participants who do not meet a survey's eligibility requirements may be disqualified from that survey. Disqualified participants do not receive compensation for that survey.</p>
+    <h4>6. Prohibited Conduct</h4>
     <p>Creating multiple accounts, submitting false information, or attempting to manipulate survey responses may result in account suspension and forfeiture of compensation.</p>
-    <h4>6. Termination</h4>
-    <p>KenyaSurvey reserves the right to suspend or terminate accounts that violate these terms.</p>
+    <h4>7. Account Suspension</h4>
+    <p>KenyaSurvey reserves the right to suspend or terminate accounts that violate these terms. Suspended accounts forfeit any unpaid compensation balances.</p>
+    <h4>8. Fraud</h4>
+    <p>Any attempt to fraudulently obtain compensation, including submitting false demographic information or manipulating survey responses, will result in immediate account termination and may be reported to relevant authorities.</p>
   </div>
 </div>
 
@@ -537,12 +1052,16 @@
     <p>We collect your phone number, PIN (hashed), demographic information (name, county, occupation, education), and survey responses.</p>
     <h4>How We Use Your Information</h4>
     <p>Your information is used to match you to relevant surveys, process compensation payments, and maintain platform security. Demographic data may be shared in aggregate, anonymised form with research clients.</p>
+    <h4>Data Principles</h4>
+    <p>We follow privacy-first principles in data collection and storage. We collect only the data necessary for platform operation. We do not sell your personal data to third parties. We retain data only as long as your account is active or as required by law.</p>
     <h4>M-Pesa Payments</h4>
-    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN. Payment processing is handled by Safaricom's M-Pesa API.</p>
+    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN. Payment processing is handled via Safaricom's M-Pesa API.</p>
     <h4>Data Security</h4>
-    <p>All passwords and PINs are hashed. Connections are encrypted via HTTPS. We do not sell your personal data to third parties.</p>
+    <p>All passwords and PINs are hashed using secure algorithms. Connections are encrypted via HTTPS. We do not sell your personal data to third parties.</p>
+    <h4>Data Retention</h4>
+    <p>Your data is retained for as long as your account remains active. Inactive accounts may be archived after 12 months of inactivity.</p>
     <h4>Your Rights</h4>
-    <p>You may request deletion of your account and personal data by contacting support@kenyasurvey.com.</p>
+    <p>You may request access to, correction of, or deletion of your account and personal data by contacting support@kenyasurvey.com. We will process requests within 14 business days.</p>
   </div>
 </div>
 
@@ -553,20 +1072,24 @@
     <button onclick="closeModal()"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
-    <p>For support, questions, or concerns about your account, please reach out to us.</p>
+    <p>For support, questions, or concerns about your account, please reach out to our team.</p>
     <div class="modal-contact-info">
-      <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@kenyasurvey.com</p>
-      <p><i class="fas fa-clock"></i> <strong>Response Time:</strong> Within 24–48 hours</p>
+      <p><i class="fas fa-envelope"></i> <strong>Support Email:</strong> support@kenyasurvey.com</p>
+      <p><i class="fas fa-clock"></i> <strong>Business Hours:</strong> Monday – Friday, 8am – 6pm EAT</p>
+      <p><i class="fas fa-reply"></i> <strong>Response Time:</strong> Within 24–48 hours</p>
     </div>
     <div class="contact-topics">
-      <p><strong>Common topics:</strong></p>
+      <p><strong>Common support topics:</strong></p>
       <ul>
         <li>Account verification issues</li>
         <li>Payment request status</li>
         <li>Survey eligibility questions</li>
+        <li>Profile update requests</li>
         <li>Account deletion requests</li>
+        <li>Data privacy enquiries</li>
       </ul>
     </div>
+    <p style="font-size:0.8rem;color:var(--text3);margin-top:8px">For fastest support, include your registered phone number (without PIN) in your message.</p>
   </div>
 </div>
 
