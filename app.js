@@ -88,7 +88,8 @@ function showPanel(name) {
 // ════════════════════════════════════════════
 function goToAuth(tab) {
   showScreen('auth-screen');
-  switchTab(tab || 'register');
+  switchTab(tab === 'login' ? 'login' : 'register');
+  window.scrollTo(0, 0);
 }
 
 function goToLanding() {
@@ -142,10 +143,11 @@ function closeModal() {
 // AUTH
 // ════════════════════════════════════════════
 function switchTab(tab) {
-  document.getElementById('form-register').classList.toggle('hidden', tab !== 'register');
-  document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
-  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
-  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  const isLogin = tab === 'login';
+  document.getElementById('form-register').classList.toggle('hidden', isLogin);
+  document.getElementById('form-login').classList.toggle('hidden', !isLogin);
+  document.getElementById('tab-register').classList.toggle('active', !isLogin);
+  document.getElementById('tab-login').classList.toggle('active', isLogin);
 }
 
 async function doRegister() {
@@ -290,7 +292,7 @@ function updateDashboard() {
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('dash-greeting').textContent = `${greet}, ${userProfile?.name || 'there'}!`;
 
-  const banner     = document.getElementById('activation-banner');
+  const banner      = document.getElementById('activation-banner');
   const bannerTitle = document.getElementById('activation-banner-title');
   const bannerDesc  = document.getElementById('activation-banner-desc');
   const bannerBtn   = document.getElementById('activation-banner-btn');
@@ -379,7 +381,7 @@ async function loadQuestions(page) {
 }
 
 function renderQuestions(questions) {
-  const grid        = document.getElementById('questions-grid');
+  const grid         = document.getElementById('questions-grid');
   const completedIds = stats.completedIds || [];
 
   grid.innerHTML = questions.map(q => {
@@ -459,7 +461,7 @@ async function submitAnswer(questionId, answerIndex, reward) {
     stats.balance = data.balance;
 
     if (data.correct) {
-      stats.totalEarned       = (stats.totalEarned || 0) + data.earned;
+      stats.totalEarned        = (stats.totalEarned || 0) + data.earned;
       stats.completedQuestions = (stats.completedQuestions || 0) + 1;
     } else {
       stats.completedQuestions = (stats.completedQuestions || 0) + 1;
@@ -556,7 +558,7 @@ function updateWithdrawPanel() {
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
     }
     unlockedDiv.classList.remove('hidden');
-    const slider     = document.getElementById('wd-slider');
+    const slider      = document.getElementById('wd-slider');
     const maxWithdraw = Math.min(Math.floor(stats.balance / 10) * 10, 10000);
     slider.max = Math.max(150, maxWithdraw);
     updateSlider();
@@ -570,10 +572,10 @@ function updateSlider() {
 
 // ── Stage 1: Account Verification ──
 async function doActivate() {
-  const phone = document.getElementById('act-phone').value.trim();
-  const errEl = document.getElementById('act-error');
+  const phone  = document.getElementById('act-phone').value.trim();
+  const errEl  = document.getElementById('act-error');
   const succEl = document.getElementById('act-success');
-  const btn   = document.getElementById('btn-activate');
+  const btn    = document.getElementById('btn-activate');
 
   clearAlert(errEl); clearAlert(succEl);
   if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
@@ -628,9 +630,9 @@ function startActivationPoll(ref) {
 
 // ── Stage 2: Payout Channel Verification ──
 async function doForceVerify() {
-  const errEl = document.getElementById('fv-error');
+  const errEl  = document.getElementById('fv-error');
   const succEl = document.getElementById('fv-success');
-  const btn   = document.getElementById('btn-force-verify');
+  const btn    = document.getElementById('btn-force-verify');
 
   clearAlert(errEl); clearAlert(succEl);
   btn.disabled = true;
