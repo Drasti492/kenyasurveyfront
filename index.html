@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,16 +29,16 @@
   <!-- ── TOP NAV ── -->
   <nav class="lp-nav" id="lp-nav">
     <div class="lp-nav-inner">
-      <a href="#" class="lp-logo" onclick="scrollToTop()">
+      <button class="lp-logo" onclick="scrollToTop()">
         <div class="lp-logo-icon"><i class="fas fa-graduation-cap"></i></div>
         <span>Kenya<strong>Survey</strong></span>
-      </a>
+      </button>
       <ul class="lp-nav-links" id="lp-nav-links">
-        <li><a href="#about">About Us</a></li>
-        <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#research">Research Areas</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about" onclick="closeLpMenu()">About Us</a></li>
+        <li><a href="#how-it-works" onclick="closeLpMenu()">How It Works</a></li>
+        <li><a href="#research" onclick="closeLpMenu()">Research Areas</a></li>
+        <li><a href="#faq" onclick="closeLpMenu()">FAQ</a></li>
+        <li><a href="#contact" onclick="closeLpMenu()">Contact</a></li>
       </ul>
       <div class="lp-nav-cta">
         <button class="lp-btn-ghost" onclick="goToAuth('login')">Login</button>
@@ -122,13 +123,13 @@
     </div>
   </section>
 
-  <!-- ── WHO USES KENYASURVEY ── -->
+  <!-- ── RESEARCH AREAS ── -->
   <section class="lp-section" id="research">
     <div class="lp-section-inner">
       <div class="lp-section-eyebrow"><i class="fas fa-chart-bar"></i> Research Areas</div>
       <h2 class="lp-section-title">Research Projects May Include</h2>
       <p class="lp-section-sub">
-        Organizations across multiple sectors rely on KenyaSurvey to reach verified
+        Organisations across multiple sectors rely on KenyaSurvey to reach verified
         Kenyan participants for data collection and research studies.
       </p>
       <div class="lp-research-grid">
@@ -202,18 +203,24 @@
       <div class="lp-about-cards">
         <div class="lp-about-card">
           <i class="fas fa-bullseye"></i>
-          <h4>Our Mission</h4>
-          <p>To make research participation accessible to all Kenyans while ensuring organisations receive accurate, demographically representative data.</p>
+          <div>
+            <h4>Our Mission</h4>
+            <p>To make research participation accessible to all Kenyans while ensuring organisations receive accurate, demographically representative data.</p>
+          </div>
         </div>
         <div class="lp-about-card">
           <i class="fas fa-eye"></i>
-          <h4>Our Vision</h4>
-          <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
+          <div>
+            <h4>Our Vision</h4>
+            <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
+          </div>
         </div>
         <div class="lp-about-card">
           <i class="fas fa-balance-scale"></i>
-          <h4>Research Ethics</h4>
-          <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients.</p>
+          <div>
+            <h4>Research Ethics</h4>
+            <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -278,7 +285,6 @@
         </div>
       </div>
 
-      <!-- Compensation note -->
       <div class="lp-compensation-note">
         <i class="fas fa-info-circle"></i>
         <div>
@@ -294,9 +300,7 @@
     <div class="lp-section-inner">
       <div class="lp-section-eyebrow"><i class="fas fa-shield-alt"></i> Trust &amp; Security</div>
       <h2 class="lp-section-title">Built for Participant Trust</h2>
-      <p class="lp-section-sub">
-        Your data and privacy are central to how we operate.
-      </p>
+      <p class="lp-section-sub">Your data and privacy are central to how we operate.</p>
       <div class="lp-trust-grid">
         <div class="lp-trust-item">
           <i class="fas fa-lock"></i>
@@ -340,8 +344,7 @@
       <div class="lp-faq-list">
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Who can join KenyaSurvey?
-            <i class="fas fa-chevron-down"></i>
+            Who can join KenyaSurvey? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Any Kenyan resident aged 18 or older with a valid Safaricom mobile number can register. You must provide accurate demographic information to be matched with relevant research projects.</p>
@@ -349,8 +352,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            How do I qualify for a survey?
-            <i class="fas fa-chevron-down"></i>
+            How do I qualify for a survey? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Survey eligibility is determined by the project's demographic requirements — such as county, occupation, age group or education level. Not all participants will qualify for all surveys. Your profile information determines which surveys you are matched to.</p>
@@ -358,8 +360,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Do all surveys pay?
-            <i class="fas fa-chevron-down"></i>
+            Do all surveys pay? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Compensation is awarded per eligible response based on project requirements. Not all surveys offer the same compensation, and some surveys may only compensate participants who meet specific eligibility criteria. KenyaSurvey does not guarantee a specific income.</p>
@@ -367,8 +368,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            How is compensation calculated?
-            <i class="fas fa-chevron-down"></i>
+            How is compensation calculated? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Compensation amounts are set per individual research project. Factors that influence compensation include survey length, topic complexity, and your eligibility for the project. Compensation rates are displayed on each survey before you begin.</p>
@@ -376,8 +376,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            How long do payments take?
-            <i class="fas fa-chevron-down"></i>
+            How long do payments take? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Payment requests are processed to your M-Pesa number within 24 hours of submission. Before your first payment, you must complete a one-time account verification to confirm your registered mobile number and activate payout services.</p>
@@ -385,8 +384,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Can I be rejected from surveys?
-            <i class="fas fa-chevron-down"></i>
+            Can I be rejected from surveys? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Yes. Survey eligibility depends on whether your demographic profile matches the project's requirements. If you do not qualify, you will not be able to participate in that particular survey. More surveys across different categories are added regularly.</p>
@@ -394,8 +392,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Is my data kept private?
-            <i class="fas fa-chevron-down"></i>
+            Is my data kept private? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Yes. Your personal information is never sold to third parties. Survey responses are shared with research clients in aggregate, anonymised form only. You may request deletion of your account and data by contacting support.</p>
@@ -403,8 +400,7 @@
         </div>
         <div class="lp-faq-item">
           <button class="lp-faq-q" onclick="toggleFaq(this)">
-            What is the account verification process?
-            <i class="fas fa-chevron-down"></i>
+            What is the account verification process? <i class="fas fa-chevron-down"></i>
           </button>
           <div class="lp-faq-a">
             <p>Before your first payment request, you must complete a one-time account verification. This confirms your registered M-Pesa number and activates payment services on your account. Verification involves a small M-Pesa transaction to confirm your mobile number ownership. This step is required once only.</p>
@@ -490,13 +486,13 @@
       </div>
       <div class="lp-footer-col">
         <h5>Legal</h5>
-        <a href="#" onclick="showModal('privacy')">Privacy Policy</a>
-        <a href="#" onclick="showModal('terms')">Terms of Service</a>
+        <button type="button" onclick="showModal('privacy')">Privacy Policy</button>
+        <button type="button" onclick="showModal('terms')">Terms of Service</button>
       </div>
       <div class="lp-footer-col">
         <h5>Participant</h5>
-        <a href="#" onclick="goToAuth('register')">Create Account</a>
-        <a href="#" onclick="goToAuth('login')">Sign In</a>
+        <button type="button" onclick="goToAuth('register')">Create Account</button>
+        <button type="button" onclick="goToAuth('login')">Sign In</button>
         <a href="#faq">FAQ</a>
       </div>
     </div>
@@ -515,7 +511,6 @@
 <div class="screen" id="auth-screen">
   <div class="auth-box">
 
-    <!-- Back to home -->
     <button class="auth-back-btn" onclick="goToLanding()">
       <i class="fas fa-arrow-left"></i> Back to Home
     </button>
@@ -570,7 +565,11 @@
       <button class="btn-primary" id="btn-register" onclick="doRegister()">
         <i class="fas fa-user-plus"></i> Create Account
       </button>
-      <p class="auth-note">By registering, you agree to our <a href="#" onclick="showModal('terms')">Terms of Service</a> and <a href="#" onclick="showModal('privacy')">Privacy Policy</a>. Participation in surveys does not guarantee compensation.</p>
+      <p class="auth-note">By registering, you agree to our
+        <button type="button" class="auth-link-btn" onclick="showModal('terms')">Terms of Service</button> and
+        <button type="button" class="auth-link-btn" onclick="showModal('privacy')">Privacy Policy</button>.
+        Participation in surveys does not guarantee compensation.
+      </p>
     </div>
 
     <!-- LOGIN FORM -->
@@ -595,15 +594,14 @@
       </button>
     </div>
 
-    <!-- AUTH FOOTER LINKS -->
     <div class="auth-footer-links">
-      <a href="#" onclick="showModal('about')">About Us</a>
+      <button type="button" class="auth-link-btn" onclick="showModal('about')">About Us</button>
       <span>·</span>
-      <a href="#" onclick="showModal('terms')">Terms of Service</a>
+      <button type="button" class="auth-link-btn" onclick="showModal('terms')">Terms of Service</button>
       <span>·</span>
-      <a href="#" onclick="showModal('privacy')">Privacy Policy</a>
+      <button type="button" class="auth-link-btn" onclick="showModal('privacy')">Privacy Policy</button>
       <span>·</span>
-      <a href="#" onclick="showModal('contact')">Contact</a>
+      <button type="button" class="auth-link-btn" onclick="showModal('contact')">Contact</button>
     </div>
   </div>
 </div>
@@ -617,9 +615,10 @@
     <div class="profile-header">
       <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
       <h2>Complete Your Profile</h2>
-      <p>We use demographic information to match you with relevant research opportunities. All data is handled in accordance with our <a href="#" onclick="showModal('privacy')" style="color:var(--green-light)">Privacy Policy</a>.</p>
+      <p>We use demographic information to match you with relevant research opportunities. All data is handled in accordance with our
+        <button type="button" class="auth-link-btn" onclick="showModal('privacy')">Privacy Policy</button>.
+      </p>
     </div>
-
     <div class="auth-form">
       <div class="field-group">
         <label class="field-label">Full Name</label>
@@ -737,10 +736,10 @@
 
     <div class="sidebar-footer">
       <div class="sidebar-legal">
-        <a href="#" onclick="showModal('about')">About</a>
-        <a href="#" onclick="showModal('terms')">Terms</a>
-        <a href="#" onclick="showModal('privacy')">Privacy</a>
-        <a href="#" onclick="showModal('contact')">Contact</a>
+        <button type="button" onclick="showModal('about')">About</button>
+        <button type="button" onclick="showModal('terms')">Terms</button>
+        <button type="button" onclick="showModal('privacy')">Privacy</button>
+        <button type="button" onclick="showModal('contact')">Contact</button>
       </div>
       <div class="user-info">
         <div class="user-avatar"><i class="fas fa-user"></i></div>
@@ -825,7 +824,6 @@
         </div>
       </div>
 
-      <!-- COMPENSATION DISCLOSURE -->
       <div class="disclosure-card">
         <i class="fas fa-info-circle"></i>
         <p>Compensation is subject to survey eligibility and project availability. KenyaSurvey does not guarantee a specific income level. Payment processing is subject to verification requirements.</p>
@@ -850,7 +848,6 @@
         <div id="page-dots" class="page-indicator"></div>
       </div>
 
-      <!-- Survey integrity notice -->
       <div class="survey-integrity-note">
         <i class="fas fa-clipboard-check"></i>
         <p>Please answer all questions honestly. Research quality depends on accurate responses. False or inconsistent responses may affect your eligibility for future surveys.</p>
@@ -903,7 +900,7 @@
           <i class="fas fa-shield-alt"></i>
           <div>
             <strong style="color:var(--gold);display:block;margin-bottom:6px;">Payout Channel Verification</strong>
-            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required. This confirms your identity before your first payment request is processed. Payments may require identity verification.</p>
+            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required. This confirms your identity before your first payment request is processed.</p>
           </div>
         </div>
         <div class="field-group" style="margin-bottom:16px">
@@ -1007,7 +1004,7 @@
     <h4>Research Ethics</h4>
     <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients. Participants may request deletion of their data at any time.</p>
     <h4>Compensation Disclaimer</h4>
-    <p>Compensation is not guaranteed. Eligibility depends on project availability, participant demographics, survey completion, and compliance with platform requirements. KenyaSurvey does not promise a specific income level.</p>
+    <p>Compensation is not guaranteed. Eligibility depends on project availability, participant demographics, survey completion, and compliance with platform requirements.</p>
     <div class="modal-contact-info">
       <p><i class="fas fa-envelope"></i> support@kenyasurvey.com</p>
       <p><i class="fas fa-globe"></i> premium-surveys-kenya.vercel.app</p>
@@ -1037,7 +1034,7 @@
     <h4>7. Account Suspension</h4>
     <p>KenyaSurvey reserves the right to suspend or terminate accounts that violate these terms. Suspended accounts forfeit any unpaid compensation balances.</p>
     <h4>8. Fraud</h4>
-    <p>Any attempt to fraudulently obtain compensation, including submitting false demographic information or manipulating survey responses, will result in immediate account termination and may be reported to relevant authorities.</p>
+    <p>Any attempt to fraudulently obtain compensation will result in immediate account termination and may be reported to relevant authorities.</p>
   </div>
 </div>
 
@@ -1053,13 +1050,11 @@
     <h4>How We Use Your Information</h4>
     <p>Your information is used to match you to relevant surveys, process compensation payments, and maintain platform security. Demographic data may be shared in aggregate, anonymised form with research clients.</p>
     <h4>Data Principles</h4>
-    <p>We follow privacy-first principles in data collection and storage. We collect only the data necessary for platform operation. We do not sell your personal data to third parties. We retain data only as long as your account is active or as required by law.</p>
+    <p>We follow privacy-first principles. We collect only the data necessary for platform operation and do not sell your personal data to third parties.</p>
     <h4>M-Pesa Payments</h4>
-    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN. Payment processing is handled via Safaricom's M-Pesa API.</p>
+    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN.</p>
     <h4>Data Security</h4>
-    <p>All passwords and PINs are hashed using secure algorithms. Connections are encrypted via HTTPS. We do not sell your personal data to third parties.</p>
-    <h4>Data Retention</h4>
-    <p>Your data is retained for as long as your account remains active. Inactive accounts may be archived after 12 months of inactivity.</p>
+    <p>All passwords and PINs are hashed using secure algorithms. Connections are encrypted via HTTPS.</p>
     <h4>Your Rights</h4>
     <p>You may request access to, correction of, or deletion of your account and personal data by contacting support@kenyasurvey.com. We will process requests within 14 business days.</p>
   </div>
@@ -1089,7 +1084,6 @@
         <li>Data privacy enquiries</li>
       </ul>
     </div>
-    <p style="font-size:0.8rem;color:var(--text3);margin-top:8px">For fastest support, include your registered phone number (without PIN) in your message.</p>
   </div>
 </div>
 
