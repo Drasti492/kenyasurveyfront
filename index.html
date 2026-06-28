@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,90 +6,107 @@
 <title>KenyaSurvey – Research Participation Platform</title>
 <meta name="description" content="KenyaSurvey connects eligible Kenyan participants with academic, market research and public opinion studies. Join thousands of verified participants today." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
-<!-- TOAST CONTAINER -->
+<!-- TOAST -->
 <div class="toast-container" id="toast-container"></div>
 <div class="earn-pop" id="earn-pop">
   <div class="earn-amount" id="earn-amount">+KSh 0</div>
   <div class="earn-label">Compensation Added!</div>
 </div>
 
-<!-- ════════════════════════════════════════
-     LANDING PAGE SCREEN
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     LANDING SCREEN
+══════════════════════════════════════════ -->
 <div class="screen active" id="landing-screen">
 
-  <!-- ── TOP NAV ── -->
+  <!-- NAV -->
   <nav class="lp-nav" id="lp-nav">
     <div class="lp-nav-inner">
-      <button class="lp-logo" onclick="scrollToTop()">
+      <div class="lp-logo" onclick="lpScrollTop()">
         <div class="lp-logo-icon"><i class="fas fa-graduation-cap"></i></div>
-        <span>Kenya<strong>Survey</strong></span>
-      </button>
-      <ul class="lp-nav-links" id="lp-nav-links">
-        <li><a href="#about" onclick="closeLpMenu()">About Us</a></li>
-        <li><a href="#how-it-works" onclick="closeLpMenu()">How It Works</a></li>
-        <li><a href="#research" onclick="closeLpMenu()">Research Areas</a></li>
-        <li><a href="#faq" onclick="closeLpMenu()">FAQ</a></li>
-        <li><a href="#contact" onclick="closeLpMenu()">Contact</a></li>
-      </ul>
-      <div class="lp-nav-cta">
-        <button class="lp-btn-ghost" onclick="goToAuth('login')">Login</button>
-        <button class="lp-btn-primary" onclick="goToAuth('register')">Become a Participant</button>
+        <span class="lp-logo-text">Kenya<strong>Survey</strong></span>
       </div>
+
+      <ul class="lp-nav-links">
+        <li><a href="#lp-about" onclick="lpScrollTo('lp-about')">About Us</a></li>
+        <li><a href="#lp-how" onclick="lpScrollTo('lp-how')">How It Works</a></li>
+        <li><a href="#lp-research" onclick="lpScrollTo('lp-research')">Research Areas</a></li>
+        <li><a href="#lp-faq" onclick="lpScrollTo('lp-faq')">FAQ</a></li>
+        <li><a href="#lp-contact" onclick="lpScrollTo('lp-contact')">Contact</a></li>
+      </ul>
+
+      <div class="lp-nav-cta">
+        <button class="lp-btn-ghost" onclick="goToAuth('login')">Sign In</button>
+        <button class="lp-btn-solid" onclick="goToAuth('register')">Become a Participant</button>
+      </div>
+
       <button class="lp-hamburger" id="lp-hamburger" onclick="toggleLpMenu()">
         <i class="fas fa-bars"></i>
       </button>
     </div>
+
     <!-- Mobile menu -->
     <div class="lp-mobile-menu" id="lp-mobile-menu">
-      <a href="#about" onclick="closeLpMenu()">About Us</a>
-      <a href="#how-it-works" onclick="closeLpMenu()">How It Works</a>
-      <a href="#research" onclick="closeLpMenu()">Research Areas</a>
-      <a href="#faq" onclick="closeLpMenu()">FAQ</a>
-      <a href="#contact" onclick="closeLpMenu()">Contact</a>
+      <a href="#lp-about"    onclick="lpScrollTo('lp-about');closeLpMenu()">About Us</a>
+      <a href="#lp-how"      onclick="lpScrollTo('lp-how');closeLpMenu()">How It Works</a>
+      <a href="#lp-research" onclick="lpScrollTo('lp-research');closeLpMenu()">Research Areas</a>
+      <a href="#lp-faq"      onclick="lpScrollTo('lp-faq');closeLpMenu()">FAQ</a>
+      <a href="#lp-contact"  onclick="lpScrollTo('lp-contact');closeLpMenu()">Contact</a>
       <div class="lp-mobile-cta">
-        <button class="lp-btn-ghost" onclick="goToAuth('login')">Login</button>
-        <button class="lp-btn-primary" onclick="goToAuth('register')">Become a Participant</button>
+        <button class="lp-btn-ghost"  onclick="goToAuth('login');closeLpMenu()">Sign In</button>
+        <button class="lp-btn-solid"  onclick="goToAuth('register');closeLpMenu()">Become a Participant</button>
       </div>
     </div>
   </nav>
 
-  <!-- ── HERO ── -->
+  <!-- HERO -->
   <section class="lp-hero">
     <div class="lp-hero-inner">
       <div class="lp-hero-badge">
         <i class="fas fa-shield-alt"></i> Verified Research Platform · Kenya
       </div>
+
       <h1 class="lp-hero-title">
-        Research That Connects<br />
+        Research That Connects<br>
         <span class="lp-hero-accent">Kenya's Voices</span>
       </h1>
+
       <p class="lp-hero-desc">
         KenyaSurvey connects eligible Kenyan participants with academic, market research
-        and public opinion studies. Participants who qualify for research projects may
-        receive compensation based on project requirements.
+        and public opinion studies. Participants who qualify may receive compensation
+        based on project requirements.
       </p>
-      <div class="lp-hero-actions">
-        <button class="lp-btn-primary lp-btn-lg" onclick="goToAuth('register')">
+
+      <!-- Shown to logged-out visitors -->
+      <div class="lp-hero-actions" id="lp-hero-cta-guest">
+        <button class="lp-btn-solid lp-btn-lg" onclick="goToAuth('register')">
           <i class="fas fa-user-plus"></i> Become a Participant
         </button>
-        <a href="#how-it-works" class="lp-btn-outline-white lp-btn-lg">
+        <button class="lp-btn-outline lp-btn-lg" onclick="lpScrollTo('lp-how')">
           <i class="fas fa-play-circle"></i> How It Works
-        </a>
+        </button>
       </div>
+
+      <!-- Shown to logged-in users — hidden by default -->
+      <div class="lp-hero-actions hidden" id="lp-hero-cta-user">
+        <button class="lp-btn-solid lp-btn-lg" onclick="showScreen('app-screen')">
+          <i class="fas fa-clipboard-list"></i> Start Participating
+        </button>
+      </div>
+
       <div class="lp-hero-trust">
         <span><i class="fas fa-lock"></i> HTTPS Encrypted</span>
         <span><i class="fas fa-user-shield"></i> Privacy Protected</span>
         <span><i class="fas fa-check-circle"></i> Verified Participants</span>
       </div>
     </div>
+
     <div class="lp-hero-visual">
       <div class="lp-hero-card">
         <div class="lp-card-row">
@@ -123,43 +139,43 @@
     </div>
   </section>
 
-  <!-- ── RESEARCH AREAS ── -->
-  <section class="lp-section" id="research">
+  <!-- RESEARCH AREAS -->
+  <section class="lp-section" id="lp-research">
     <div class="lp-section-inner">
-      <div class="lp-section-eyebrow"><i class="fas fa-chart-bar"></i> Research Areas</div>
+      <div class="lp-eyebrow"><i class="fas fa-chart-bar"></i> Research Areas</div>
       <h2 class="lp-section-title">Research Projects May Include</h2>
       <p class="lp-section-sub">
         Organisations across multiple sectors rely on KenyaSurvey to reach verified
         Kenyan participants for data collection and research studies.
       </p>
-      <div class="lp-research-grid">
-        <div class="lp-research-card">
-          <div class="lp-research-icon"><i class="fas fa-shopping-bag"></i></div>
+      <div class="lp-grid-3">
+        <div class="lp-card-block">
+          <div class="lp-block-icon"><i class="fas fa-shopping-bag"></i></div>
           <h3>Consumer Products</h3>
           <p>Product feedback, brand perception, and consumer behaviour studies for manufacturers and retailers.</p>
         </div>
-        <div class="lp-research-card">
-          <div class="lp-research-icon"><i class="fas fa-heartbeat"></i></div>
+        <div class="lp-card-block">
+          <div class="lp-block-icon"><i class="fas fa-heartbeat"></i></div>
           <h3>Healthcare Research</h3>
           <p>Public health surveys, patient experience studies, and health awareness campaigns.</p>
         </div>
-        <div class="lp-research-card">
-          <div class="lp-research-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="lp-card-block">
+          <div class="lp-block-icon"><i class="fas fa-graduation-cap"></i></div>
           <h3>Education Studies</h3>
           <p>Academic research, student experience surveys, and educational policy evaluation projects.</p>
         </div>
-        <div class="lp-research-card">
-          <div class="lp-research-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div class="lp-card-block">
+          <div class="lp-block-icon"><i class="fas fa-mobile-alt"></i></div>
           <h3>Technology Research</h3>
           <p>App usability, digital adoption, and technology access studies for tech companies and NGOs.</p>
         </div>
-        <div class="lp-research-card">
-          <div class="lp-research-icon"><i class="fas fa-comments"></i></div>
+        <div class="lp-card-block">
+          <div class="lp-block-icon"><i class="fas fa-comments"></i></div>
           <h3>Public Opinion</h3>
           <p>Community sentiment, policy awareness, and social research for government bodies and think-tanks.</p>
         </div>
-        <div class="lp-research-card">
-          <div class="lp-research-icon"><i class="fas fa-hands-helping"></i></div>
+        <div class="lp-card-block">
+          <div class="lp-block-icon"><i class="fas fa-hands-helping"></i></div>
           <h3>NGO Research</h3>
           <p>Impact assessments, field surveys, and beneficiary feedback for non-governmental organisations.</p>
         </div>
@@ -167,36 +183,26 @@
     </div>
   </section>
 
-  <!-- ── ABOUT ── -->
-  <section class="lp-section lp-section-alt" id="about">
+  <!-- ABOUT -->
+  <section class="lp-section lp-section-alt" id="lp-about">
     <div class="lp-section-inner lp-about-grid">
       <div class="lp-about-text">
-        <div class="lp-section-eyebrow"><i class="fas fa-info-circle"></i> About KenyaSurvey</div>
+        <div class="lp-eyebrow"><i class="fas fa-info-circle"></i> About KenyaSurvey</div>
         <h2 class="lp-section-title">We Connect Organisations with Verified Kenyan Participants</h2>
-        <p>
-          KenyaSurvey is a research participation platform that bridges the gap between
-          organisations seeking reliable data and Kenyan citizens willing to share their
-          perspectives. We handle participant recruitment, verification, and compensation
-          so researchers can focus on what matters — the data.
-        </p>
-        <p>
-          Demographic profiling is a core part of our platform. Research projects often
-          require specific participant profiles — particular counties, age groups, or
-          occupations. By collecting verified demographic data, we ensure your survey
-          reaches the right audience.
-        </p>
+        <p>KenyaSurvey is a research participation platform that bridges the gap between organisations seeking reliable data and Kenyan citizens willing to share their perspectives. We handle participant recruitment, verification, and compensation so researchers can focus on what matters — the data.</p>
+        <p>Demographic profiling is a core part of our platform. Research projects often require specific participant profiles — particular counties, age groups, or occupations. By collecting verified demographic data, we ensure your survey reaches the right audience.</p>
         <div class="lp-about-stats">
           <div class="lp-about-stat">
-            <div class="lp-about-stat-val">47</div>
-            <div class="lp-about-stat-label">Counties Covered</div>
+            <div class="lp-stat-val">47</div>
+            <div class="lp-stat-label">Counties Covered</div>
           </div>
           <div class="lp-about-stat">
-            <div class="lp-about-stat-val">6+</div>
-            <div class="lp-about-stat-label">Research Categories</div>
+            <div class="lp-stat-val">6+</div>
+            <div class="lp-stat-label">Research Categories</div>
           </div>
           <div class="lp-about-stat">
-            <div class="lp-about-stat-val">M-Pesa</div>
-            <div class="lp-about-stat-label">Compensation Method</div>
+            <div class="lp-stat-val">M-Pesa</div>
+            <div class="lp-stat-label">Compensation Method</div>
           </div>
         </div>
       </div>
@@ -226,15 +232,12 @@
     </div>
   </section>
 
-  <!-- ── HOW IT WORKS ── -->
-  <section class="lp-section" id="how-it-works">
+  <!-- HOW IT WORKS -->
+  <section class="lp-section" id="lp-how">
     <div class="lp-section-inner">
-      <div class="lp-section-eyebrow"><i class="fas fa-list-ol"></i> Process</div>
+      <div class="lp-eyebrow"><i class="fas fa-list-ol"></i> Process</div>
       <h2 class="lp-section-title">How It Works</h2>
-      <p class="lp-section-sub">
-        Joining KenyaSurvey is straightforward. From registration to compensation,
-        here is what the process looks like.
-      </p>
+      <p class="lp-section-sub">Joining KenyaSurvey is straightforward. From registration to compensation, here is what the process looks like.</p>
       <div class="lp-steps">
         <div class="lp-step">
           <div class="lp-step-num">1</div>
@@ -243,7 +246,7 @@
             <p>Register with your Kenyan mobile number and set a secure PIN. Your phone number is used for identity verification and M-Pesa compensation.</p>
           </div>
         </div>
-        <div class="lp-step-connector"></div>
+        <div class="lp-step-line"></div>
         <div class="lp-step">
           <div class="lp-step-num">2</div>
           <div class="lp-step-body">
@@ -251,7 +254,7 @@
             <p>Provide your demographic information — county, occupation, and education level. This helps us match you with research projects relevant to your profile.</p>
           </div>
         </div>
-        <div class="lp-step-connector"></div>
+        <div class="lp-step-line"></div>
         <div class="lp-step">
           <div class="lp-step-num">3</div>
           <div class="lp-step-body">
@@ -259,7 +262,7 @@
             <p>Access surveys relevant to your demographic profile. Answer all questions honestly — research quality depends on accurate responses.</p>
           </div>
         </div>
-        <div class="lp-step-connector"></div>
+        <div class="lp-step-line"></div>
         <div class="lp-step">
           <div class="lp-step-num">4</div>
           <div class="lp-step-body">
@@ -267,7 +270,7 @@
             <p>Compensation varies by project, survey length and eligibility. Not all surveys pay the same amount, and eligibility is determined by project requirements.</p>
           </div>
         </div>
-        <div class="lp-step-connector"></div>
+        <div class="lp-step-line"></div>
         <div class="lp-step">
           <div class="lp-step-num">5</div>
           <div class="lp-step-body">
@@ -275,7 +278,7 @@
             <p>Before your first payment, a one-time account verification process confirms your registered mobile number and activates M-Pesa payout services.</p>
           </div>
         </div>
-        <div class="lp-step-connector"></div>
+        <div class="lp-step-line"></div>
         <div class="lp-step">
           <div class="lp-step-num">6</div>
           <div class="lp-step-body">
@@ -284,8 +287,7 @@
           </div>
         </div>
       </div>
-
-      <div class="lp-compensation-note">
+      <div class="lp-info-note">
         <i class="fas fa-info-circle"></i>
         <div>
           <strong>About Compensation</strong>
@@ -295,13 +297,13 @@
     </div>
   </section>
 
-  <!-- ── TRUST SECTION ── -->
+  <!-- TRUST -->
   <section class="lp-section lp-section-alt">
     <div class="lp-section-inner">
-      <div class="lp-section-eyebrow"><i class="fas fa-shield-alt"></i> Trust &amp; Security</div>
+      <div class="lp-eyebrow"><i class="fas fa-shield-alt"></i> Trust &amp; Security</div>
       <h2 class="lp-section-title">Built for Participant Trust</h2>
       <p class="lp-section-sub">Your data and privacy are central to how we operate.</p>
-      <div class="lp-trust-grid">
+      <div class="lp-grid-3">
         <div class="lp-trust-item">
           <i class="fas fa-lock"></i>
           <h4>Secure Platform</h4>
@@ -336,10 +338,10 @@
     </div>
   </section>
 
-  <!-- ── FAQ ── -->
-  <section class="lp-section" id="faq">
-    <div class="lp-section-inner lp-faq-inner">
-      <div class="lp-section-eyebrow"><i class="fas fa-question-circle"></i> FAQ</div>
+  <!-- FAQ -->
+  <section class="lp-section" id="lp-faq">
+    <div class="lp-section-inner lp-faq-wrap">
+      <div class="lp-eyebrow"><i class="fas fa-question-circle"></i> FAQ</div>
       <h2 class="lp-section-title">Frequently Asked Questions</h2>
       <div class="lp-faq-list">
         <div class="lp-faq-item">
@@ -410,42 +412,42 @@
     </div>
   </section>
 
-  <!-- ── CTA BANNER ── -->
+  <!-- CTA BANNER -->
   <section class="lp-cta-section">
     <div class="lp-cta-inner">
       <h2>Ready to Participate in Research?</h2>
       <p>Join verified Kenyan participants contributing to academic, market and public opinion research. Create your free account today.</p>
-      <button class="lp-btn-primary lp-btn-lg" onclick="goToAuth('register')">
+      <button class="lp-btn-solid lp-btn-lg" onclick="goToAuth('register')">
         <i class="fas fa-user-plus"></i> Create Free Account
       </button>
       <p class="lp-cta-note">By registering you confirm you are 18+ and a Kenyan resident. Survey eligibility is not guaranteed.</p>
     </div>
   </section>
 
-  <!-- ── CONTACT ── -->
-  <section class="lp-section lp-section-alt" id="contact">
+  <!-- CONTACT -->
+  <section class="lp-section lp-section-alt" id="lp-contact">
     <div class="lp-section-inner lp-contact-grid">
       <div>
-        <div class="lp-section-eyebrow"><i class="fas fa-envelope"></i> Contact</div>
+        <div class="lp-eyebrow"><i class="fas fa-envelope"></i> Contact</div>
         <h2 class="lp-section-title">Get in Touch</h2>
-        <p>For support, account issues, or general enquiries, reach out to our team. We aim to respond within 24–48 hours.</p>
+        <p class="lp-contact-intro">For support, account issues, or general enquiries, reach out to our team. We aim to respond within 24–48 hours.</p>
         <div class="lp-contact-details">
           <div class="lp-contact-row">
-            <i class="fas fa-envelope"></i>
+            <span class="lp-contact-icon"><i class="fas fa-envelope"></i></span>
             <div>
               <div class="lp-contact-label">Support Email</div>
               <div class="lp-contact-val">support@kenyasurvey.com</div>
             </div>
           </div>
           <div class="lp-contact-row">
-            <i class="fas fa-globe"></i>
+            <span class="lp-contact-icon"><i class="fas fa-globe"></i></span>
             <div>
               <div class="lp-contact-label">Platform</div>
               <div class="lp-contact-val">premium-surveys-kenya.vercel.app</div>
             </div>
           </div>
           <div class="lp-contact-row">
-            <i class="fas fa-clock"></i>
+            <span class="lp-contact-icon"><i class="fas fa-clock"></i></span>
             <div>
               <div class="lp-contact-label">Response Time</div>
               <div class="lp-contact-val">Within 24–48 business hours</div>
@@ -467,7 +469,7 @@
     </div>
   </section>
 
-  <!-- ── FOOTER ── -->
+  <!-- FOOTER -->
   <footer class="lp-footer">
     <div class="lp-footer-inner">
       <div class="lp-footer-brand">
@@ -479,25 +481,25 @@
       </div>
       <div class="lp-footer-col">
         <h5>Company</h5>
-        <a href="#about">About Us</a>
-        <a href="#research">Research Areas</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#contact">Contact</a>
+        <a href="#lp-about"    onclick="lpScrollTo('lp-about')">About Us</a>
+        <a href="#lp-research" onclick="lpScrollTo('lp-research')">Research Areas</a>
+        <a href="#lp-how"      onclick="lpScrollTo('lp-how')">How It Works</a>
+        <a href="#lp-contact"  onclick="lpScrollTo('lp-contact')">Contact</a>
       </div>
       <div class="lp-footer-col">
         <h5>Legal</h5>
-        <button type="button" onclick="showModal('privacy')">Privacy Policy</button>
-        <button type="button" onclick="showModal('terms')">Terms of Service</button>
+        <a href="#" onclick="showModal('privacy');return false;">Privacy Policy</a>
+        <a href="#" onclick="showModal('terms');return false;">Terms of Service</a>
       </div>
       <div class="lp-footer-col">
         <h5>Participant</h5>
-        <button type="button" onclick="goToAuth('register')">Create Account</button>
-        <button type="button" onclick="goToAuth('login')">Sign In</button>
-        <a href="#faq">FAQ</a>
+        <a href="#" onclick="goToAuth('register');return false;">Create Account</a>
+        <a href="#" onclick="goToAuth('login');return false;">Sign In</a>
+        <a href="#lp-faq" onclick="lpScrollTo('lp-faq')">FAQ</a>
       </div>
     </div>
     <div class="lp-footer-bottom">
-      <span>© 2025 KenyaSurvey. All rights reserved.</span>
+      <span>&copy; 2025 KenyaSurvey. All rights reserved.</span>
       <span>support@kenyasurvey.com</span>
     </div>
   </footer>
@@ -505,199 +507,198 @@
 </div><!-- /landing-screen -->
 
 
-<!-- ════════════════════════════════════════
+<!-- ══════════════════════════════════════════
      AUTH SCREEN
-════════════════════════════════════════ -->
+══════════════════════════════════════════ -->
 <div class="screen" id="auth-screen">
-  <div class="auth-box">
-
-    <button class="auth-back-btn" onclick="goToLanding()">
-      <i class="fas fa-arrow-left"></i> Back to Home
-    </button>
-
-    <div class="logo-wrap">
-      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
-      <div class="logo-title">Kenya<span>Survey</span></div>
-      <div class="logo-sub">Research Participation Platform</div>
-    </div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">Create Account</button>
-      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign In</button>
-    </div>
-
-    <!-- REGISTER FORM -->
-    <div class="auth-form" id="form-register">
-      <div class="auth-register-heading">
-        <h2>Become a KenyaSurvey Participant</h2>
-      </div>
-      <div class="auth-confirm-list">
-        <p>By registering you confirm:</p>
-        <ul>
-          <li><i class="fas fa-check"></i> You are at least 18 years old</li>
-          <li><i class="fas fa-check"></i> Information provided is accurate</li>
-          <li><i class="fas fa-check"></i> Survey eligibility is not guaranteed</li>
-          <li><i class="fas fa-check"></i> Compensation depends on project completion</li>
-        </ul>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Phone Number</label>
-        <div class="field-wrap">
-          <i class="fas fa-phone"></i>
-          <input class="field-input" type="tel" id="reg-phone" placeholder="07XX XXX XXX" maxlength="12" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Create 4-Digit PIN</label>
-        <div class="field-wrap">
-          <i class="fas fa-lock"></i>
-          <input class="field-input" type="password" id="reg-pin" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Confirm PIN</label>
-        <div class="field-wrap">
-          <i class="fas fa-lock"></i>
-          <input class="field-input" type="password" id="reg-pin2" placeholder="Repeat your PIN" maxlength="4" inputmode="numeric" />
-        </div>
-      </div>
-      <div class="alert error" id="reg-error"></div>
-      <button class="btn-primary" id="btn-register" onclick="doRegister()">
-        <i class="fas fa-user-plus"></i> Create Account
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <button class="auth-back-btn" onclick="goToLanding()">
+        <i class="fas fa-arrow-left"></i> Back to Home
       </button>
-      <p class="auth-note">By registering, you agree to our
-        <button type="button" class="auth-link-btn" onclick="showModal('terms')">Terms of Service</button> and
-        <button type="button" class="auth-link-btn" onclick="showModal('privacy')">Privacy Policy</button>.
-        Participation in surveys does not guarantee compensation.
-      </p>
-    </div>
 
-    <!-- LOGIN FORM -->
-    <div class="auth-form hidden" id="form-login">
-      <div class="field-group">
-        <label class="field-label">Phone Number</label>
-        <div class="field-wrap">
-          <i class="fas fa-phone"></i>
-          <input class="field-input" type="tel" id="login-phone" placeholder="07XX XXX XXX" maxlength="12" />
-        </div>
+      <div class="logo-wrap">
+        <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="logo-title">Kenya<span>Survey</span></div>
+        <div class="logo-sub">Research Participation Platform</div>
       </div>
-      <div class="field-group">
-        <label class="field-label">Your 4-Digit PIN</label>
-        <div class="field-wrap">
-          <i class="fas fa-lock"></i>
-          <input class="field-input" type="password" id="login-pin" placeholder="Enter PIN" maxlength="4" inputmode="numeric" />
-        </div>
-      </div>
-      <div class="alert error" id="login-error"></div>
-      <button class="btn-primary" id="btn-login" onclick="doLogin()">
-        <i class="fas fa-sign-in-alt"></i> Sign In
-      </button>
-    </div>
 
-    <div class="auth-footer-links">
-      <button type="button" class="auth-link-btn" onclick="showModal('about')">About Us</button>
-      <span>·</span>
-      <button type="button" class="auth-link-btn" onclick="showModal('terms')">Terms of Service</button>
-      <span>·</span>
-      <button type="button" class="auth-link-btn" onclick="showModal('privacy')">Privacy Policy</button>
-      <span>·</span>
-      <button type="button" class="auth-link-btn" onclick="showModal('contact')">Contact</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">Create Account</button>
+        <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-form" id="form-register">
+        <div class="auth-heading">
+          <h2>Become a KenyaSurvey Participant</h2>
+        </div>
+        <div class="auth-confirm-list">
+          <p class="confirm-label">By registering you confirm:</p>
+          <ul>
+            <li><i class="fas fa-check"></i> You are at least 18 years old</li>
+            <li><i class="fas fa-check"></i> Information provided is accurate</li>
+            <li><i class="fas fa-check"></i> Survey eligibility is not guaranteed</li>
+            <li><i class="fas fa-check"></i> Compensation depends on project completion</li>
+          </ul>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Phone Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-phone"></i>
+            <input class="field-input" type="tel" id="reg-phone" placeholder="07XX XXX XXX" maxlength="12" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Create 4-Digit PIN</label>
+          <div class="field-wrap">
+            <i class="fas fa-lock"></i>
+            <input class="field-input" type="password" id="reg-pin" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Confirm PIN</label>
+          <div class="field-wrap">
+            <i class="fas fa-lock"></i>
+            <input class="field-input" type="password" id="reg-pin2" placeholder="Repeat your PIN" maxlength="4" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="alert error" id="reg-error"></div>
+        <button class="btn-primary" id="btn-register" onclick="doRegister()">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+        <p class="auth-note">
+          By registering, you agree to our
+          <span class="text-link" onclick="showModal('terms')">Terms of Service</span> and
+          <span class="text-link" onclick="showModal('privacy')">Privacy Policy</span>.
+          Participation in surveys does not guarantee compensation.
+        </p>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="auth-form hidden" id="form-login">
+        <div class="field-group">
+          <label class="field-label">Phone Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-phone"></i>
+            <input class="field-input" type="tel" id="login-phone" placeholder="07XX XXX XXX" maxlength="12" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Your 4-Digit PIN</label>
+          <div class="field-wrap">
+            <i class="fas fa-lock"></i>
+            <input class="field-input" type="password" id="login-pin" placeholder="Enter PIN" maxlength="4" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="alert error" id="login-error"></div>
+        <button class="btn-primary" id="btn-login" onclick="doLogin()">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+      </div>
+
+      <div class="auth-footer-links">
+        <span class="text-link" onclick="showModal('about')">About Us</span>
+        <span class="auth-dot">·</span>
+        <span class="text-link" onclick="showModal('terms')">Terms</span>
+        <span class="auth-dot">·</span>
+        <span class="text-link" onclick="showModal('privacy')">Privacy</span>
+        <span class="auth-dot">·</span>
+        <span class="text-link" onclick="showModal('contact')">Contact</span>
+      </div>
     </div>
   </div>
 </div>
 
 
-<!-- ════════════════════════════════════════
+<!-- ══════════════════════════════════════════
      PROFILE SCREEN
-════════════════════════════════════════ -->
+══════════════════════════════════════════ -->
 <div class="screen" id="profile-screen">
-  <div class="profile-box">
-    <div class="profile-header">
-      <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
-      <h2>Complete Your Profile</h2>
-      <p>We use demographic information to match you with relevant research opportunities. All data is handled in accordance with our
-        <button type="button" class="auth-link-btn" onclick="showModal('privacy')">Privacy Policy</button>.
-      </p>
-    </div>
-    <div class="auth-form">
-      <div class="field-group">
-        <label class="field-label">Full Name</label>
-        <div class="field-wrap">
-          <i class="fas fa-user"></i>
-          <input class="field-input" type="text" id="prof-name" placeholder="Enter your full name" />
-        </div>
+  <div class="profile-wrap">
+    <div class="profile-box">
+      <div class="profile-header">
+        <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
+        <h2>Complete Your Profile</h2>
+        <p>We use demographic information to match you with relevant research opportunities. All data is handled in accordance with our <span class="text-link" onclick="showModal('privacy')">Privacy Policy</span>.</p>
       </div>
-      <div class="field-group">
-        <label class="field-label">County</label>
-        <div class="field-wrap">
-          <i class="fas fa-map-marker-alt"></i>
-          <select class="select-input" id="prof-county">
-            <option value="">Select your county</option>
-            <option>Mombasa</option><option>Kwale</option><option>Kilifi</option><option>Tana River</option>
-            <option>Lamu</option><option>Taita-Taveta</option><option>Garissa</option><option>Wajir</option>
-            <option>Mandera</option><option>Marsabit</option><option>Isiolo</option><option>Meru</option>
-            <option>Tharaka-Nithi</option><option>Embu</option><option>Kitui</option><option>Machakos</option>
-            <option>Makueni</option><option>Nyandarua</option><option>Nyeri</option><option>Kirinyaga</option>
-            <option>Murang'a</option><option>Kiambu</option><option>Turkana</option><option>West Pokot</option>
-            <option>Samburu</option><option>Trans-Nzoia</option><option>Uasin Gishu</option><option>Elgeyo-Marakwet</option>
-            <option>Nandi</option><option>Baringo</option><option>Laikipia</option><option>Nakuru</option>
-            <option>Narok</option><option>Kajiado</option><option>Kericho</option><option>Bomet</option>
-            <option>Kakamega</option><option>Vihiga</option><option>Bungoma</option><option>Busia</option>
-            <option>Siaya</option><option>Kisumu</option><option>Homa Bay</option><option>Migori</option>
-            <option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
-          </select>
+      <div class="auth-form">
+        <div class="field-group">
+          <label class="field-label">Full Name</label>
+          <div class="field-wrap">
+            <i class="fas fa-user"></i>
+            <input class="field-input" type="text" id="prof-name" placeholder="Enter your full name" />
+          </div>
         </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Occupation</label>
-        <div class="field-wrap">
-          <i class="fas fa-briefcase"></i>
-          <select class="select-input" id="prof-occupation">
-            <option value="">Select occupation</option>
-            <option>Student</option><option>Employed - Private Sector</option><option>Employed - Government</option>
-            <option>Self-Employed / Business</option><option>Freelancer</option><option>Farmer</option>
-            <option>Unemployed</option><option>Retired</option><option>Other</option>
-          </select>
+        <div class="field-group">
+          <label class="field-label">County</label>
+          <div class="field-wrap">
+            <i class="fas fa-map-marker-alt"></i>
+            <select class="select-input" id="prof-county">
+              <option value="">Select your county</option>
+              <option>Mombasa</option><option>Kwale</option><option>Kilifi</option><option>Tana River</option>
+              <option>Lamu</option><option>Taita-Taveta</option><option>Garissa</option><option>Wajir</option>
+              <option>Mandera</option><option>Marsabit</option><option>Isiolo</option><option>Meru</option>
+              <option>Tharaka-Nithi</option><option>Embu</option><option>Kitui</option><option>Machakos</option>
+              <option>Makueni</option><option>Nyandarua</option><option>Nyeri</option><option>Kirinyaga</option>
+              <option>Murang'a</option><option>Kiambu</option><option>Turkana</option><option>West Pokot</option>
+              <option>Samburu</option><option>Trans-Nzoia</option><option>Uasin Gishu</option><option>Elgeyo-Marakwet</option>
+              <option>Nandi</option><option>Baringo</option><option>Laikipia</option><option>Nakuru</option>
+              <option>Narok</option><option>Kajiado</option><option>Kericho</option><option>Bomet</option>
+              <option>Kakamega</option><option>Vihiga</option><option>Bungoma</option><option>Busia</option>
+              <option>Siaya</option><option>Kisumu</option><option>Homa Bay</option><option>Migori</option>
+              <option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Highest Education Level</label>
-        <div class="field-wrap">
-          <i class="fas fa-graduation-cap"></i>
-          <select class="select-input" id="prof-education">
-            <option value="">Select education level</option>
-            <option>Primary School</option><option>Secondary School (KCSE)</option>
-            <option>Certificate / Diploma</option><option>Bachelor's Degree</option>
-            <option>Master's Degree</option><option>PhD</option><option>Other</option>
-          </select>
+        <div class="field-group">
+          <label class="field-label">Occupation</label>
+          <div class="field-wrap">
+            <i class="fas fa-briefcase"></i>
+            <select class="select-input" id="prof-occupation">
+              <option value="">Select occupation</option>
+              <option>Student</option><option>Employed - Private Sector</option><option>Employed - Government</option>
+              <option>Self-Employed / Business</option><option>Freelancer</option><option>Farmer</option>
+              <option>Unemployed</option><option>Retired</option><option>Other</option>
+            </select>
+          </div>
         </div>
+        <div class="field-group">
+          <label class="field-label">Highest Education Level</label>
+          <div class="field-wrap">
+            <i class="fas fa-graduation-cap"></i>
+            <select class="select-input" id="prof-education">
+              <option value="">Select education level</option>
+              <option>Primary School</option><option>Secondary School (KCSE)</option>
+              <option>Certificate / Diploma</option><option>Bachelor's Degree</option>
+              <option>Master's Degree</option><option>PhD</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="alert error" id="prof-error"></div>
+        <div class="alert success" id="prof-success"></div>
+        <button class="btn-primary" id="btn-profile" onclick="doCompleteProfile()">
+          <i class="fas fa-check"></i> Save Profile and Continue
+        </button>
       </div>
-      <div class="alert error" id="prof-error"></div>
-      <div class="alert success" id="prof-success"></div>
-      <button class="btn-primary" id="btn-profile" onclick="doCompleteProfile()">
-        <i class="fas fa-check"></i> Save Profile and Continue
-      </button>
     </div>
   </div>
 </div>
 
 
-<!-- ════════════════════════════════════════
-     MAIN APP SCREEN
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     APP SCREEN
+══════════════════════════════════════════ -->
 <div class="screen" id="app-screen">
 
-  <!-- Mobile Header -->
   <div class="mobile-header">
     <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
     <div class="mobile-balance" id="mobile-balance">KSh 0.00</div>
     <button class="btn-logout" onclick="doLogout()"><i class="fas fa-power-off"></i></button>
   </div>
 
-  <!-- Sidebar overlay -->
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon"><i class="fas fa-graduation-cap"></i></div>
@@ -736,10 +737,10 @@
 
     <div class="sidebar-footer">
       <div class="sidebar-legal">
-        <button type="button" onclick="showModal('about')">About</button>
-        <button type="button" onclick="showModal('terms')">Terms</button>
-        <button type="button" onclick="showModal('privacy')">Privacy</button>
-        <button type="button" onclick="showModal('contact')">Contact</button>
+        <span class="text-link small" onclick="showModal('about')">About</span>
+        <span class="text-link small" onclick="showModal('terms')">Terms</span>
+        <span class="text-link small" onclick="showModal('privacy')">Privacy</span>
+        <span class="text-link small" onclick="showModal('contact')">Contact</span>
       </div>
       <div class="user-info">
         <div class="user-avatar"><i class="fas fa-user"></i></div>
@@ -754,10 +755,9 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
   <main class="main-content">
 
-    <!-- ── DASHBOARD PANEL ── -->
+    <!-- DASHBOARD -->
     <div class="page-panel active" id="panel-dashboard">
       <div class="page-title" id="dash-greeting">Good day!</div>
       <div class="page-sub">Track your research participation activity and compensation.</div>
@@ -838,7 +838,7 @@
       </div>
     </div>
 
-    <!-- ── SURVEY PANEL ── -->
+    <!-- SURVEYS -->
     <div class="page-panel" id="panel-survey">
       <div class="survey-top">
         <div>
@@ -847,16 +847,13 @@
         </div>
         <div id="page-dots" class="page-indicator"></div>
       </div>
-
       <div class="survey-integrity-note">
         <i class="fas fa-clipboard-check"></i>
         <p>Please answer all questions honestly. Research quality depends on accurate responses. False or inconsistent responses may affect your eligibility for future surveys.</p>
       </div>
-
       <div class="questions-grid" id="questions-grid">
         <div class="empty-state"><div class="spinner"></div></div>
       </div>
-
       <div class="pagination">
         <button class="btn-page" id="btn-prev" onclick="changePage(-1)" disabled>
           <i class="fas fa-arrow-left"></i> Previous
@@ -868,7 +865,7 @@
       </div>
     </div>
 
-    <!-- ── PARTICIPANT COMPENSATION PANEL ── -->
+    <!-- PARTICIPANT COMPENSATION -->
     <div class="page-panel withdraw-box" id="panel-withdraw">
       <div class="page-title">Participant Compensation</div>
       <div class="page-sub">Request payment of your accumulated compensation to M-Pesa. Compensation becomes available after survey validation.</div>
@@ -894,7 +891,6 @@
         </div>
       </div>
 
-      <!-- Stage 1: Account Verification -->
       <div id="wd-locked" class="hidden">
         <div class="locked-msg">
           <i class="fas fa-shield-alt"></i>
@@ -918,7 +914,6 @@
         <p class="auth-note" style="margin-top:12px">One-time verification required to activate payment services. This process confirms your registered mobile number.</p>
       </div>
 
-      <!-- Stage 2: Payout Channel Verification -->
       <div id="wd-force" class="hidden">
         <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
           <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
@@ -941,7 +936,6 @@
         </button>
       </div>
 
-      <!-- Stage 3: Unlocked -->
       <div id="wd-unlocked" class="hidden">
         <div class="field-group" style="margin-bottom:16px">
           <label class="field-label">M-Pesa Phone Number</label>
@@ -967,7 +961,7 @@
       </div>
     </div>
 
-    <!-- ── COMPENSATION HISTORY PANEL ── -->
+    <!-- COMPENSATION HISTORY -->
     <div class="page-panel" id="panel-transactions">
       <div class="page-title">Compensation History</div>
       <div class="page-sub">View your research participation compensation and payment request history.</div>
@@ -983,12 +977,12 @@
 </div><!-- /app-screen -->
 
 
-<!-- ════════════════════════════════════════
+<!-- ══════════════════════════════════════════
      MODALS
-════════════════════════════════════════ -->
+══════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
 
-<!-- About Modal -->
+<!-- About -->
 <div class="modal" id="modal-about">
   <div class="modal-header">
     <h3><i class="fas fa-info-circle"></i> About KenyaSurvey</h3>
@@ -1012,7 +1006,7 @@
   </div>
 </div>
 
-<!-- Terms Modal -->
+<!-- Terms -->
 <div class="modal" id="modal-terms">
   <div class="modal-header">
     <h3><i class="fas fa-file-contract"></i> Terms of Service</h3>
@@ -1038,7 +1032,7 @@
   </div>
 </div>
 
-<!-- Privacy Modal -->
+<!-- Privacy -->
 <div class="modal" id="modal-privacy">
   <div class="modal-header">
     <h3><i class="fas fa-user-shield"></i> Privacy Policy</h3>
@@ -1060,7 +1054,7 @@
   </div>
 </div>
 
-<!-- Contact Modal -->
+<!-- Contact -->
 <div class="modal" id="modal-contact">
   <div class="modal-header">
     <h3><i class="fas fa-envelope"></i> Contact Us</h3>
