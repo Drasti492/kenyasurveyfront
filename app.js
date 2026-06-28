@@ -20,17 +20,18 @@ let forceVerifyPollTimer = null;
 // INIT
 // ════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
-  if (token) {
-    loadUser();
-  }
-  // Sticky nav shadow on scroll
+  // Sticky nav shadow
   const nav = document.getElementById('lp-nav');
   if (nav) {
     window.addEventListener('scroll', () => {
-      nav.style.boxShadow = window.scrollY > 10
-        ? '0 4px 24px rgba(0,0,0,0.4)'
-        : 'none';
+      nav.style.boxShadow = window.scrollY > 10 ? '0 4px 24px rgba(0,0,0,0.45)' : 'none';
     });
+  }
+
+  if (token) {
+    loadUser();
+  } else {
+    showHeroCta('guest');
   }
 });
 
@@ -41,12 +42,14 @@ async function loadUser() {
     if (!data.profileComplete) {
       showScreen('profile-screen');
     } else {
+      showHeroCta('user');
       showScreen('app-screen');
       initApp();
     }
   } catch {
     token = null;
     localStorage.removeItem('ks_token');
+    showHeroCta('guest');
     showScreen('landing-screen');
   }
 }
@@ -55,6 +58,22 @@ async function initApp() {
   updateSidebarUser();
   await loadStats();
   loadQuestions(currentPage);
+}
+
+// ════════════════════════════════════════════
+// HERO CTA TOGGLE
+// ════════════════════════════════════════════
+function showHeroCta(state) {
+  const guest = document.getElementById('lp-hero-cta-guest');
+  const user  = document.getElementById('lp-hero-cta-user');
+  if (!guest || !user) return;
+  if (state === 'user') {
+    guest.classList.add('hidden');
+    user.classList.remove('hidden');
+  } else {
+    guest.classList.remove('hidden');
+    user.classList.add('hidden');
+  }
 }
 
 // ════════════════════════════════════════════
@@ -84,41 +103,54 @@ function showPanel(name) {
 }
 
 // ════════════════════════════════════════════
-// LANDING PAGE NAVIGATION
+// LANDING PAGE HELPERS
 // ════════════════════════════════════════════
 function goToAuth(tab) {
   showScreen('auth-screen');
   switchTab(tab === 'login' ? 'login' : 'register');
-  window.scrollTo(0, 0);
 }
 
 function goToLanding() {
   showScreen('landing-screen');
 }
 
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function lpScrollTop() {
+  if (document.getElementById('landing-screen').classList.contains('active')) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showScreen('landing-screen');
+  }
+}
+
+function lpScrollTo(id) {
+  // If we're not on the landing screen, go there first then scroll
+  if (!document.getElementById('landing-screen').classList.contains('active')) {
+    showScreen('landing-screen');
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  } else {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 function toggleLpMenu() {
-  const menu = document.getElementById('lp-mobile-menu');
-  if (menu) menu.classList.toggle('open');
+  document.getElementById('lp-mobile-menu').classList.toggle('open');
 }
 
 function closeLpMenu() {
-  const menu = document.getElementById('lp-mobile-menu');
-  if (menu) menu.classList.remove('open');
+  const m = document.getElementById('lp-mobile-menu');
+  if (m) m.classList.remove('open');
 }
 
 function toggleFaq(btn) {
-  const item = btn.closest('.lp-faq-item');
-  const answer = item.querySelector('.lp-faq-a');
+  const answer = btn.nextElementSibling;
   const isOpen = answer.classList.contains('open');
-
   // Close all
   document.querySelectorAll('.lp-faq-a').forEach(a => a.classList.remove('open'));
   document.querySelectorAll('.lp-faq-q').forEach(b => b.classList.remove('open'));
-
   if (!isOpen) {
     answer.classList.add('open');
     btn.classList.add('open');
@@ -200,6 +232,7 @@ async function doLogin() {
     if (!user.profileComplete) {
       showScreen('profile-screen');
     } else {
+      showHeroCta('user');
       showScreen('app-screen');
       initApp();
     }
@@ -232,6 +265,7 @@ async function doCompleteProfile() {
     const user = await apiFetch('/auth/profile');
     userProfile = user;
     setTimeout(() => {
+      showHeroCta('user');
       showScreen('app-screen');
       initApp();
     }, 1200);
@@ -247,6 +281,7 @@ function doLogout() {
   token = null;
   userProfile = null;
   localStorage.removeItem('ks_token');
+  showHeroCta('guest');
   showScreen('landing-screen');
 }
 
@@ -277,15 +312,15 @@ function updateDashboard() {
   const remaining = total - completed;
   const pct       = Math.round((completed / total) * 100);
 
-  document.getElementById('sidebar-balance').textContent = `KSh ${bal}`;
-  document.getElementById('sidebar-earned').textContent  = `Total compensation: KSh ${earned}`;
-  document.getElementById('mobile-balance').textContent  = `KSh ${bal}`;
-  document.getElementById('stat-balance').textContent    = bal;
-  document.getElementById('stat-earned').textContent     = earned;
-  document.getElementById('stat-completed').textContent  = completed;
-  document.getElementById('stat-remaining').textContent  = remaining;
-  document.getElementById('progress-fill').style.width   = pct + '%';
-  document.getElementById('progress-text').textContent   = `${completed} / ${total} completed`;
+  document.getElementById('sidebar-balance').textContent  = `KSh ${bal}`;
+  document.getElementById('sidebar-earned').textContent   = `Total compensation: KSh ${earned}`;
+  document.getElementById('mobile-balance').textContent   = `KSh ${bal}`;
+  document.getElementById('stat-balance').textContent     = bal;
+  document.getElementById('stat-earned').textContent      = earned;
+  document.getElementById('stat-completed').textContent   = completed;
+  document.getElementById('stat-remaining').textContent   = remaining;
+  document.getElementById('progress-fill').style.width    = pct + '%';
+  document.getElementById('progress-text').textContent    = `${completed} / ${total} completed`;
   document.getElementById('nav-survey-badge').textContent = remaining;
 
   const hour  = new Date().getHours();
@@ -317,8 +352,7 @@ function updateDashboard() {
 function updateSidebarUser() {
   if (!userProfile) return;
   document.getElementById('sidebar-name').textContent  = userProfile.name || 'User';
-  const ph = userProfile.phone || '';
-  document.getElementById('sidebar-phone').textContent = '+' + ph;
+  document.getElementById('sidebar-phone').textContent = '+' + (userProfile.phone || '');
 }
 
 function renderDashTransactions() {
@@ -345,7 +379,7 @@ function renderTxItem(tx) {
   const isPositive = tx.amount > 0;
   const type       = tx.type;
   let iconClass = 'earn', iconName = 'coins';
-  if (type === 'withdrawal') { iconClass = 'withdraw'; iconName = 'paper-plane'; }
+  if (type === 'withdrawal')                             { iconClass = 'withdraw'; iconName = 'paper-plane'; }
   else if (type === 'welcome_bonus' || type === 'activation') { iconClass = 'bonus'; iconName = 'gift'; }
 
   const date   = new Date(tx.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -570,7 +604,7 @@ function updateSlider() {
   document.getElementById('wd-amount-display').textContent = val;
 }
 
-// ── Stage 1: Account Verification ──
+// Stage 1
 async function doActivate() {
   const phone  = document.getElementById('act-phone').value.trim();
   const errEl  = document.getElementById('act-error');
@@ -628,7 +662,7 @@ function startActivationPoll(ref) {
   }, 3000);
 }
 
-// ── Stage 2: Payout Channel Verification ──
+// Stage 2
 async function doForceVerify() {
   const errEl  = document.getElementById('fv-error');
   const succEl = document.getElementById('fv-success');
@@ -682,7 +716,7 @@ function startForceVerifyPoll(ref, btn) {
   }, 3000);
 }
 
-// ── Payment Request ──
+// Payment request
 async function doWithdraw() {
   const phone  = document.getElementById('wd-phone').value.trim();
   const amount = document.getElementById('wd-slider').value;
@@ -731,13 +765,9 @@ function closeSidebar() {
 // UTILITIES
 // ════════════════════════════════════════════
 async function apiFetch(path, method = 'GET', body = null) {
-  const opts = {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-  };
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
   if (token) opts.headers['Authorization'] = `Bearer ${token}`;
-  if (body) opts.body = JSON.stringify(body);
-
+  if (body)  opts.body = JSON.stringify(body);
   const res  = await fetch(API + path, opts);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Request failed');
