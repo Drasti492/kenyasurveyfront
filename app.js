@@ -21,7 +21,6 @@ let liveNotificationInterval = null;
 // INIT
 // ════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
-  // Sticky nav shadow
   const nav = document.getElementById('lp-nav');
   if (nav) {
     window.addEventListener('scroll', () => {
@@ -100,7 +99,6 @@ function showPanel(name) {
     document.getElementById('wd-locked').classList.add('hidden');
     document.getElementById('wd-force').classList.add('hidden');
     document.getElementById('wd-unlocked').classList.add('hidden');
-    updateWithdrawPanel();
   }
   if (name === 'transactions') renderAllTransactions();
 }
@@ -172,7 +170,6 @@ function closeModal() {
   document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
 }
 
-// Withdraw notification modal
 function showWithdrawNotification() {
   document.getElementById('withdraw-notification-overlay').classList.add('show');
   document.getElementById('withdraw-notification-modal').classList.add('show');
@@ -419,18 +416,18 @@ function renderTxItem(tx) {
 function startLiveWithdrawNotifications() {
   if (liveNotificationInterval) clearInterval(liveNotificationInterval);
   
-  const names = ["James", "Aisha", "Michael", "Fatuma", "David", "Grace", "Samuel", "Nancy"];
-  const amounts = [1250, 850, 2340, 680, 1750, 920, 3120, 450];
+  const names = ["Kiptoo", "Wambui", "Kwamboka", "Jane", "Kevin", "Aisha", "Michael", "Fatuma", "David", "Grace", "Samuel", "Nancy", "Ochieng", "Muthoni", "Kamau", "Njeri", "Otieno", "Chebet"];
+  const amounts = [1250, 850, 2340, 680, 1750, 920, 3120, 450, 1890, 760];
 
   liveNotificationInterval = setInterval(() => {
     if (!document.getElementById('app-screen').classList.contains('active')) return;
     
     const randomName = names[Math.floor(Math.random() * names.length)];
     const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
-    const phoneSuffix = Math.floor(100 + Math.random() * 900);
+    const phoneSuffix = String(10 + Math.floor(Math.random() * 90));
     
     showLiveNotification(randomName, phoneSuffix, randomAmount);
-  }, 8500);
+  }, 7500);
 }
 
 function showLiveNotification(name, phoneSuffix, amount) {
@@ -608,7 +605,7 @@ function renderPageDots(total) {
 }
 
 // ════════════════════════════════════════════
-// PARTICIPANT COMPENSATION (WITHDRAW)
+// WITHDRAWAL
 // ════════════════════════════════════════════
 function formatPhoneDisplay(phone) {
   let ph = String(phone || '');
@@ -665,13 +662,11 @@ function updateSlider() {
   const fee = (val * 0.02).toFixed(2);
   document.getElementById('fee-display').textContent = `KSh ${fee}`;
 
-  // Enable/disable withdraw button based on balance
   const withdrawBtn = document.getElementById('btn-withdraw-main');
   const currentBalance = stats.balance || 0;
   withdrawBtn.disabled = val > currentBalance || val < 150;
 }
 
-// New withdrawal attempt with error handling
 function attemptWithdraw() {
   const amount = parseFloat(document.getElementById('wd-slider').value);
   const errEl = document.getElementById('wd-error');
@@ -685,7 +680,7 @@ function attemptWithdraw() {
   }
 
   if (amount > currentBalance) {
-    showAlert(errEl, 'Insufficient balance. You cannot withdraw more than your available compensation.');
+    showAlert(errEl, `Insufficient balance. Your available balance is KSh ${currentBalance.toFixed(2)}.`);
     return;
   }
 
