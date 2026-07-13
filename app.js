@@ -626,7 +626,7 @@ async function doActivate() {
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to  verify your account .');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account';
+    btn.innerHTML = '<i class="fas fa-shield-alt"></i> Register your account ';
   }
 }
 
@@ -708,7 +708,7 @@ function startForceVerifyPoll(ref, btn) {
         clearInterval(forceVerifyPollTimer);
         showAlert(document.getElementById('fv-error'), 'Verification failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Verify Payout Channel';
+        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal Now';
       }
     } catch (err) {
       console.error('Poll error:', err.message);
