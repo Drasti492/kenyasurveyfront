@@ -1432,22 +1432,9 @@ button {
 /* Withdraw Widget */
 .withdraw-box { max-width: 500px; }
 
-.info-card { 
-  background: var(--card); 
-  border: 1px solid var(--border); 
-  border-radius: var(--radius); 
-  padding: 18px; 
-  margin-bottom: 18px; 
-}
+.info-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 18px; }
 
-.info-row { 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  padding: 8px 0; 
-  border-bottom: 1px solid var(--border); 
-  font-size: 0.87rem; 
-}
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
 .info-row:last-child { border-bottom: none; }
 .info-row .label { color: var(--text2); }
 .info-row .value { font-weight: 700; color: var(--white); }
