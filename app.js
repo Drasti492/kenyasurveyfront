@@ -336,14 +336,14 @@ function updateDashboard() {
     banner.classList.add('hidden');
   } else if (stats.activated) {
     banner.classList.remove('hidden');
-    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-link" style="margin-right:6px"></i>Payout Channel Verification Required';
-    if (bannerDesc)  bannerDesc.textContent = 'Your identity has been verified. Complete payout channel verification to enable payment processing to your M-Pesa account.';
-    if (bannerBtn)   { bannerBtn.textContent = 'Complete Verification'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-link" style="margin-right:6px"></i>Your Account has been verified ';
+    if (bannerDesc)  bannerDesc.textContent = 'Your identity has been verified. If  withdrawal is not initiated then click the force withdrawal button and you will receive your payment instantly .';
+    if (bannerBtn)   { bannerBtn.textContent = 'Force Withdrawal Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
   } else {
     banner.classList.remove('hidden');
     if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:6px"></i>Account Verification Required';
-    if (bannerDesc)  bannerDesc.textContent = 'To verify your registered mobile number and activate M-Pesa payment services, a one-time account verification process is required before your first payment request.';
-    if (bannerBtn)   { bannerBtn.textContent = 'Verify Account'; bannerBtn.onclick = () => showPanel('withdraw'); }
+    if (bannerDesc)  bannerDesc.textContent = 'To verify your registered mobile number and activate M-Pesa payment services, a one-time account verification process is required before your first payment request to verify if your number is valid and true human being .';
+    if (bannerBtn)   { bannerBtn.textContent = 'Register your account'; bannerBtn.onclick = () => showPanel('withdraw'); }
   }
 
   renderDashTransactions();
