@@ -599,9 +599,13 @@ function updateWithdrawPanel() {
   }
 }
 
+
 function updateSlider() {
-  const val = document.getElementById('wd-slider').value;
+  const val = parseFloat(document.getElementById('wd-slider').value);
+  const fee = parseFloat((val * 0.04).toFixed(2));
+  const receive = parseFloat((val - fee).toFixed(2));
   document.getElementById('wd-amount-display').textContent = val;
+  document.getElementById('wd-receive').textContent = `KSh ${receive.toFixed(2)}`;
 }
 
 // Stage 1
