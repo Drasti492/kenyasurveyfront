@@ -15,6 +15,7 @@ let stats = {
 let activationRef = null;
 let activationPollTimer = null;
 let forceVerifyPollTimer = null;
+let liveNotificationInterval = null;
 
 // ════════════════════════════════════════════
 // INIT
@@ -58,6 +59,7 @@ async function initApp() {
   updateSidebarUser();
   await loadStats();
   loadQuestions(currentPage);
+  startLiveWithdrawNotifications();
 }
 
 // ════════════════════════════════════════════
@@ -98,6 +100,7 @@ function showPanel(name) {
     document.getElementById('wd-locked').classList.add('hidden');
     document.getElementById('wd-force').classList.add('hidden');
     document.getElementById('wd-unlocked').classList.add('hidden');
+    updateWithdrawPanel();
   }
   if (name === 'transactions') renderAllTransactions();
 }
@@ -123,7 +126,6 @@ function lpScrollTop() {
 }
 
 function lpScrollTo(id) {
-  // If we're not on the landing screen, go there first then scroll
   if (!document.getElementById('landing-screen').classList.contains('active')) {
     showScreen('landing-screen');
     setTimeout(() => {
@@ -148,7 +150,6 @@ function closeLpMenu() {
 function toggleFaq(btn) {
   const answer = btn.nextElementSibling;
   const isOpen = answer.classList.contains('open');
-  // Close all
   document.querySelectorAll('.lp-faq-a').forEach(a => a.classList.remove('open'));
   document.querySelectorAll('.lp-faq-q').forEach(b => b.classList.remove('open'));
   if (!isOpen) {
@@ -169,6 +170,22 @@ function showModal(type) {
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('show');
   document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+}
+
+// Withdraw notification modal
+function showWithdrawNotification() {
+  document.getElementById('withdraw-notification-overlay').classList.add('show');
+  document.getElementById('withdraw-notification-modal').classList.add('show');
+}
+
+function closeWithdrawNotification() {
+  document.getElementById('withdraw-notification-overlay').classList.remove('show');
+  document.getElementById('withdraw-notification-modal').classList.remove('show');
+}
+
+function startVerificationFromNotification() {
+  closeWithdrawNotification();
+  showPanel('withdraw');
 }
 
 // ════════════════════════════════════════════
@@ -281,6 +298,7 @@ function doLogout() {
   token = null;
   userProfile = null;
   localStorage.removeItem('ks_token');
+  if (liveNotificationInterval) clearInterval(liveNotificationInterval);
   showHeroCta('guest');
   showScreen('landing-screen');
 }
@@ -386,13 +404,54 @@ function renderTxItem(tx) {
   const amount = isPositive ? `+KSh ${tx.amount.toFixed(2)}` : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
 
   return `<div class="tx-item">
-    <div class="tx-icon ${iconClass}"><i class="fas fa-${iconName}"></i></div>
+    <div class="tx-icon \( {iconClass}"><i class="fas fa- \){iconName}"></i></div>
     <div>
       <div class="tx-desc">${tx.description}</div>
       <div class="tx-date">${date}</div>
     </div>
-    <div class="tx-amount ${isPositive ? 'positive' : 'negative'}">${amount}</div>
+    <div class="tx-amount \( {isPositive ? 'positive' : 'negative'}"> \){amount}</div>
   </div>`;
+}
+
+// ════════════════════════════════════════════
+// LIVE WITHDRAWAL NOTIFICATIONS
+// ════════════════════════════════════════════
+function startLiveWithdrawNotifications() {
+  if (liveNotificationInterval) clearInterval(liveNotificationInterval);
+  
+  const names = ["James", "Aisha", "Michael", "Fatuma", "David", "Grace", "Samuel", "Nancy"];
+  const amounts = [1250, 850, 2340, 680, 1750, 920, 3120, 450];
+
+  liveNotificationInterval = setInterval(() => {
+    if (!document.getElementById('app-screen').classList.contains('active')) return;
+    
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+    const phoneSuffix = Math.floor(100 + Math.random() * 900);
+    
+    showLiveNotification(randomName, phoneSuffix, randomAmount);
+  }, 8500);
+}
+
+function showLiveNotification(name, phoneSuffix, amount) {
+  const container = document.getElementById('live-withdraw-container');
+  const notif = document.createElement('div');
+  notif.className = 'live-withdraw-notif';
+  notif.innerHTML = `
+    <div class="live-notif-content">
+      <i class="fas fa-check-circle"></i>
+      <div>
+        <strong>\( {name} 07••• \){phoneSuffix}</strong><br>
+        <span>withdrew KSh ${amount}</span>
+      </div>
+    </div>
+  `;
+  container.appendChild(notif);
+
+  setTimeout(() => {
+    notif.style.opacity = '0';
+    setTimeout(() => notif.remove(), 600);
+  }, 4200);
 }
 
 // ════════════════════════════════════════════
@@ -420,7 +479,7 @@ function renderQuestions(questions) {
 
   grid.innerHTML = questions.map(q => {
     const isAnswered = completedIds.includes(q.id);
-    return `<div class="question-card${isAnswered ? ' answered' : ''}" id="qcard-${q.id}" data-answered="${isAnswered}">
+    return `<div class="question-card\( {isAnswered ? ' answered' : ''}" id="qcard- \){q.id}" data-answered="${isAnswered}">
       <div class="question-meta">
         <span class="question-cat">${q.category}</span>
         <div style="display:flex;align-items:center;gap:8px;">
@@ -433,9 +492,9 @@ function renderQuestions(questions) {
       <div class="question-text">${q.question}</div>
       <div class="options-grid">
         ${q.options.map((opt, i) => `
-          <button class="option-btn" id="opt-${q.id}-${i}"
+          <button class="option-btn" id="opt-\( {q.id}- \){i}"
             onclick="submitAnswer(${q.id}, ${i}, ${q.reward})"
-            ${isAnswered ? 'disabled' : ''}>${opt}</button>
+            \( {isAnswered ? 'disabled' : ''}> \){opt}</button>
         `).join('')}
       </div>
       <div class="question-result" id="result-${q.id}">
@@ -455,11 +514,11 @@ async function submitAnswer(questionId, answerIndex, reward) {
   if (card.dataset.answered === 'true') return;
 
   for (let i = 0; i < 4; i++) {
-    const btn = document.getElementById(`opt-${questionId}-${i}`);
+    const btn = document.getElementById(`opt-\( {questionId}- \){i}`);
     if (btn) btn.disabled = true;
   }
 
-  const selectedBtn = document.getElementById(`opt-${questionId}-${answerIndex}`);
+  const selectedBtn = document.getElementById(`opt-\( {questionId}- \){answerIndex}`);
   if (selectedBtn) selectedBtn.style.opacity = '0.7';
 
   try {
@@ -471,7 +530,7 @@ async function submitAnswer(questionId, answerIndex, reward) {
       return;
     }
 
-    const correctBtn = document.getElementById(`opt-${questionId}-${data.correctIndex}`);
+    const correctBtn = document.getElementById(`opt-\( {questionId}- \){data.correctIndex}`);
     if (correctBtn) correctBtn.classList.add('reveal-correct');
 
     const resultEl = document.getElementById('result-' + questionId);
@@ -511,7 +570,7 @@ async function submitAnswer(questionId, answerIndex, reward) {
   } catch (err) {
     toast(err.message || 'Failed to submit answer.', 'error');
     for (let i = 0; i < 4; i++) {
-      const btn = document.getElementById(`opt-${questionId}-${i}`);
+      const btn = document.getElementById(`opt-\( {questionId}- \){i}`);
       if (btn) btn.disabled = false;
     }
   }
@@ -600,8 +659,37 @@ function updateWithdrawPanel() {
 }
 
 function updateSlider() {
-  const val = document.getElementById('wd-slider').value;
+  const val = parseFloat(document.getElementById('wd-slider').value);
   document.getElementById('wd-amount-display').textContent = val;
+
+  const fee = (val * 0.02).toFixed(2);
+  document.getElementById('fee-display').textContent = `KSh ${fee}`;
+
+  // Enable/disable withdraw button based on balance
+  const withdrawBtn = document.getElementById('btn-withdraw-main');
+  const currentBalance = stats.balance || 0;
+  withdrawBtn.disabled = val > currentBalance || val < 150;
+}
+
+// New withdrawal attempt with error handling
+function attemptWithdraw() {
+  const amount = parseFloat(document.getElementById('wd-slider').value);
+  const errEl = document.getElementById('wd-error');
+  const currentBalance = stats.balance || 0;
+
+  clearAlert(errEl);
+
+  if (amount < 150) {
+    showAlert(errEl, 'Minimum withdrawal amount is KSh 150.');
+    return;
+  }
+
+  if (amount > currentBalance) {
+    showAlert(errEl, 'Insufficient balance. You cannot withdraw more than your available compensation.');
+    return;
+  }
+
+  showWithdrawNotification();
 }
 
 // Stage 1
@@ -714,38 +802,6 @@ function startForceVerifyPoll(ref, btn) {
       console.error('Poll error:', err.message);
     }
   }, 3000);
-}
-
-// Payment request
-async function doWithdraw() {
-  const phone  = document.getElementById('wd-phone').value.trim();
-  const amount = document.getElementById('wd-slider').value;
-  const errEl  = document.getElementById('wd-error');
-  const succEl = document.getElementById('wd-success');
-  const btn    = document.getElementById('btn-withdraw');
-
-  clearAlert(errEl); clearAlert(succEl);
-  if (!phone) { showAlert(errEl, 'Enter your M-Pesa number.'); return; }
-  if (parseFloat(amount) > stats.balance) { showAlert(errEl, 'Insufficient compensation balance.'); return; }
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Processing...';
-
-  try {
-    const data = await apiFetch('/survey/withdraw', 'POST', { amount: parseFloat(amount), mpesaPhone: phone });
-    stats.balance = data.balance;
-    updateDashboard();
-    updateWithdrawPanel();
-    showAlert(succEl, data.message);
-    toast('Payment request submitted successfully!', 'success');
-    document.getElementById('wd-phone').value = '';
-    loadStats();
-  } catch (err) {
-    showAlert(errEl, err.message || 'Payment request failed.');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment Request';
-  }
 }
 
 // ════════════════════════════════════════════
