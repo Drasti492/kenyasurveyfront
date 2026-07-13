@@ -1136,39 +1136,69 @@ button {
 .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--white); }
 .stat-label { font-size: 0.76rem; color: var(--text2); margin-top: 2px; }
 
-/* Activation banner */
-.activation-banner {
-  background: linear-gradient(135deg, rgba(245,166,35,0.12), rgba(245,166,35,0.06));
-  border: 1px solid rgba(245,166,35,0.3);
-  border-radius: var(--radius);
-  padding: 18px 22px;
+/* Withdraw Hero Banner */
+.withdraw-hero-banner {
+  background: linear-gradient(135deg, #0d2e18, #0a1f10);
+  border: 1.5px solid var(--green-dark);
+  border-radius: var(--radius-lg);
+  padding: 20px 26px;
+  margin-bottom: 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 24px;
+  gap: 18px;
   flex-wrap: wrap;
+  box-shadow: 0 4px 24px rgba(0,166,81,0.15);
 }
-.activation-banner.hidden { display: none; }
-.activation-text h3 { font-size: 0.97rem; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
-.activation-text p  { font-size: 0.81rem; color: var(--text2); line-height: 1.5; }
 
-.btn-activate {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, var(--gold), #e8941a);
+.withdraw-hero-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.withdraw-hero-icon {
+  width: 50px; height: 50px;
+  background: rgba(0,166,81,0.18);
+  border: 1.5px solid rgba(0,166,81,0.35);
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 21px;
+  color: var(--green-light);
+  flex-shrink: 0;
+}
+
+.withdraw-hero-content h3 {
+  font-size: 1.02rem; 
+  font-weight: 800; 
+  color: var(--white); 
+  margin-bottom: 3px;
+}
+
+.withdraw-hero-content p {
+  font-size: 0.79rem; 
+  color: var(--text2); 
+  line-height: 1.4;
+}
+
+.btn-withdraw-hero {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 26px;
+  background: linear-gradient(135deg, var(--green-light), var(--green));
   border: none;
   border-radius: var(--radius);
-  color: var(--dark);
-  font-size: 0.87rem;
-  font-weight: 700;
+  color: #fff;
+  font-size: 0.93rem;
+  font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,166,81,0.45);
   transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  flex-shrink: 0;
 }
-.btn-activate:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,166,35,0.4); }
+.btn-withdraw-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,166,81,0.55); }
 
 /* Progress */
 .progress-card {
@@ -1399,38 +1429,156 @@ button {
 
 .page-info { font-size: 0.83rem; color: var(--text2); font-weight: 600; }
 
-/* Withdraw */
+/* Withdraw Widget */
 .withdraw-box { max-width: 500px; }
 
-.info-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 18px; }
+.info-card { 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  border-radius: var(--radius); 
+  padding: 18px; 
+  margin-bottom: 18px; 
+}
 
-.info-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
+.info-row { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 8px 0; 
+  border-bottom: 1px solid var(--border); 
+  font-size: 0.87rem; 
+}
 .info-row:last-child { border-bottom: none; }
 .info-row .label { color: var(--text2); }
 .info-row .value { font-weight: 700; color: var(--white); }
 .info-row .value.green { color: var(--green-light); font-family: 'JetBrains Mono', monospace; }
 
-.locked-msg {
-  display: flex; align-items: flex-start; gap: 12px;
-  background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.25);
-  border-radius: var(--radius); padding: 15px; margin-bottom: 18px;
+.wd-slider-section {
+  margin-bottom: 18px;
 }
-.locked-msg > i { color: var(--gold); margin-top: 2px; }
-.locked-msg p { font-size: 0.83rem; color: var(--text2); line-height: 1.5; }
 
-.slider-input { width: 100%; accent-color: var(--green); }
-
-.amount-display { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.9rem; font-weight: 700; color: var(--white); margin: 11px 0; }
-
-/* Chips */
-.chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(0,166,81,0.12); color: var(--green);
-  font-size: 0.74rem; font-weight: 700; padding: 3px 10px;
-  border-radius: 20px; border: 1px solid rgba(0,166,81,0.2);
+.amount-display { 
+  text-align: center; 
+  font-family: 'JetBrains Mono', monospace; 
+  font-size: 1.9rem; 
+  font-weight: 700; 
+  color: var(--white); 
+  margin: 11px 0; 
 }
-.chip.gold { background: rgba(245,166,35,0.12); color: var(--gold); border-color: rgba(245,166,35,0.2); }
 
+.slider-input { 
+  width: 100%; 
+  accent-color: var(--green); 
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+.fee-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: var(--text2);
+  margin-bottom: 18px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.btn-withdraw-main {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.05rem;
+  margin-top: 8px;
+}
+
+/* Live Notifications */
+.live-withdraw-container {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 280px;
+}
+
+.live-withdraw-notif {
+  background: var(--card);
+  border: 1px solid var(--green);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  animation: slideIn 0.4s ease;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.live-notif-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.live-notif-content i {
+  color: var(--green);
+  font-size: 18px;
+}
+
+.live-notif-content strong {
+  color: var(--green-light);
+  font-size: 0.85rem;
+}
+
+.live-notif-content span {
+  font-size: 0.78rem;
+  color: var(--text2);
+}
+
+/* Activation banner */
+.activation-banner {
+  background: linear-gradient(135deg, rgba(245,166,35,0.12), rgba(245,166,35,0.06));
+  border: 1px solid rgba(245,166,35,0.3);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.activation-banner.hidden { display: none; }
+.activation-text h3 { font-size: 0.97rem; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+.activation-text p  { font-size: 0.81rem; color: var(--text2); line-height: 1.5; }
+
+.btn-activate {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--gold), #e8941a);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--dark);
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-activate:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,166,35,0.4); }
 
 /* Spinner */
 .spinner {
@@ -1568,4 +1716,6 @@ button {
   .toast { min-width: unset; }
   .start-survey-hero { flex-direction: column; align-items: flex-start; padding: 16px 18px; }
   .btn-start-survey  { width: 100%; justify-content: center; }
+  .withdraw-hero-banner { flex-direction: column; align-items: flex-start; }
+  .btn-withdraw-hero { width: 100%; justify-content: center; }
 }
