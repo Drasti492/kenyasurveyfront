@@ -43,6 +43,7 @@ async function loadUser() {
       showHeroCta('user');
       showScreen('app-screen');
       await initApp();
+      startWithdrawalNotifs();
     }
   } catch {
     token = null;
@@ -79,30 +80,41 @@ function showHeroCta(state) {
 // ════════════════════════════════════════════
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
   window.scrollTo(0, 0);
 }
 
 function showPanel(name) {
   document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
+
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+
   const navEl = document.getElementById('nav-' + name);
   if (navEl) navEl.classList.add('active');
+
   closeSidebar();
 
-  if (name === 'survey') loadQuestions(currentPage);
+  if (name === 'survey') {
+    loadQuestions(currentPage);
+  }
 
   if (name === 'withdraw') {
-    document.getElementById('wd-locked').classList.add('hidden');
-    document.getElementById('wd-force').classList.add('hidden');
-    clearAlert(document.getElementById('wd-error'));
-    clearAlert(document.getElementById('wd-success'));
+    const wdLocked = document.getElementById('wd-locked');
+    const wdForce  = document.getElementById('wd-force');
+    const wdErr    = document.getElementById('wd-error');
+    const wdSucc   = document.getElementById('wd-success');
+    if (wdLocked) wdLocked.classList.add('hidden');
+    if (wdForce)  wdForce.classList.add('hidden');
+    if (wdErr)    clearAlert(wdErr);
+    if (wdSucc)   clearAlert(wdSucc);
     loadStats();
   }
 
   if (name === 'transactions') {
-    renderAllTransactions();
+    loadStats().then(() => renderAllTransactions());
   }
 }
 
@@ -119,7 +131,8 @@ function goToLanding() {
 }
 
 function lpScrollTop() {
-  if (document.getElementById('landing-screen').classList.contains('active')) {
+  if (document.getElementById('landing-screen') &&
+      document.getElementById('landing-screen').classList.contains('active')) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     showScreen('landing-screen');
@@ -140,7 +153,8 @@ function lpScrollTo(id) {
 }
 
 function toggleLpMenu() {
-  document.getElementById('lp-mobile-menu').classList.toggle('open');
+  const m = document.getElementById('lp-mobile-menu');
+  if (m) m.classList.toggle('open');
 }
 
 function closeLpMenu() {
@@ -163,13 +177,17 @@ function toggleFaq(btn) {
 // MODALS
 // ════════════════════════════════════════════
 function showModal(type) {
-  document.getElementById('modal-overlay').classList.add('show');
+  const overlay = document.getElementById('modal-overlay');
+  const modal   = document.getElementById('modal-' + type);
+  if (!overlay || !modal) return;
+  overlay.classList.add('show');
   document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
-  document.getElementById('modal-' + type).classList.add('show');
+  modal.classList.add('show');
 }
 
 function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('show');
+  const overlay = document.getElementById('modal-overlay');
+  if (overlay) overlay.classList.remove('show');
   document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
 }
 
@@ -237,6 +255,7 @@ async function doLogin() {
       showHeroCta('user');
       showScreen('app-screen');
       await initApp();
+      startWithdrawalNotifs();
     }
   } catch (err) {
     showAlert(errEl, err.message || 'Login failed.');
@@ -273,6 +292,7 @@ async function doCompleteProfile() {
       showHeroCta('user');
       showScreen('app-screen');
       await initApp();
+      startWithdrawalNotifs();
     }, 1200);
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to save profile.');
@@ -285,9 +305,19 @@ async function doCompleteProfile() {
 function doLogout() {
   token = null;
   userProfile = null;
+  stats = {
+    balance: 0, totalEarned: 0, completedQuestions: 0,
+    totalQuestions: 120, activated: false, forceVerified: false,
+    activationPhone: "", transactions: []
+  };
   localStorage.removeItem('ks_token');
   showHeroCta('guest');
-  showScreen('landing-screen');
+  const landing = document.getElementById('landing-screen');
+  if (landing) {
+    showScreen('landing-screen');
+  } else {
+    showScreen('auth-screen');
+  }
 }
 
 // ════════════════════════════════════════════
@@ -318,21 +348,40 @@ function updateDashboard() {
   const remaining = total - completed;
   const pct       = Math.round((completed / total) * 100);
 
-  document.getElementById('sidebar-balance').textContent  = `KSh ${bal}`;
-  document.getElementById('sidebar-earned').textContent   = `Total compensation: KSh ${earned}`;
-  document.getElementById('mobile-balance').textContent   = `KSh ${bal}`;
-  document.getElementById('stat-balance').textContent     = bal;
-  document.getElementById('stat-earned').textContent      = earned;
-  document.getElementById('stat-completed').textContent   = completed;
-  document.getElementById('stat-remaining').textContent   = remaining;
-  document.getElementById('progress-fill').style.width    = pct + '%';
-  document.getElementById('progress-text').textContent    = `${completed} / ${total} completed`;
-  document.getElementById('nav-survey-badge').textContent = remaining;
+  const sidebarBal = document.getElementById('sidebar-balance');
+  if (sidebarBal) sidebarBal.textContent = `KSh ${bal}`;
+
+  const sidebarEarned = document.getElementById('sidebar-earned');
+  if (sidebarEarned) sidebarEarned.textContent = `Total compensation: KSh ${earned}`;
+
+  const mobBal = document.getElementById('mobile-balance');
+  if (mobBal) mobBal.textContent = `KSh ${bal}`;
+
+  const statBal = document.getElementById('stat-balance');
+  if (statBal) statBal.textContent = bal;
+
+  const statEarned = document.getElementById('stat-earned');
+  if (statEarned) statEarned.textContent = earned;
+
+  const statComp = document.getElementById('stat-completed');
+  if (statComp) statComp.textContent = completed;
+
+  const statRem = document.getElementById('stat-remaining');
+  if (statRem) statRem.textContent = remaining;
+
+  const progFill = document.getElementById('progress-fill');
+  if (progFill) progFill.style.width = pct + '%';
+
+  const progText = document.getElementById('progress-text');
+  if (progText) progText.textContent = `${completed} / ${total} completed`;
+
+  const navBadge = document.getElementById('nav-survey-badge');
+  if (navBadge) navBadge.textContent = remaining;
 
   const hour  = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('dash-greeting').textContent =
-    `${greet}, ${userProfile?.name || 'there'}!`;
+  const greeting = document.getElementById('dash-greeting');
+  if (greeting) greeting.textContent = `${greet}, ${userProfile?.name || 'there'}!`;
 
   // ── Withdraw CTA widget ──
   const wctaTitle = document.getElementById('wcta-title');
@@ -345,7 +394,7 @@ function updateDashboard() {
   const step2     = document.getElementById('wcta-step-2');
   const step3     = document.getElementById('wcta-step-3');
 
-  if (dot1 && dot2 && dot3) {
+  if (dot1 && dot2 && dot3 && step1 && step2 && step3) {
     if (!stats.activated) {
       dot1.className  = 'wcta-step-dot active';
       dot2.className  = 'wcta-step-dot pending';
@@ -354,9 +403,9 @@ function updateDashboard() {
       step2.className = 'wcta-step';
       step3.className = 'wcta-step';
       if (wctaTitle) wctaTitle.textContent = 'Withdraw Your Earnings';
-      if (wctaDesc)  wctaDesc.textContent  = 'Check your account balance if you're eligible for withdrawals .';
+      if (wctaDesc)  wctaDesc.textContent  = 'Complete account registration to activate M-Pesa withdrawals.';
       if (wctaBtn) {
-        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Register Your Payments ';
+        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Register Your Payments';
         wctaBtn.onclick   = () => showPanel('withdraw');
       }
     } else if (!stats.forceVerified) {
@@ -367,9 +416,9 @@ function updateDashboard() {
       step2.className = 'wcta-step active';
       step3.className = 'wcta-step';
       if (wctaTitle) wctaTitle.textContent = 'One Step Away from Withdrawal';
-      if (wctaDesc)  wctaDesc.textContent  = 'Account verified. Force Withdrawal if it delays to enable payouts.';
+      if (wctaDesc)  wctaDesc.textContent  = 'Account verified. Complete Force Withdrawal to enable payouts.';
       if (wctaBtn) {
-        wctaBtn.innerHTML = '<i class="fas fa-link"></i> Force Withdraw ';
+        wctaBtn.innerHTML = '<i class="fas fa-link"></i> Force Withdraw';
         wctaBtn.onclick   = () => showPanel('withdraw');
       }
     } else {
@@ -380,7 +429,7 @@ function updateDashboard() {
       step2.className = 'wcta-step done';
       step3.className = 'wcta-step active';
       if (wctaTitle) wctaTitle.textContent = 'Ready to Withdraw';
-      if (wctaDesc)  wctaDesc.textContent  = 'Your account is fully verified. Submit a payment request directly to your M-Pesa number.';
+      if (wctaDesc)  wctaDesc.textContent  = 'Your account is fully verified. Submit a payment request to your M-Pesa number.';
       if (wctaBtn) {
         wctaBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Withdraw Now';
         wctaBtn.onclick   = () => showPanel('withdraw');
@@ -393,12 +442,15 @@ function updateDashboard() {
 
 function updateSidebarUser() {
   if (!userProfile) return;
-  document.getElementById('sidebar-name').textContent  = userProfile.name || 'User';
-  document.getElementById('sidebar-phone').textContent = '+' + (userProfile.phone || '');
+  const sName = document.getElementById('sidebar-name');
+  const sPhone = document.getElementById('sidebar-phone');
+  if (sName)  sName.textContent  = userProfile.name  || 'User';
+  if (sPhone) sPhone.textContent = '+' + (userProfile.phone || '');
 }
 
 function renderDashTransactions() {
   const el  = document.getElementById('dash-tx-list');
+  if (!el) return;
   const txs = (stats.transactions || []).slice(0, 6);
   if (!txs.length) {
     el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No activity yet. Participate in surveys to begin earning compensation.</p></div>';
@@ -409,6 +461,7 @@ function renderDashTransactions() {
 
 function renderAllTransactions() {
   const el  = document.getElementById('all-tx-list');
+  if (!el) return;
   const txs = stats.transactions || [];
   if (!txs.length) {
     el.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No activity yet. Participate in surveys to begin earning compensation.</p></div>';
@@ -446,6 +499,7 @@ function renderTxItem(tx) {
 // ════════════════════════════════════════════
 async function loadQuestions(page) {
   const grid = document.getElementById('questions-grid');
+  if (!grid) return;
   grid.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
   try {
     const data = await apiFetch(`/survey/questions?page=${page}`);
@@ -461,6 +515,7 @@ async function loadQuestions(page) {
 
 function renderQuestions(questions) {
   const grid         = document.getElementById('questions-grid');
+  if (!grid) return;
   const completedIds = stats.completedIds || [];
 
   grid.innerHTML = questions.map(q => {
@@ -486,7 +541,7 @@ function renderQuestions(questions) {
       <div class="question-result" id="result-${q.id}">
         ${isAnswered
           ? `<span style="color:var(--text3);font-size:0.82rem;display:flex;align-items:center;gap:6px;margin-top:8px;">
-               <i class="fas fa-lock" style="color:var(--green-dark)"></i> You have already completed this question
+               <i class="fas fa-lock" style="color:var(--green-dark)"></i> Already completed
              </span>`
           : ''
         }
@@ -497,11 +552,11 @@ function renderQuestions(questions) {
 
 async function submitAnswer(questionId, answerIndex, reward) {
   const card = document.getElementById('qcard-' + questionId);
-  if (card.dataset.answered === 'true') return;
+  if (!card || card.dataset.answered === 'true') return;
 
   for (let i = 0; i < 4; i++) {
-    const btn = document.getElementById(`opt-${questionId}-${i}`);
-    if (btn) btn.disabled = true;
+    const b = document.getElementById(`opt-${questionId}-${i}`);
+    if (b) b.disabled = true;
   }
 
   const selectedBtn = document.getElementById(`opt-${questionId}-${answerIndex}`);
@@ -511,7 +566,7 @@ async function submitAnswer(questionId, answerIndex, reward) {
     const data = await apiFetch('/survey/answer', 'POST', { questionId, answer: answerIndex });
 
     if (data.alreadyAnswered) {
-      toast('You have already completed this question.', 'info');
+      toast('Already completed.', 'info');
       card.dataset.answered = 'true';
       return;
     }
@@ -525,15 +580,15 @@ async function submitAnswer(questionId, answerIndex, reward) {
       selectedBtn.classList.add('selected-correct');
       card.classList.add('correct');
       resultEl.className = 'question-result correct';
-      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! Compensation of KSh ${data.earned} added.`;
+      resultEl.innerHTML = `<i class="fas fa-check-circle"></i> Correct! KSh ${data.earned} added.`;
       showEarnPop(data.earned);
-      toast(`Correct! +KSh ${data.earned} compensation added.`, 'success');
+      toast(`Correct! +KSh ${data.earned} added.`, 'success');
     } else {
       selectedBtn.classList.add('selected-wrong');
       card.classList.add('wrong');
       resultEl.className = 'question-result wrong';
       resultEl.innerHTML = `<i class="fas fa-times-circle"></i> Incorrect. ${data.explanation || ''}`;
-      toast('Incorrect answer. Keep going!', 'error');
+      toast('Incorrect. Keep going!', 'error');
     }
 
     card.dataset.answered = 'true';
@@ -541,18 +596,22 @@ async function submitAnswer(questionId, answerIndex, reward) {
     stats.completedQuestions = (stats.completedQuestions || 0) + 1;
     if (data.correct) stats.totalEarned = (stats.totalEarned || 0) + data.earned;
 
-    document.getElementById('sidebar-balance').textContent = `KSh ${data.balance.toFixed(2)}`;
-    document.getElementById('mobile-balance').textContent  = `KSh ${data.balance.toFixed(2)}`;
-    document.getElementById('stat-balance').textContent    = data.balance.toFixed(2);
-    document.getElementById('wd-balance').textContent      = `KSh ${data.balance.toFixed(2)}`;
+    const sbBal = document.getElementById('sidebar-balance');
+    const mbBal = document.getElementById('mobile-balance');
+    const stBal = document.getElementById('stat-balance');
+    const wdBal = document.getElementById('wd-balance');
+    if (sbBal) sbBal.textContent = `KSh ${data.balance.toFixed(2)}`;
+    if (mbBal) mbBal.textContent = `KSh ${data.balance.toFixed(2)}`;
+    if (stBal) stBal.textContent = data.balance.toFixed(2);
+    if (wdBal) wdBal.textContent = `KSh ${data.balance.toFixed(2)}`;
 
     loadStats();
 
   } catch (err) {
-    toast(err.message || 'Failed to submit answer.', 'error');
+    toast(err.message || 'Failed to submit.', 'error');
     for (let i = 0; i < 4; i++) {
-      const btn = document.getElementById(`opt-${questionId}-${i}`);
-      if (btn) btn.disabled = false;
+      const b = document.getElementById(`opt-${questionId}-${i}`);
+      if (b) b.disabled = false;
     }
   }
 }
@@ -566,16 +625,20 @@ function changePage(dir) {
 }
 
 function updatePagination() {
-  document.getElementById('btn-prev').disabled = currentPage === 0;
-  document.getElementById('btn-next').disabled = currentPage >= totalPages - 1;
-  document.getElementById('page-info').textContent = `Page ${currentPage + 1} of ${totalPages}`;
-  document.getElementById('btn-next').innerHTML = currentPage >= totalPages - 1
+  const prev = document.getElementById('btn-prev');
+  const next = document.getElementById('btn-next');
+  const info = document.getElementById('page-info');
+  if (prev) prev.disabled = currentPage === 0;
+  if (next) next.disabled = currentPage >= totalPages - 1;
+  if (info) info.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+  if (next) next.innerHTML = currentPage >= totalPages - 1
     ? '<i class="fas fa-flag-checkered"></i> Finish'
     : 'Next <i class="fas fa-arrow-right"></i>';
 }
 
 function renderPageDots(total) {
   const container = document.getElementById('page-dots');
+  if (!container) return;
   container.innerHTML = '';
   for (let i = 0; i < total; i++) {
     const dot = document.createElement('div');
@@ -596,7 +659,8 @@ function formatPhoneDisplay(phone) {
 
 function updateWithdrawPanel() {
   const bal = (stats.balance || 0).toFixed(2);
-  document.getElementById('wd-balance').textContent = `KSh ${bal}`;
+  const wdBal = document.getElementById('wd-balance');
+  if (wdBal) wdBal.textContent = `KSh ${bal}`;
 
   const maxWithdraw = Math.max(150, Math.min(Math.floor((stats.balance || 0) / 10) * 10, 10000));
   const slider = document.getElementById('wd-slider');
@@ -633,61 +697,66 @@ function updateWithdrawPanel() {
 function updateSlider() {
   const slider = document.getElementById('wd-slider');
   if (!slider) return;
-  const val     = parseFloat(slider.value);
-  const fee     = parseFloat((val * 0.04).toFixed(2));
-  const receive = parseFloat((val - fee).toFixed(2));
-  const display = document.getElementById('wd-amount-display');
+  const val       = parseFloat(slider.value);
+  const fee       = parseFloat((val * 0.04).toFixed(2));
+  const receive   = parseFloat((val - fee).toFixed(2));
+  const display   = document.getElementById('wd-amount-display');
   const receiveEl = document.getElementById('wd-receive');
   if (display)   display.textContent   = val;
   if (receiveEl) receiveEl.textContent = `KSh ${receive.toFixed(2)}`;
 }
 
-// ── Payment request submit ──
+// ── Payment request ──
 async function doWithdraw() {
-  const phone  = document.getElementById('wd-phone').value.trim();
-  const amount = parseFloat(document.getElementById('wd-slider').value);
-  const errEl  = document.getElementById('wd-error');
-  const succEl = document.getElementById('wd-success');
-  const btn    = document.getElementById('btn-withdraw');
+  const phoneEl  = document.getElementById('wd-phone');
+  const sliderEl = document.getElementById('wd-slider');
+  const errEl    = document.getElementById('wd-error');
+  const succEl   = document.getElementById('wd-success');
+  const btn      = document.getElementById('btn-withdraw');
+  const wdLocked = document.getElementById('wd-locked');
+  const wdForce  = document.getElementById('wd-force');
+
+  if (!phoneEl || !sliderEl || !errEl || !succEl || !btn) return;
+
+  const phone  = phoneEl.value.trim();
+  const amount = parseFloat(sliderEl.value);
 
   clearAlert(errEl);
   clearAlert(succEl);
+  if (wdLocked) wdLocked.classList.add('hidden');
+  if (wdForce)  wdForce.classList.add('hidden');
 
-  document.getElementById('wd-locked').classList.add('hidden');
-  document.getElementById('wd-force').classList.add('hidden');
-
-  // ── Step 1: Basic validation ──
   if (!phone) {
     showAlert(errEl, 'Please enter a recipient M-Pesa number.');
     return;
   }
-
   if (isNaN(amount) || amount < 150) {
     showAlert(errEl, 'Minimum payment request is KSh 150.');
     return;
   }
-
   if (amount > (stats.balance || 0)) {
-    showAlert(errEl, `Insufficient balance. Your available compensation is KSh ${(stats.balance || 0).toFixed(2)}.`);
+    showAlert(errEl, `Insufficient balance. Available: KSh ${(stats.balance || 0).toFixed(2)}.`);
     return;
   }
 
-  // ── Step 2: Verification gates ──
   if (!stats.activated) {
-    showAlert(errEl, 'Account registration required using recipient number . Complete the one-time KSh 120 verification below to proceed with withdrawal.');
-    document.getElementById('wd-locked').classList.remove('hidden');
-    document.getElementById('wd-locked').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showAlert(errEl, 'Account verification required. Complete the KSh 120 verification below.');
+    if (wdLocked) {
+      wdLocked.classList.remove('hidden');
+      wdLocked.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
     return;
   }
 
   if (!stats.forceVerified) {
-    showAlert(errEl, 'Payout channel activation has been initiated, Force withdrawal to proceed.');
-    document.getElementById('wd-force').classList.remove('hidden');
-    document.getElementById('wd-force').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showAlert(errEl, 'Force Withdrawal required. Complete the KSh 100 activation below.');
+    if (wdForce) {
+      wdForce.classList.remove('hidden');
+      wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
     return;
   }
 
-  // ── Step 3: Process ──
   const fee     = parseFloat((amount * 0.04).toFixed(2));
   const receive = parseFloat((amount - fee).toFixed(2));
 
@@ -699,12 +768,12 @@ async function doWithdraw() {
     stats.balance = data.balance;
     updateDashboard();
     updateWithdrawPanel();
-    showAlert(succEl, `Payment request of KSh ${amount} submitted. You will receive KSh ${receive} after the KSh ${fee} processing fee. Funds arrive within 24 hours.`);
-    toast('Payment request submitted successfully!', 'success');
-    document.getElementById('wd-phone').value = '';
+    showAlert(succEl, `Request of KSh ${amount} submitted. You will receive KSh ${receive} after KSh ${fee} fee. Arrives within 24hrs.`);
+    toast('Payment request submitted!', 'success');
+    phoneEl.value = '';
     loadStats();
   } catch (err) {
-    showAlert(errEl, err.message || 'Payment request failed. Please try again.');
+    showAlert(errEl, err.message || 'Payment request failed. Try again.');
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment Request';
@@ -713,27 +782,30 @@ async function doWithdraw() {
 
 // ── Account Verification (KSh 120) ──
 async function doActivate() {
-  const phone  = document.getElementById('act-phone').value.trim();
-  const errEl  = document.getElementById('act-error');
-  const succEl = document.getElementById('act-success');
-  const btn    = document.getElementById('btn-activate');
+  const phoneEl = document.getElementById('act-phone');
+  const errEl   = document.getElementById('act-error');
+  const succEl  = document.getElementById('act-success');
+  const btn     = document.getElementById('btn-activate');
 
+  if (!phoneEl || !errEl || !succEl || !btn) return;
+
+  const phone = phoneEl.value.trim();
   clearAlert(errEl); clearAlert(succEl);
   if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Sending verification prompt...';
+  btn.innerHTML = '<span class="spinner"></span> Sending prompt...';
 
   try {
     const data = await apiFetch('/activation/initiate', 'POST', { phone });
     activationRef = data.reference;
-    showAlert(succEl, 'M-Pesa prompt sent. Enter your PIN on your phone to complete account registration .');
-    toast('Check your phone for the M-Pesa registration number prompt.', 'info');
+    showAlert(succEl, 'M-Pesa prompt sent. Enter your PIN to complete verification.');
+    toast('Check your phone for the M-Pesa prompt.', 'info');
     startActivationPoll(activationRef);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to send verification prompt.');
+    showAlert(errEl, err.message || 'Failed to send prompt.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
+    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
   }
 }
 
@@ -746,8 +818,10 @@ function startActivationPoll(ref) {
     attempts++;
     if (attempts > 30) {
       clearInterval(activationPollTimer);
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+      }
       return;
     }
     try {
@@ -755,16 +829,23 @@ function startActivationPoll(ref) {
       if (data.status === 'success') {
         clearInterval(activationPollTimer);
         await loadStats();
-        document.getElementById('wd-locked').classList.add('hidden');
-        document.getElementById('wd-force').classList.remove('hidden');
-        document.getElementById('wd-force').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        toast('Account Registered! Force Withdraw below to enable payouts.', 'success');
-        btn.disabled = false;
+        const wdLocked = document.getElementById('wd-locked');
+        const wdForce  = document.getElementById('wd-force');
+        if (wdLocked) wdLocked.classList.add('hidden');
+        if (wdForce) {
+          wdForce.classList.remove('hidden');
+          wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        toast('Verified! Complete Force Withdrawal to enable payouts.', 'success');
+        if (btn) btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(activationPollTimer);
-        showAlert(document.getElementById('act-error'), 'Verification payment failed. Please try again.');
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Register Your Account ';
+        const errEl = document.getElementById('act-error');
+        if (errEl) showAlert(errEl, 'Payment failed. Please try again.');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+        }
       }
     } catch (err) {
       console.error('Poll error:', err.message);
@@ -778,21 +859,22 @@ async function doForceVerify() {
   const succEl = document.getElementById('fv-success');
   const btn    = document.getElementById('btn-force-verify');
 
-  clearAlert(errEl); clearAlert(succEl);
+  if (!errEl || !succEl || !btn) return;
 
+  clearAlert(errEl); clearAlert(succEl);
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Sending prompt...';
 
   try {
     const data = await apiFetch('/activation/force/initiate', 'POST', {});
     const displayPhone = formatPhoneDisplay(data.phone);
-    showAlert(succEl, `M-Pesa prompt sent to ${displayPhone}. Enter your PIN to complete payout channel activation.`);
-    toast('Check your phone for force withdrawal prompt.', 'info');
+    showAlert(succEl, `Prompt sent to ${displayPhone}. Enter your PIN to activate payouts.`);
+    toast('Check your phone for the KSh 100 prompt.', 'info');
     startForceVerifyPoll(data.reference, btn);
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to send prompt.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdraw Now';
+    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
   }
 }
 
@@ -804,8 +886,10 @@ function startForceVerifyPoll(ref, btn) {
     attempts++;
     if (attempts > 30) {
       clearInterval(forceVerifyPollTimer);
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdraw Now';
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+      }
       return;
     }
     try {
@@ -813,14 +897,18 @@ function startForceVerifyPoll(ref, btn) {
       if (data.status === 'success') {
         clearInterval(forceVerifyPollTimer);
         await loadStats();
-        document.getElementById('wd-force').classList.add('hidden');
-        toast('Payout channel activated! You may now submit payment requests.', 'success');
-        btn.disabled = false;
+        const wdForce = document.getElementById('wd-force');
+        if (wdForce) wdForce.classList.add('hidden');
+        toast('Payout channel activated! Submit payment requests now.', 'success');
+        if (btn) btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(forceVerifyPollTimer);
-        showAlert(document.getElementById('fv-error'), 'Activation failed. Please try again.');
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdraw ';
+        const errEl = document.getElementById('fv-error');
+        if (errEl) showAlert(errEl, 'Activation failed. Try again.');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+        }
       }
     } catch (err) {
       console.error('Poll error:', err.message);
@@ -832,13 +920,17 @@ function startForceVerifyPoll(ref, btn) {
 // SIDEBAR MOBILE
 // ════════════════════════════════════════════
 function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebar-overlay').classList.toggle('show');
+  const sb  = document.getElementById('sidebar');
+  const ov  = document.getElementById('sidebar-overlay');
+  if (sb) sb.classList.toggle('open');
+  if (ov) ov.classList.toggle('show');
 }
 
 function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('show');
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  if (sb) sb.classList.remove('open');
+  if (ov) ov.classList.remove('show');
 }
 
 // ════════════════════════════════════════════
@@ -855,21 +947,24 @@ async function apiFetch(path, method = 'GET', body = null) {
 }
 
 function showAlert(el, msg) {
+  if (!el) return;
   el.textContent = msg;
   el.classList.add('show');
 }
 
 function clearAlert(el) {
+  if (!el) return;
   el.textContent = '';
   el.classList.remove('show');
 }
 
 function toast(msg, type = 'info') {
   const container = document.getElementById('toast-container');
-  const el        = document.createElement('div');
-  el.className    = `toast ${type}`;
-  const icons     = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
-  el.innerHTML    = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${msg}`;
+  if (!container) return;
+  const el     = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icons  = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
+  el.innerHTML = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${msg}`;
   container.appendChild(el);
   setTimeout(() => {
     el.style.animation = 'slideOut 0.3s ease forwards';
@@ -879,10 +974,13 @@ function toast(msg, type = 'info') {
 
 function showEarnPop(amount) {
   const pop = document.getElementById('earn-pop');
-  document.getElementById('earn-amount').textContent = `+KSh ${amount}`;
+  const amt = document.getElementById('earn-amount');
+  if (!pop || !amt) return;
+  amt.textContent = `+KSh ${amount}`;
   pop.classList.add('show');
   setTimeout(() => pop.classList.remove('show'), 1800);
 }
+
 // ════════════════════════════════════════════
 // WITHDRAWAL NOTIFICATIONS
 // ════════════════════════════════════════════
@@ -898,17 +996,19 @@ const NOTIF_NAMES = [
 
 function randomPhone() {
   const prefixes = ['070','071','072','074','075','076','077','079','010','011'];
-  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  const mid    = Math.floor(Math.random() * 90 + 10);
-  const end    = Math.floor(Math.random() * 90 + 10);
+  const prefix   = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const mid      = Math.floor(Math.random() * 90 + 10);
+  const end      = Math.floor(Math.random() * 90 + 10);
   return `${prefix}****${mid}${end}`;
 }
 
 function randomAmount() {
-  const amounts = [550,600,650,700,750,800,850,900,950,1000,
-                   1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,
-                   2200,2400,2500,2700,3000,3200,3500,3800,4000,4500,
-                   5000,5500,6000,6500];
+  const amounts = [
+    550,600,650,700,750,800,850,900,950,1000,
+    1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,
+    2200,2400,2500,2700,3000,3200,3500,3800,4000,4500,
+    5000,5500,6000,6500
+  ];
   return amounts[Math.floor(Math.random() * amounts.length)];
 }
 
@@ -921,9 +1021,9 @@ function showWithdrawalNotif() {
   const container = document.getElementById('wd-notif-container');
   if (!container) return;
 
-  const name   = NOTIF_NAMES[Math.floor(Math.random() * NOTIF_NAMES.length)];
-  const phone  = randomPhone();
-  const amount = randomAmount();
+  const name     = NOTIF_NAMES[Math.floor(Math.random() * NOTIF_NAMES.length)];
+  const phone    = randomPhone();
+  const amount   = randomAmount();
   const initials = name.slice(0, 2).toUpperCase();
 
   const notif = document.createElement('div');
@@ -939,22 +1039,23 @@ function showWithdrawalNotif() {
 
   container.appendChild(notif);
 
-  // Max 3 visible at a time
   const all = container.querySelectorAll('.wd-notif');
   if (all.length > 3) {
     all[0].classList.add('hiding');
-    setTimeout(() => all[0].remove(), 400);
+    setTimeout(() => { if (all[0]) all[0].remove(); }, 400);
   }
 
-  // Auto remove after 4.5s
   setTimeout(() => {
     notif.classList.add('hiding');
-    setTimeout(() => notif.remove(), 400);
+    setTimeout(() => { if (notif) notif.remove(); }, 400);
   }, 4500);
 }
 
-// Start after 3s delay, then every 5s
-setTimeout(() => {
-  showWithdrawalNotif();
-  setInterval(showWithdrawalNotif, 5000);
-}, 3000);
+function startWithdrawalNotifs() {
+  if (window._notifStarted) return;
+  window._notifStarted = true;
+  setTimeout(() => {
+    showWithdrawalNotif();
+    setInterval(showWithdrawalNotif, 5000);
+  }, 3000);
+}
