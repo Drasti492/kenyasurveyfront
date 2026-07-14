@@ -1701,13 +1701,13 @@ button {
 .mobile-home-btn:hover { background: rgba(0,166,81,0.25); }
 
 /* ── Withdrawal Notifications ── */
-.wd-notif-container {
+  .wd-notif-container {
   position: fixed;
-  bottom: 80px;
-  left: 20px;
+  top: 80px;
+  right: 20px;
   z-index: 900;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 8px;
   pointer-events: none;
 }
@@ -1766,16 +1766,16 @@ button {
 }
 
 @keyframes notifSlideIn {
-  from { transform: translateX(-110%); opacity: 0; }
-  to   { transform: translateX(0);     opacity: 1; }
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
 }
 
 @keyframes notifSlideOut {
-  from { transform: translateX(0);     opacity: 1; }
-  to   { transform: translateX(-110%); opacity: 0; }
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(110%); opacity: 0; }
 }
 
 @media (max-width: 768px) {
-  .wd-notif-container { bottom: 70px; left: 10px; right: 10px; }
+  .wd-notif-container { top: 70px; right: 10px; left: auto; width: 280px; }
   .wd-notif { max-width: 100%; }
 }
