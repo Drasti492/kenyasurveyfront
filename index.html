@@ -629,11 +629,17 @@
 ══════════════════════════════════════════ -->
 <div class="screen" id="app-screen">
 
-  <div class="mobile-header">
-    <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-    <div class="mobile-balance" id="mobile-balance">KSh 0.00</div>
-    <button class="btn-logout" onclick="doLogout()"><i class="fas fa-power-off"></i></button>
-  </div>
+   
+
+<!-- prof header : -->
+<div class="mobile-header">
+  <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <button class="mobile-home-btn" onclick="showPanel('dashboard')" title="Dashboard">
+    <i class="fas fa-home"></i>
+  </button>
+  <div class="mobile-balance" id="mobile-balance">KSh 0.00</div>
+  <button class="btn-logout" onclick="doLogout()"><i class="fas fa-power-off"></i></button>
+</div>
 
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
