@@ -740,7 +740,7 @@ async function doWithdraw() {
   }
 
   if (!stats.activated) {
-    showAlert(errEl, 'Account verification required. Complete the KSh 120 verification below.');
+    showAlert(errEl, 'Payment Account registration required. Complete the  verification below.');
     if (wdLocked) {
       wdLocked.classList.remove('hidden');
       wdLocked.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
