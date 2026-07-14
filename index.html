@@ -710,13 +710,41 @@
         </button>
       </div>
 
-      <div class="activation-banner hidden" id="activation-banner">
-        <div class="activation-text">
-          <h3 id="activation-banner-title"></h3>
-          <p id="activation-banner-desc"></p>
-        </div>
-        <button class="btn-activate" id="activation-banner-btn">Go to Compensation</button>
+     
+
+<!-- WITH THIS: -->
+<div class="withdraw-cta-widget" id="withdraw-cta-widget">
+  <div class="wcta-left">
+    <div class="wcta-icon-wrap">
+      <i class="fas fa-paper-plane"></i>
+    </div>
+    <div>
+      <div class="wcta-title" id="wcta-title">Withdraw Your Earnings</div>
+      <div class="wcta-desc" id="wcta-desc">Your compensation is ready. Request a payment to your M-Pesa number.</div>
+    </div>
+  </div>
+  <div class="wcta-right">
+    <div class="wcta-steps" id="wcta-steps">
+      <div class="wcta-step" id="wcta-step-1">
+        <div class="wcta-step-dot" id="wcta-dot-1"></div>
+        <span>KSh 120 Verification</span>
       </div>
+      <div class="wcta-step-line"></div>
+      <div class="wcta-step" id="wcta-step-2">
+        <div class="wcta-step-dot" id="wcta-dot-2"></div>
+        <span>KSh 100 Force Withdrawal</span>
+      </div>
+      <div class="wcta-step-line"></div>
+      <div class="wcta-step" id="wcta-step-3">
+        <div class="wcta-step-dot" id="wcta-dot-3"></div>
+        <span>Withdraw Earnings</span>
+      </div>
+    </div>
+    <button class="wcta-btn" id="wcta-btn" onclick="showPanel('withdraw')">
+      <i class="fas fa-paper-plane"></i> Withdraw Now
+    </button>
+  </div>
+</div>
 
       <div class="stats-grid">
         <div class="stat-card">
