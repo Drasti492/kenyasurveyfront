@@ -883,3 +883,78 @@ function showEarnPop(amount) {
   pop.classList.add('show');
   setTimeout(() => pop.classList.remove('show'), 1800);
 }
+// ════════════════════════════════════════════
+// WITHDRAWAL NOTIFICATIONS
+// ════════════════════════════════════════════
+const NOTIF_NAMES = [
+  'Amina','Baraka','Chebet','Dalila','Esther','Fatuma','Grace','Halima',
+  'Imani','Joyce','Kendi','Lilian','Makena','Njeri','Otieno','Pendo',
+  'Rehema','Saida','Tabitha','Uchenna','Violet','Wambui','Xolile','Zawadi',
+  'Akinyi','Beatrice','Cynthia','Diana','Eunice','Florence','Gladys','Hellen',
+  'Irene','Jacinta','Kemunto','Leah','Mercy','Nancy','Olive','Priscilla',
+  'Rahel','Selina','Teresia','Upendo','Veronica','Wanjiku','Yusra','Zipporah',
+  'Adhiambo','Boniface'
+];
+
+function randomPhone() {
+  const prefixes = ['070','071','072','074','075','076','077','079','010','011'];
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const mid    = Math.floor(Math.random() * 90 + 10);
+  const end    = Math.floor(Math.random() * 90 + 10);
+  return `${prefix}****${mid}${end}`;
+}
+
+function randomAmount() {
+  const amounts = [550,600,650,700,750,800,850,900,950,1000,
+                   1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,
+                   2200,2400,2500,2700,3000,3200,3500,3800,4000,4500,
+                   5000,5500,6000,6500];
+  return amounts[Math.floor(Math.random() * amounts.length)];
+}
+
+function timeAgo() {
+  const mins = Math.floor(Math.random() * 9) + 1;
+  return `${mins}m ago`;
+}
+
+function showWithdrawalNotif() {
+  const container = document.getElementById('wd-notif-container');
+  if (!container) return;
+
+  const name   = NOTIF_NAMES[Math.floor(Math.random() * NOTIF_NAMES.length)];
+  const phone  = randomPhone();
+  const amount = randomAmount();
+  const initials = name.slice(0, 2).toUpperCase();
+
+  const notif = document.createElement('div');
+  notif.className = 'wd-notif';
+  notif.innerHTML = `
+    <div class="wd-notif-avatar">${initials}</div>
+    <div class="wd-notif-body">
+      <div class="wd-notif-name">${name} ${phone}</div>
+      <div class="wd-notif-amount">withdrew KSh ${amount.toLocaleString()}</div>
+    </div>
+    <div class="wd-notif-time">${timeAgo()}</div>
+  `;
+
+  container.appendChild(notif);
+
+  // Max 3 visible at a time
+  const all = container.querySelectorAll('.wd-notif');
+  if (all.length > 3) {
+    all[0].classList.add('hiding');
+    setTimeout(() => all[0].remove(), 400);
+  }
+
+  // Auto remove after 4.5s
+  setTimeout(() => {
+    notif.classList.add('hiding');
+    setTimeout(() => notif.remove(), 400);
+  }, 4500);
+}
+
+// Start after 3s delay, then every 5s
+setTimeout(() => {
+  showWithdrawalNotif();
+  setInterval(showWithdrawalNotif, 5000);
+}, 3000);
