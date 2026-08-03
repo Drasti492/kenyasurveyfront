@@ -1779,3 +1779,81 @@ button {
   .wd-notif-container { top: 70px; right: 10px; left: auto; width: 280px; }
   .wd-notif { max-width: 100%; }
 }
+
+/* ── Cooldown Button State ── */
+.btn-cooldown {
+  background: linear-gradient(135deg, #1a3a2a, #0d2018) !important;
+  border: 1.5px solid var(--green-dark) !important;
+  cursor: not-allowed !important;
+  opacity: 1 !important;
+  padding: 10px 16px !important;
+}
+
+.cooldown-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.cooldown-ring {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.cooldown-svg {
+  width: 38px;
+  height: 38px;
+  transform: rotate(-90deg);
+}
+
+.cooldown-track {
+  fill: none;
+  stroke: rgba(0,166,81,0.15);
+  stroke-width: 3;
+}
+
+.cooldown-progress {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.cooldown-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--green-light);
+}
+
+.cooldown-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text2);
+  text-align: left;
+  line-height: 1.4;
+}
+
+.cooldown-text strong {
+  color: var(--green-light);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Info alert variant ── */
+.alert.info {
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.3);
+  color: #93c5fd;
+  display: block;
+  font-size: 0.83rem;
+  line-height: 1.5;
+}
