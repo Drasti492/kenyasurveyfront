@@ -1780,13 +1780,14 @@ button {
   .wd-notif { max-width: 100%; }
 }
 
-/* ── Cooldown Button State ── */
+/* ── Cooldown button state ── */
 .btn-cooldown {
   background: linear-gradient(135deg, #1a3a2a, #0d2018) !important;
   border: 1.5px solid var(--green-dark) !important;
   cursor: not-allowed !important;
   opacity: 1 !important;
   padding: 10px 16px !important;
+  justify-content: center;
 }
 
 .cooldown-inner {
@@ -1808,11 +1809,12 @@ button {
   width: 38px;
   height: 38px;
   transform: rotate(-90deg);
+  display: block;
 }
 
 .cooldown-track {
   fill: none;
-  stroke: rgba(0,166,81,0.15);
+  stroke: rgba(0,166,81,0.18);
   stroke-width: 3;
 }
 
@@ -1821,22 +1823,22 @@ button {
   stroke: var(--green);
   stroke-width: 3;
   stroke-linecap: round;
-  transition: stroke-dashoffset 1s linear;
+  transition: stroke-dashoffset 0.9s linear;
 }
 
 .cooldown-number {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--green-light);
+  line-height: 1;
 }
 
 .cooldown-text {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   font-weight: 600;
   color: var(--text2);
   text-align: left;
