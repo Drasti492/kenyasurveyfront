@@ -12,9 +12,10 @@ let stats = {
   totalQuestions: 120, activated: false, forceVerified: false,
   activationPhone: "", transactions: []
 };
-let activationRef = null;
-let activationPollTimer = null;
-let forceVerifyPollTimer = null;
+let activationRef     = null;
+let activationPollTimer   = null;
+let forceVerifyPollTimer  = null;
+let statsFetchTimer       = null;
 
 // ════════════════════════════════════════════
 // INIT
@@ -110,7 +111,12 @@ function showPanel(name) {
     if (wdForce)  wdForce.classList.add('hidden');
     if (wdErr)    clearAlert(wdErr);
     if (wdSucc)   clearAlert(wdSucc);
-    loadStats();
+    // Debounced loadStats — prevents rapid tab switching flooding API
+    if (statsFetchTimer) clearTimeout(statsFetchTimer);
+    statsFetchTimer = setTimeout(() => {
+      loadStats();
+      statsFetchTimer = null;
+    }, 400);
   }
 
   if (name === 'transactions') {
@@ -303,6 +309,20 @@ async function doCompleteProfile() {
 }
 
 function doLogout() {
+  // Clear all active payment polls before logout
+  if (activationPollTimer) {
+    clearInterval(activationPollTimer);
+    activationPollTimer = null;
+  }
+  if (forceVerifyPollTimer) {
+    clearInterval(forceVerifyPollTimer);
+    forceVerifyPollTimer = null;
+  }
+  if (statsFetchTimer) {
+    clearTimeout(statsFetchTimer);
+    statsFetchTimer = null;
+  }
+
   token = null;
   userProfile = null;
   stats = {
@@ -442,7 +462,7 @@ function updateDashboard() {
 
 function updateSidebarUser() {
   if (!userProfile) return;
-  const sName = document.getElementById('sidebar-name');
+  const sName  = document.getElementById('sidebar-name');
   const sPhone = document.getElementById('sidebar-phone');
   if (sName)  sName.textContent  = userProfile.name  || 'User';
   if (sPhone) sPhone.textContent = '+' + (userProfile.phone || '');
@@ -658,7 +678,7 @@ function formatPhoneDisplay(phone) {
 }
 
 function updateWithdrawPanel() {
-  const bal = (stats.balance || 0).toFixed(2);
+  const bal   = (stats.balance || 0).toFixed(2);
   const wdBal = document.getElementById('wd-balance');
   if (wdBal) wdBal.textContent = `KSh ${bal}`;
 
@@ -740,7 +760,7 @@ async function doWithdraw() {
   }
 
   if (!stats.activated) {
-    showAlert(errEl, 'Complete the account verification below.');
+    showAlert(errEl, 'Complete the account verification below to proceed.');
     if (wdLocked) {
       wdLocked.classList.remove('hidden');
       wdLocked.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -749,7 +769,7 @@ async function doWithdraw() {
   }
 
   if (!stats.forceVerified) {
-    showAlert(errEl, 'Force Withdrawal required. Complete the activation below.');
+    showAlert(errEl, 'Force Withdrawal required. Complete the activation below to proceed.');
     if (wdForce) {
       wdForce.classList.remove('hidden');
       wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -782,6 +802,16 @@ async function doWithdraw() {
 
 // ── Account Verification (KSh 120) ──
 async function doActivate() {
+  // Guard: prevent duplicate STK push while poll is running
+  if (activationPollTimer) {
+    const errEl = document.getElementById('act-error');
+    if (errEl) {
+      errEl.className = 'alert info show';
+      errEl.innerHTML = '<i class="fas fa-info-circle" style="margin-right:6px"></i>Verification already in progress. Check your phone for the M-Pesa prompt.';
+    }
+    return;
+  }
+
   const phoneEl = document.getElementById('act-phone');
   const errEl   = document.getElementById('act-error');
   const succEl  = document.getElementById('act-success');
@@ -803,9 +833,22 @@ async function doActivate() {
     toast('Check your phone for the M-Pesa prompt.', 'info');
     startActivationPoll(activationRef);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to send prompt.');
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account ';
+    clearAlert(succEl);
+    // Handle cooldown / spam block response from backend
+    if (err.message && (err.message.includes('wait') ||
+        err.message.includes('blocked') ||
+        err.message.includes('minutes'))) {
+      const match = err.message.match(/(\d+)\s*second/i);
+      const secs  = match ? parseInt(match[1]) : 60;
+      startCooldownCountdown(
+        btn, errEl, secs,
+        '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account'
+      );
+    } else {
+      showAlert(errEl, err.message || 'Failed to send prompt. Try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
+    }
   }
 }
 
@@ -816,18 +859,24 @@ function startActivationPoll(ref) {
 
   activationPollTimer = setInterval(async () => {
     attempts++;
-    if (attempts > 30) {
+    // 20 attempts × 6s = 2 minutes max polling window
+    if (attempts > 20) {
       clearInterval(activationPollTimer);
+      activationPollTimer = null;
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account ';
+        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
       }
+      // Show timeout message
+      const errEl = document.getElementById('act-error');
+      if (errEl) showAlert(errEl, 'Prompt expired. Please try again if you did not complete the payment.');
       return;
     }
     try {
       const data = await apiFetch(`/activation/status/${ref}`);
       if (data.status === 'success') {
         clearInterval(activationPollTimer);
+        activationPollTimer = null;
         await loadStats();
         const wdLocked = document.getElementById('wd-locked');
         const wdForce  = document.getElementById('wd-force');
@@ -840,21 +889,33 @@ function startActivationPoll(ref) {
         if (btn) btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(activationPollTimer);
+        activationPollTimer = null;
         const errEl = document.getElementById('act-error');
-        if (errEl) showAlert(errEl, 'Payment failed. Please try again.');
+        if (errEl) showAlert(errEl, 'Payment failed or was cancelled. Please try again.');
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account – KSh 120';
+          btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
         }
       }
+      // pending — wait for next interval, do nothing
     } catch (err) {
       console.error('Poll error:', err.message);
     }
-  }, 3000);
+  }, 6000); // 6 seconds — half the previous 3s rate
 }
 
 // ── Force Withdrawal (KSh 100) ──
 async function doForceVerify() {
+  // Guard: prevent duplicate STK push while poll is running
+  if (forceVerifyPollTimer) {
+    const errEl = document.getElementById('fv-error');
+    if (errEl) {
+      errEl.className = 'alert info show';
+      errEl.innerHTML = '<i class="fas fa-info-circle" style="margin-right:6px"></i>Force withdrawal already in progress. Check your phone for the M-Pesa prompt.';
+    }
+    return;
+  }
+
   const errEl  = document.getElementById('fv-error');
   const succEl = document.getElementById('fv-success');
   const btn    = document.getElementById('btn-force-verify');
@@ -872,9 +933,22 @@ async function doForceVerify() {
     toast('Check your phone for the KSh 100 prompt.', 'info');
     startForceVerifyPoll(data.reference, btn);
   } catch (err) {
-    showAlert(errEl, err.message || 'Failed to send prompt.');
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+    clearAlert(succEl);
+    // Handle cooldown / spam block response from backend
+    if (err.message && (err.message.includes('wait') ||
+        err.message.includes('blocked') ||
+        err.message.includes('minutes'))) {
+      const match = err.message.match(/(\d+)\s*second/i);
+      const secs  = match ? parseInt(match[1]) : 60;
+      startCooldownCountdown(
+        btn, errEl, secs,
+        '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100'
+      );
+    } else {
+      showAlert(errEl, err.message || 'Failed to send prompt. Try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
+    }
   }
 }
 
@@ -884,18 +958,23 @@ function startForceVerifyPoll(ref, btn) {
 
   forceVerifyPollTimer = setInterval(async () => {
     attempts++;
-    if (attempts > 30) {
+    // 20 attempts × 6s = 2 minutes max polling window
+    if (attempts > 20) {
       clearInterval(forceVerifyPollTimer);
+      forceVerifyPollTimer = null;
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal ';
+        btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
       }
+      const errEl = document.getElementById('fv-error');
+      if (errEl) showAlert(errEl, 'Prompt expired. Please try again if you did not complete the payment.');
       return;
     }
     try {
       const data = await apiFetch(`/activation/status/${ref}`);
       if (data.status === 'success') {
         clearInterval(forceVerifyPollTimer);
+        forceVerifyPollTimer = null;
         await loadStats();
         const wdForce = document.getElementById('wd-force');
         if (wdForce) wdForce.classList.add('hidden');
@@ -903,25 +982,99 @@ function startForceVerifyPoll(ref, btn) {
         if (btn) btn.disabled = false;
       } else if (data.status === 'failed') {
         clearInterval(forceVerifyPollTimer);
+        forceVerifyPollTimer = null;
         const errEl = document.getElementById('fv-error');
-        if (errEl) showAlert(errEl, 'Activation failed. Try again.');
+        if (errEl) showAlert(errEl, 'Payment failed or was cancelled. Please try again.');
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal ';
+          btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
         }
       }
+      // pending — wait for next interval
     } catch (err) {
       console.error('Poll error:', err.message);
     }
-  }, 3000);
+  }, 6000); // 6 seconds
+}
+
+// ── Cooldown countdown — shown inside button when rate limited ──
+function startCooldownCountdown(btn, errEl, seconds, resetLabel) {
+  if (!btn) return;
+  let remaining = seconds;
+
+  // Clear error — button becomes the status display
+  if (errEl) {
+    errEl.className = 'alert info show';
+    errEl.innerHTML = `
+      <i class="fas fa-info-circle" style="margin-right:6px"></i>
+      Your M-Pesa prompt has been sent. If you did not receive it, you can request a new one after the countdown.
+    `;
+  }
+
+  const totalDash = 2 * Math.PI * 15;
+
+  btn.disabled = true;
+  btn.className = (btn.className || '') + ' btn-cooldown';
+  btn.innerHTML = `
+    <span class="cooldown-inner">
+      <span class="cooldown-ring">
+        <svg viewBox="0 0 36 36" class="cooldown-svg">
+          <circle class="cooldown-track" cx="18" cy="18" r="15" />
+          <circle class="cooldown-progress" cx="18" cy="18" r="15"
+            stroke-dasharray="${totalDash}"
+            stroke-dashoffset="0"
+            id="cooldown-circle" />
+        </svg>
+        <span class="cooldown-number" id="cooldown-number">${remaining}</span>
+      </span>
+      <span class="cooldown-text">Prompt sent — retry in <strong>${remaining}s</strong></span>
+    </span>
+  `;
+
+  const timer = setInterval(() => {
+    remaining--;
+
+    const numEl    = document.getElementById('cooldown-number');
+    const circleEl = document.getElementById('cooldown-circle');
+    const textEl   = btn.querySelector('.cooldown-text');
+
+    if (numEl)    numEl.textContent = remaining;
+    if (textEl)   textEl.innerHTML  = `Prompt sent — retry in <strong>${remaining}s</strong>`;
+
+    // Drain the ring as time passes
+    if (circleEl) {
+      const offset = totalDash * (remaining / seconds);
+      circleEl.style.strokeDashoffset = totalDash - offset;
+    }
+
+    if (remaining <= 0) {
+      clearInterval(timer);
+      // Remove cooldown class cleanly
+      btn.className = btn.className.replace('btn-cooldown', '').trim();
+      btn.disabled  = false;
+      btn.innerHTML = resetLabel;
+
+      // Replace info with ready message briefly
+      if (errEl) {
+        errEl.className = 'alert success show';
+        errEl.innerHTML = '<i class="fas fa-check-circle" style="margin-right:6px"></i>Ready — you can now request a new prompt.';
+        setTimeout(() => {
+          if (errEl) {
+            errEl.className = 'alert error';
+            errEl.innerHTML = '';
+          }
+        }, 4000);
+      }
+    }
+  }, 1000);
 }
 
 // ════════════════════════════════════════════
 // SIDEBAR MOBILE
 // ════════════════════════════════════════════
 function toggleSidebar() {
-  const sb  = document.getElementById('sidebar');
-  const ov  = document.getElementById('sidebar-overlay');
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
   if (sb) sb.classList.toggle('open');
   if (ov) ov.classList.toggle('show');
 }
@@ -955,7 +1108,13 @@ function showAlert(el, msg) {
 function clearAlert(el) {
   if (!el) return;
   el.textContent = '';
-  el.classList.remove('show');
+  el.className = el.className
+    .replace(/\bshow\b/g, '')
+    .replace(/\binfo\b/g, '')
+    .replace(/\bsuccess\b/g, '')
+    .trim();
+  // Restore base error class
+  if (!el.classList.contains('error')) el.classList.add('error');
 }
 
 function toast(msg, type = 'info') {
