@@ -585,9 +585,9 @@ function updateDashboard() {
       step2.className = 'wcta-step';
       step3.className = 'wcta-step';
       if (wctaTitle) wctaTitle.textContent = 'Withdraw Your Earnings';
-      if (wctaDesc)  wctaDesc.textContent  = 'A one-time KSh 150 account verification is required before your first withdrawal.';
+      if (wctaDesc)  wctaDesc.textContent  = 'A one-time account verification is required before your first withdrawal.Check Requirements for your first withdrawal ';
       if (wctaBtn) {
-        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Verify Account – KSh 150';
+        wctaBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Withdraw Now';
         wctaBtn.onclick   = () => showPanel('withdraw');
       }
     } else if (!stats.forceVerified) {
