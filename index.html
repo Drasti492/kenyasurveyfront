@@ -1054,6 +1054,78 @@
 <!-- Withdrawal notification ticker -->
 <div class="wd-notif-container" id="wd-notif-container"></div>
 
+
+<!-- ── Verification Confirmation Modal ── -->
+<div class="verif-modal-overlay hidden" id="verif-modal-overlay">
+  <div class="verif-modal" id="verif-modal">
+    <div class="verif-modal-icon">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+    <div class="verif-modal-badge">One-Time Verification Required</div>
+    <h3 class="verif-modal-title">Account Verification – KSh 150</h3>
+    <div class="verif-modal-reason">
+      <i class="fas fa-info-circle"></i>
+      <div>
+        <strong>Why is this required?</strong>
+        <p>KenyaSurvey registers participants without an OTP during sign-up to keep the process simple and fast. To protect your earnings and confirm that the M-Pesa number on your account truly belongs to you, a one-time verification payment of <strong>KSh 150</strong> is required before your first withdrawal. This is a security measure — not a charge for using the platform.</p>
+      </div>
+    </div>
+    <div class="verif-modal-fee">
+      <div class="verif-fee-row">
+        <span>Verification Fee</span>
+        <span class="verif-fee-amount">KSh 150</span>
+      </div>
+      <div class="verif-fee-row">
+        <span>Charged To</span>
+        <span id="verif-modal-phone" class="verif-fee-phone">Your M-Pesa number</span>
+      </div>
+      <div class="verif-fee-row">
+        <span>Frequency</span>
+        <span style="color:var(--green-light);font-weight:600">One-time only</span>
+      </div>
+    </div>
+    <p class="verif-modal-note">
+      Once verified, your withdrawal will be processed immediately. You will not be charged this fee again.
+    </p>
+    <div class="verif-modal-actions">
+      <button class="verif-btn-decline" onclick="closeVerifModal()">
+        <i class="fas fa-times"></i> Decline Verification
+      </button>
+      <button class="verif-btn-proceed" id="verif-proceed-btn" onclick="showVerifPhoneStep()">
+        <i class="fas fa-shield-alt"></i> Proceed with Verification
+      </button>
+    </div>
+
+    <!-- Phone input step — shown after proceed is clicked -->
+    <div class="verif-phone-step hidden" id="verif-phone-step">
+      <div style="height:1px;background:var(--border);margin:20px 0"></div>
+      <p style="font-size:0.83rem;color:var(--text2);margin-bottom:12px;text-align:left">
+        Enter your M-Pesa number below. An STK push of <strong style="color:var(--text)">KSh 150</strong> will be sent to it.
+      </p>
+      <div class="field-group" style="margin-bottom:12px">
+        <label class="field-label">Your M-Pesa Number</label>
+        <div class="field-wrap">
+          <i class="fas fa-mobile-alt"></i>
+          <input class="field-input" type="tel" id="verif-phone-input"
+            placeholder="07XX XXX XXX" />
+        </div>
+      </div>
+      <div class="alert error" id="verif-error"></div>
+      <div class="alert success" id="verif-success"></div>
+      <button class="verif-btn-proceed" id="verif-register-btn" onclick="doVerifActivate()"
+        style="width:100%;margin-top:4px">
+        <i class="fas fa-paper-plane"></i> Register Now – Send KSh 150 Prompt
+      </button>
+      <button class="verif-btn-decline" onclick="closeVerifModal()"
+        style="width:100%;margin-top:8px">
+        <i class="fas fa-arrow-left"></i> Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="wd-notif-container" id="wd-notif-container"></div>
+
 <script src="app.js"></script>
 </body>
 </html>
